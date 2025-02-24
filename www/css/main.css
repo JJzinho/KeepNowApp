@@ -210,7 +210,11 @@ iframe {
 .login100-form-title i {
   font-size: 60px;
 }
-
+.keepnowlogo{
+  width: 280px;
+  height: 100%;
+  margin-bottom: 30px;
+}
 /*------------------------------------------------------------------
 [ Input ]*/
 
