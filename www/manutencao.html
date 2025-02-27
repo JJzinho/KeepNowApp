@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Keepnow Condo</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .top-bar {
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .top-bar .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 80px; /* Ajuste para ficar logo abaixo da top-bar */
+        }
+
+        .info-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .image-title-container {
+            text-align: center;
+            margin-right: 20px;
+        }
+
+        .unit-photo img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1.editable {
+            font-size: 1.5em;
+            margin: 10px 0 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-container p {
+            margin: 5px 0;
+        }
+
+        .editable {
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px 0;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+            width: 300px;
+            text-align: left;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .nav-btn {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-bar .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .dropdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
+    </div>
+    
+    <div class="content">
+        <div class="info-section">
+            <div class="image-title-container">
+                <div class="unit-photo">
+                    <img src="https://img.expoimovel.com/imagens_classificados/2971/216782_AV_T3279_01.JPG" alt="Foto da Unidade">
+                </div>
+                <h1 class="editable" id="titulo">Cond. Maria Augusta</h1>
+            </div>
+
+            <div class="grid-container">
+                <p><strong>CNPJ:</strong> <span class="editable" id="cnpj">00.0000/00</span></p>
+                <p><strong>Endereço:</strong> <span class="editable" id="endereco">Av. Rosa e Silva, 1241 - Graças</span></p>
+                <p><strong>Telefone:</strong> <span class="editable" id="telefone">(81) 4101-0000</span></p>
+            </div>
+        </div>
+
+        <!-- Menus Suspensos -->
+        <div class="dropdown-container">
+            <div class="dropdown">
+                <button onclick="toggleDropdown('elevador')" class="nav-btn">Elevador</button>
+                <div id="elevadorDropdown" class="dropdown-content">
+                    <a href="#">Fornecedor: ACTA</a>
+                    <a href="#">Telefone: (11) 91968-9899</a>
+                    <a href="#">Última manutenção: 20/01/2025</a>
+                    <a href="#">Vigência de contrato: 20/01/2025 ≥ 20/01/2025</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="toggleDropdown('reservatorios')" class="nav-btn">Reservatórios</button>
+                <div id="reservatoriosDropdown" class="dropdown-content">
+                    <a href="#">Informações sobre reservatórios</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="toggleDropdown('bombas')" class="nav-btn">Bombas</button>
+                <div id="bombasDropdown" class="dropdown-content">
+                    <a href="#">Informações sobre bombas</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="toggleDropdown('gerador')" class="nav-btn">Gerador</button>
+                <div id="geradorDropdown" class="dropdown-content">
+                    <a href="#">Informações sobre gerador</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
+        <button class="nav-btn">🔍</button>
+        <button class="nav-btn" id="menu-btn">☰</button>
+    </div>
+
+    <script>
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id + "Dropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.nav-btn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

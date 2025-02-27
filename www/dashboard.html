@@ -4,21 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keepnow Condo</title>
-    <link rel="stylesheet" href="css/dashboard.css">
-    <script src="js/script.js"></script>
+    <style>
+        /* Reset básico */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .top-bar .logo {
+            height: 40px;
+        }
+
+        /* Conteúdo principal */
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 80px; /* Ajuste para ficar logo abaixo da top-bar */
+        }
+
+        /* Container do botão e ícone */
+        .unit-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px; /* Desce os botões */
+        }
+
+        /* Botão principal e ícone do dropdown */
+        .unit-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .unit-btn {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: #1e3c72;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Menu suspenso */
+        .unit-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .unit-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .unit-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .unit-details {
+            flex: 1;
+        }
+
+        .unit-details p {
+            margin: 5px 0;
+        }
+
+        .unit-status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .status-circle {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .verify-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .top-bar {
+                height: 50px;
+            }
+
+            .top-bar .logo {
+                height: 30px;
+            }
+
+            .content {
+                margin-top: 70px;
+            }
+
+            .unit-dropdown-menu {
+                width: 280px;
+            }
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .bottom-bar .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Menu Lateral (Perfil e Sair) */
+        #menu {
+            position: fixed;
+            right: 0;
+            top: 60px;
+            background-color: #fff;
+            border-left: 1px solid #ccc;
+            box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            z-index: 1001;
+        }
+
+        #menu button {
+            background: none;
+            border: none;
+            color: #1e3c72;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+    </style>
 </head>
 <body>
     <div class="top-bar">
-        <img src="logo.png" alt="Logo" class="logo">
+        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
     </div>
-    
-    <div class="content" id="content">
-        <div id="button-list"></div>
-        <button id="add-button">Adicionar novo</button>
+
+    <div class="content">
+        <div class="unit-container">
+            <div class="unit-header">
+                <button class="unit-btn" onclick="window.location.href='cond1.html'">Cond. Maria Augusta</button>
+                <button class="dropdown-btn" id="unit-dropdown-btn">▼</button>
+            </div>
+            <div class="unit-dropdown-menu" id="unitDropdownMenu">
+                <div class="unit-info">
+                    <img src="https://img.expoimovel.com/imagens_classificados/2971/216782_AV_T3279_01.JPG" alt="Foto do Condomínio" class="unit-photo">
+                    <div class="unit-details">
+                        <p><strong>Localização:</strong> Av. Rosa e Silva, 1241 - Graças</p>
+                        <p><strong>CNPJ:</strong> 00.0000/00</p>
+                        <p><strong>Telefone:</strong> (81) 4101-0000</p>
+                        <p><strong>Unidades:</strong> 100</p>
+                    </div>
+                </div>
+                <div class="unit-status">
+                    <div class="status-circle"></div>
+                    <span>Situação: Precisando de manutenção</span>
+                </div>
+                <button class="verify-btn">Verificar</button>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-bar">
-        <button class="nav-btn">🏠</button>
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
         <button class="nav-btn">🔍</button>
         <button class="nav-btn" id="menu-btn">☰</button>
     </div>
@@ -29,5 +268,38 @@
     </div>
 
     <div id="overlay"></div>
+
+    <script>
+        // JavaScript para abrir/fechar o menu suspenso
+        const unitDropdownBtn = document.getElementById('unit-dropdown-btn');
+        const unitDropdownMenu = document.getElementById('unitDropdownMenu');
+
+        unitDropdownBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            unitDropdownMenu.style.display = unitDropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Fechar o menu ao clicar fora dele
+        window.addEventListener('click', (event) => {
+            if (!unitDropdownMenu.contains(event.target) && event.target !== unitDropdownBtn) {
+                unitDropdownMenu.style.display = 'none';
+            }
+        });
+
+        // JavaScript para abrir/fechar o menu lateral
+        const menuBtn = document.getElementById('menu-btn');
+        const menu = document.getElementById('menu');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.addEventListener('click', () => {
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            overlay.style.display = menu.style.display === 'block' ? 'block' : 'none';
+        });
+
+        overlay.addEventListener('click', () => {
+            menu.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+    </script>
 </body>
 </html>

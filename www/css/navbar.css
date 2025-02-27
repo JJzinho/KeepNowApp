@@ -1,0 +1,119 @@
+ /* Reset básico */
+ body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Top Bar */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(90deg, #0346c4, #ff7300);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.top-bar .logo {
+    height: 40px; /* Ajuste o tamanho da logo conforme necessário */
+}
+
+/* Bottom Bar */
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(90deg, #0346c4, #ff7300);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.bottom-bar .nav-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Menu Suspenso */
+.dropdown-menu {
+    display: none;
+    position: fixed;
+    top: 60px; /* Alinhado com a parte inferior da top-bar */
+    right: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    width: 200px; /* Largura maior */
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu ul li {
+    padding: 15px 20px; /* Padding maior para mais espaço */
+    cursor: pointer;
+    color: #333;
+    font-size: 16px; /* Fonte maior */
+    border-bottom: 1px solid #eee; /* Divisória entre os itens */
+}
+
+.dropdown-menu ul li:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.dropdown-menu ul li:hover {
+    background: #f1f1f1;
+}
+
+/* Conteúdo principal */
+.content {
+    padding-top: 60px; /* Para evitar que o conteúdo fique escondido atrás da top-bar */
+    padding-bottom: 60px; /* Para evitar que o conteúdo fique escondido atrás da bottom-bar */
+    height: calc(100% - 120px);
+    overflow-y: auto;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .top-bar, .bottom-bar {
+        height: 50px;
+    }
+
+    .top-bar .logo {
+        height: 30px;
+    }
+
+    .bottom-bar .nav-btn {
+        font-size: 20px;
+    }
+
+    .content {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        height: calc(100% - 100px);
+    }
+
+    .dropdown-menu {
+        top: 50px; /* Ajuste para a altura menor da top-bar em dispositivos móveis */
+        width: 180px; /* Largura menor em dispositivos móveis */
+    }
+}
