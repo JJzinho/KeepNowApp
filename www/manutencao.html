@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keepnow Condo</title>
     <style>
-
-        body {
+             body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -29,8 +28,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            margin-top: 80px; /* Ajuste para ficar logo abaixo da top-bar */
+            justify-content: flex-start;
+            margin-top: 80px;
+            margin-bottom: 80px;
         }
 
         .info-section {
@@ -41,12 +41,13 @@
             max-width: 800px;
             width: 100%;
             display: flex;
+            flex-direction: column;
             align-items: center;
         }
 
         .image-title-container {
             text-align: center;
-            margin-right: 20px;
+            margin-bottom: 20px;
         }
 
         .unit-photo img {
@@ -66,6 +67,12 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         .grid-container p {
@@ -101,6 +108,14 @@
             z-index: 1000;
             width: 300px;
             text-align: left;
+        }
+
+        @media (max-width: 600px) {
+            .dropdown-content {
+                width: 90%;
+                left: 5%;
+                transform: translateX(0);
+            }
         }
 
         .dropdown-content a {
@@ -156,6 +171,85 @@
             align-items: center;
             width: 100%;
         }
+
+        .maintenance-section {
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .add-item-btn {
+            background-color: rgb(255, 187, 0); /* Botão amarelo */
+            color: black; /* Texto preto para melhor contraste */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .add-item-btn:hover {
+            background-color: #ffae00; /* Amarelo mais claro no hover */
+        }
+
+        .form-container {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+        }
+
+        .form-container input,
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background: linear-gradient(90deg, #2a5298, #1e3c72);
+        }
+
+        .item-list {
+            margin-top: 10px;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .item-list .dropdown {
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -179,40 +273,38 @@
             </div>
         </div>
 
-       <h1>Manutenção</h1>
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="toggleDropdown('elevador')" class="nav-btn">Elevador</button>
-                <div id="elevadorDropdown" class="dropdown-content">
-                    <a href="#">Fornecedor: ACTA</a>
-                    <a href="#">Telefone: (11) 91968-9899</a>
-                    <a href="#">Última manutenção: 20/01/2025</a>
-                    <a href="#">Vigência de contrato: 20/01/2025 ≥ 20/01/2025</a>
-                    <button type="button" class="nav-btn" onclick="window.location.href='elevador.html'">Entrar</button>
-                     </div>
-            </div>
-
-            <div class="dropdown">
-                <button onclick="toggleDropdown('reservatorios')" class="nav-btn">Reservatórios</button>
-                <div id="reservatoriosDropdown" class="dropdown-content">
-                    <a href="#">Informações sobre reservatórios</a>
+        <div class="maintenance-section">
+            <h1>Manutenção</h1>
+            <div class="dropdown-container">
+                <div class="dropdown">
+                    <button onclick="toggleDropdown('elevador')" class="nav-btn">Elevador</button>
+                    <div id="elevadorDropdown" class="dropdown-content">
+                        <a href="#">Fornecedor: ACTA</a>
+                        <a href="#">Telefone: (11) 91968-9899</a>
+                        <a href="#">Última manutenção: 20/01/2025</a>
+                        <a href="#">Vigência de contrato: 20/01/2025 ≥ 20/01/2025</a>
+                        <button type="button" class="nav-btn" onclick="window.location.href='elevador.html'">Entrar</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="dropdown">
-                <button onclick="toggleDropdown('bombas')" class="nav-btn">Bombas</button>
-                <div id="bombasDropdown" class="dropdown-content">
-                    <a href="#">Informações sobre bombas</a>
-                </div>
-            </div>
+            <div class="item-list" id="itemList"></div>
 
-            <div class="dropdown">
-                <button onclick="toggleDropdown('gerador')" class="nav-btn">Gerador</button>
-                <div id="geradorDropdown" class="dropdown-content">
-                    <a href="#">Informações sobre gerador</a>
-                </div>
-            </div>
+            <button class="add-item-btn" onclick="mostrarFormulario()">Adicionar Item</button>
         </div>
+
+    </div>
+
+    <div class="form-container" id="formContainer">
+        <input type="text" id="nomeItem" placeholder="Nome do Item">
+        <input type="text" id="fornecedor" placeholder="Fornecedor">
+        <input type="text" id="telefoneFornecedor" placeholder="Telefone">
+        <input type="text" id="ultimaAtualizacao" placeholder="Última Atualização (deixe -)" value="-">
+        <label for="inicioContrato">Vigência do Contrato:</label>
+        <input type="date" id="inicioContrato">
+        <input type="date" id="fimContrato">
+        <button onclick="salvarItem()">Salvar</button>
+        <button onclick="cancelarFormulario()">Cancelar</button>
     </div>
 
     <div class="bottom-bar">
@@ -222,11 +314,66 @@
     </div>
 
     <script>
+        function mostrarFormulario() {
+            document.getElementById("formContainer").style.display = "block";
+        }
+
+        function salvarItem() {
+            const nomeItem = document.getElementById("nomeItem").value;
+            const fornecedor = document.getElementById("fornecedor").value;
+            const telefone = document.getElementById("telefoneFornecedor").value;
+            const ultimaAtualizacao = document.getElementById("ultimaAtualizacao").value;
+            const inicioContrato = document.getElementById("inicioContrato").value;
+            const fimContrato = document.getElementById("fimContrato").value;
+
+            if (!nomeItem || !fornecedor || !telefone || !inicioContrato || !fimContrato) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            const itemList = document.getElementById("itemList");
+            const novoItemContainer = document.createElement("div");
+
+            novoItemContainer.innerHTML = `
+                <div class="dropdown">
+                    <button onclick="toggleDropdown('${nomeItem.replace(/\s+/g, '')}')" class="nav-btn">${nomeItem}</button>
+                    <div id="${nomeItem.replace(/\s+/g, '')}Dropdown" class="dropdown-content">
+                        <p><strong>Fornecedor:</strong> ${fornecedor}</p>
+                        <p><strong>Telefone:</strong> ${telefone}</p>
+                        <p><strong>Última Atualização:</strong> ${ultimaAtualizacao}</p>
+                        <p><strong>Vigência do Contrato:</strong> ${inicioContrato} a ${fimContrato}</p>
+                    </div>
+                </div>
+            `;
+            itemList.appendChild(novoItemContainer);
+
+            // Limpa o formulário
+            document.getElementById("nomeItem").value = "";
+            document.getElementById("fornecedor").value = "";
+            document.getElementById("telefoneFornecedor").value = "";
+            document.getElementById("ultimaAtualizacao").value = "-";
+            document.getElementById("inicioContrato").value = "";
+            document.getElementById("fimContrato").value = "";
+
+            // Oculta o formulário após salvar
+            document.getElementById("formContainer").style.display = "none";
+        }
+
         function toggleDropdown(id) {
+            // Fecha todos os dropdowns abertos
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].id !== id + "Dropdown") {
+                    dropdowns[i].classList.remove("show");
+                }
+            }
+
+            // Abre ou fecha o dropdown clicado
             var dropdown = document.getElementById(id + "Dropdown");
             dropdown.classList.toggle("show");
         }
 
+        // Fecha os dropdowns ao clicar fora
         window.onclick = function(event) {
             if (!event.target.matches('.nav-btn')) {
                 var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -236,11 +383,10 @@
                         openDropdown.classList.remove('show');
                     }
                 }
-
-        
-    
-
             }
+        }
+        function cancelarFormulario() {
+            document.getElementById("formContainer").style.display = "none";
         }
     </script>
 </body>

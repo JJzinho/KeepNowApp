@@ -54,7 +54,6 @@
             margin-top: 30px; /* Desce os botões */
         }
 
-        /* Botão principal e ícone do dropdown */
         .unit-header {
             display: flex;
             align-items: center;
@@ -80,6 +79,30 @@
             color: #1e3c72;
             font-size: 20px;
             cursor: pointer;
+        }
+
+        /* Círculo laranja */
+        .status-circle {
+            width: 15px;
+            height: 15px;
+            background-color: orange;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .status-circle:hover::after {
+            content: "Pendências na unidade";
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
         }
 
         /* Menu suspenso */
@@ -125,14 +148,6 @@
             margin-top: 10px;
         }
 
-        .status-circle {
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
         .verify-btn {
             background: #1e3c72;
             color: white;
@@ -143,6 +158,18 @@
             border-radius: 5px;
             width: 100%;
             margin-top: 10px;
+        }
+
+        /* Botão Adicionar Novo */
+        .add-new-btn {
+            background: #ff7300;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
         }
 
         /* Responsividade */
@@ -224,6 +251,52 @@
             z-index: 1000;
         }
 
+        /* Página de Cadastro */
+        .cadastro-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cadastro-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cadastro-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .cadastro-container input,
+        .cadastro-container textarea,
+        .cadastro-container select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .cadastro-container button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .cadastro-container button:hover {
+            background: #2a5298;
+        }
     </style>
 </head>
 <body>
@@ -234,6 +307,7 @@
     <div class="content">
         <div class="unit-container">
             <div class="unit-header">
+                <div class="status-circle"></div>
                 <button class="unit-btn" onclick="window.location.href='cond1.html'">Cond. Maria Augusta</button>
                 <button class="dropdown-btn" id="unit-dropdown-btn">▼</button>
             </div>
@@ -254,6 +328,7 @@
                 <button class="verify-btn">Verificar</button>
             </div>
         </div>
+        <button class="add-new-btn" onclick="window.location.href='cadastro.html'">Adicionar Novo</button>
     </div>
 
     <div class="bottom-bar">

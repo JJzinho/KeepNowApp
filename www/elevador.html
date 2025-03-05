@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keepnow Condo</title>
+    <title>Keepnow Condo - Elevador</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,54 +49,6 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-        }
-
-        .info-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
-
-        .image-title-container {
-            text-align: center;
-            margin-right: 20px;
-        }
-
-        .unit-photo img {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1.editable {
-            font-size: 1.5em;
-            margin: 10px 0 0;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .grid-container p {
-            margin: 5px 0;
-        }
-
-        .editable {
-            border: 1px solid #ccc;
-            padding: 5px;
-            margin: 5px 0;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .card {
@@ -170,26 +122,68 @@
             border-radius: 5px;
         }
 
+        .edit-button {
+            background-color: #ffc107;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Espaçamento abaixo do botão */
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: none; /* Inicialmente oculto */
+        }
+
+        .cancel-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
         /* Estilos para telas menores (smartphones) */
         @media (max-width: 600px) {
             .content {
                 margin-top: 60px; /* Reduz o espaço acima do conteúdo */
                 padding: 10px; /* Reduz o padding */
-            }
-
-            .info-section {
-                flex-direction: column; /* Empilha os elementos verticalmente */
-                align-items: center;
-                text-align: center;
-            }
-
-            .image-title-container {
-                margin-right: 0; /* Remove a margem à direita */
-                margin-bottom: 20px; /* Adiciona espaço abaixo da foto */
-            }
-
-            .grid-container {
-                grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
             }
 
             .card {
@@ -204,29 +198,12 @@
             .historico-content {
                 padding: 10px; /* Reduz o padding interno */
             }
-
-            .editable {
-                width: 90%; /* Ajusta a largura dos campos editáveis */
-            }
         }
 
         /* Estilos para telas médias (tablets) */
         @media (min-width: 601px) and (max-width: 1024px) {
             .content {
                 margin-top: 70px; /* Ajusta o espaço acima do conteúdo */
-            }
-
-            .info-section {
-                flex-direction: row; /* Mantém os elementos lado a lado */
-                align-items: flex-start;
-            }
-
-            .image-title-container {
-                margin-right: 20px; /* Mantém a margem à direita */
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr); /* Duas colunas */
             }
 
             .card {
@@ -241,19 +218,6 @@
                 margin-top: 80px; /* Mantém o espaço acima do conteúdo */
             }
 
-            .info-section {
-                flex-direction: row; /* Mantém os elementos lado a lado */
-                align-items: flex-start;
-            }
-
-            .image-title-container {
-                margin-right: 20px; /* Mantém a margem à direita */
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr); /* Duas colunas */
-            }
-
             .card {
                 width: 350px; /* Mantém a largura fixa */
             }
@@ -266,31 +230,21 @@
     </div>
 
     <div class="content">
-        <div class="info-section">
-            <div class="image-title-container">
-                <div class="unit-photo">
-                    <img src="https://img.expoimovel.com/imagens_classificados/2971/216782_AV_T3279_01.JPG" alt="Foto da Unidade">
-                </div>
-                <h1 class="editable" id="titulo">Cond. Maria Augusta</h1>
-            </div>
-            <div class="grid-container">
-                <p><strong>CNPJ:</strong> <span class="editable" id="cnpj">00.0000/00</span></p>
-                <p><strong>Endereço:</strong> <span class="editable" id="endereco">Av. Rosa e Silva, 1241 - Graças</span></p>
-                <p><strong>Telefone:</strong> <span class="editable" id="telefone">(81) 4101-0000</span></p>
-            </div>
-        </div>
         <div class="card">
             <div class="title">
                 <div class="dot"></div>
                 Elevador <input type="file" id="contrato" class="file-input" accept=".pdf">
             </div>
-            <p><strong>Fornecedor:</strong> <input type="text" value="ACTA"></p>
-            <p><strong>Última manutenção:</strong> <input type="date" value="2025-01-20"></p>
-            <p><strong>Vigência do contrato:</strong> <input type="text" value="20/01/2023 a 20/01/2025"></p>
+            <p><strong>Fornecedor:</strong> <input type="text" id="fornecedor" value="ACTA" readonly></p>
+            <p><strong>Telefone:</strong> <input type="text" id="telefoneFornecedor" placeholder="(11) 9999-9999" readonly></p>
+            <p><strong>Última manutenção:</strong> <input type="date" id="ultimaManutencao" value="2025-01-20" readonly></p>
+            <p><strong>Vigência do contrato:</strong> <input type="text" id="vigenciaContrato" value="20/01/2023 a 20/01/2025" readonly></p>
+            <button class="edit-button" onclick="editarFornecedor()">Editar Fornecedor</button>
+            <button class="save-button" onclick="salvarEdicao()">Salvar Edição</button>
             <div class="historico" onclick="toggleHistorico()">Histórico de Chamadas</div>
             <div class="historico-content" id="historicoContent">
                 <div id="historicoList"></div>
-                <button class="add-button" onclick="addHistorico()">Adicionar Histórico</button>
+                <button class="add-button" onclick="criarChamado()">Criar Chamado</button>
             </div>
         </div>
     </div>
@@ -302,57 +256,133 @@
     </div>
 
     <script>
+        let historicoChamadas = []; // Array para armazenar as chamadas
+        let fornecedorEditavel = false; // Estado de edição do fornecedor
+
         function toggleHistorico() {
             const content = document.getElementById('historicoContent');
             content.style.display = content.style.display === 'none' ? 'block' : 'none';
         }
 
-        function addHistorico() {
+        function criarChamado() {
             const historicoList = document.getElementById('historicoList');
+            historicoList.innerHTML = ''; // Limpa o conteúdo atual
+
             const div = document.createElement('div');
             div.innerHTML = `
-                <p><strong>Data:</strong> <input type="date"></p>
-                <p><strong>Motivo:</strong> <input type="text"></p>
-                <p><strong>Tipo:</strong> <input type="text"></p>
+                <p><strong>Data:</strong> <input type="date" id="dataChamada"></p>
+                <p><strong>Motivo:</strong> <input type="text" id="motivoChamada"></p>
+                <p><strong>Tipo:</strong> <input type="text" id="tipoChamada"></p>
                 <p><strong>Descrição:</strong></p>
-                <textarea rows="3"></textarea>
-                <p><strong>Anexar Documento:</strong> <input type="file" accept=".pdf"></p>
+                <textarea rows="3" id="descricaoChamada"></textarea>
+                <p><strong>Anexar Documento:</strong> <input type="file" id="anexoChamada" accept=".pdf"></p>
                 <button class="add-button" onclick="salvarHistorico(this)">Salvar</button>
+                <button class="cancel-button" onclick="cancelarChamado()">Cancelar</button>
                 <hr>
             `;
             historicoList.appendChild(div);
         }
 
         function salvarHistorico(button) {
+            // Captura os valores dos campos
+            const data = document.getElementById('dataChamada').value;
+            const motivo = document.getElementById('motivoChamada').value;
+            const tipo = document.getElementById('tipoChamada').value;
+            const descricao = document.getElementById('descricaoChamada').value;
+            const anexo = document.getElementById('anexoChamada').files[0];
+            const telefoneFornecedor = document.getElementById('telefoneFornecedor').value;
+
+            // Cria um objeto com os dados da chamada
+            const chamada = {
+                data,
+                motivo,
+                tipo,
+                descricao,
+                anexo: anexo ? anexo.name : null,
+                telefoneFornecedor
+            };
+
+            // Adiciona a chamada ao array de histórico
+            historicoChamadas.push(chamada);
+
+            // Exibe as chamadas salvas
+            exibirHistorico();
+
+            // Desabilita o botão e altera o texto
             button.disabled = true;
             button.innerText = "Salvo";
         }
 
-        document.getElementById('arquivo').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    localStorage.setItem('uploadedFile', e.target.result);
-                    displayFiles();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function displayFiles() {
-            const fileList = document.getElementById('fileList');
-            fileList.innerHTML = '';
-            const fileData = localStorage.getItem('uploadedFile');
-            if (fileData) {
-                const link = document.createElement('a');
-                link.href = fileData;
-                link.textContent = 'Arquivo PDF';
-                link.target = '_blank';
-                fileList.appendChild(link);
-            }
+        function cancelarChamado() {
+            const historicoList = document.getElementById('historicoList');
+            historicoList.innerHTML = ''; // Limpa o formulário de cadastro
+            exibirHistorico(); // Exibe o histórico novamente
         }
-        displayFiles();
+
+        function exibirHistorico() {
+            const historicoList = document.getElementById('historicoList');
+            historicoList.innerHTML = ''; // Limpa o conteúdo atual
+
+            // Itera sobre o array de chamadas e exibe cada uma
+            historicoChamadas.forEach((chamada, index) => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <p><strong>Data:</strong> ${chamada.data}</p>
+                    <p><strong>Motivo:</strong> ${chamada.motivo}</p>
+                    <p><strong>Tipo:</strong> ${chamada.tipo}</p>
+                    <p><strong>Descrição:</strong> ${chamada.descricao}</p>
+                    ${chamada.anexo ? `<p><strong>Anexo:</strong> ${chamada.anexo}</p>` : ''}
+                    <a class="whatsapp-button" href="${gerarLinkWhatsApp(chamada)}" target="_blank">Contactar via WhatsApp</a>
+                    <hr>
+                `;
+                historicoList.appendChild(div);
+            });
+        }
+
+        function gerarLinkWhatsApp(chamada) {
+            // Formata a mensagem para o WhatsApp
+            const mensagem = `Chamada registrada:\n\nData: ${chamada.data}\nMotivo: ${chamada.motivo}\nTipo: ${chamada.tipo}\nDescrição: ${chamada.descricao}`;
+            const mensagemCodificada = encodeURIComponent(mensagem);
+
+            // Remove caracteres não numéricos do telefone
+            const numeroFornecedor = chamada.telefoneFornecedor.replace(/\D/g, '');
+
+            // Retorna o link do WhatsApp
+            return `https://wa.me/${numeroFornecedor}?text=${mensagemCodificada}`;
+        }
+
+        function editarFornecedor() {
+            const fornecedorInput = document.getElementById('fornecedor');
+            const telefoneInput = document.getElementById('telefoneFornecedor');
+            const vigenciaInput = document.getElementById('vigenciaContrato');
+            const saveButton = document.querySelector('.save-button');
+
+            // Habilita a edição
+            fornecedorInput.readOnly = false;
+            telefoneInput.readOnly = false;
+            vigenciaInput.readOnly = false;
+
+            // Exibe o botão "Salvar Edição"
+            saveButton.style.display = 'block';
+        }
+
+        function salvarEdicao() {
+            const fornecedorInput = document.getElementById('fornecedor');
+            const telefoneInput = document.getElementById('telefoneFornecedor');
+            const vigenciaInput = document.getElementById('vigenciaContrato');
+            const saveButton = document.querySelector('.save-button');
+
+            // Desabilita a edição
+            fornecedorInput.readOnly = true;
+            telefoneInput.readOnly = true;
+            vigenciaInput.readOnly = true;
+
+            // Oculta o botão "Salvar Edição"
+            saveButton.style.display = 'none';
+        }
+
+        // Exibe o histórico ao carregar a página (caso já existam chamadas salvas)
+        exibirHistorico();
     </script>
 </body>
 </html>
