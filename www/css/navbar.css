@@ -48,18 +48,18 @@
     cursor: pointer;
 }
 
-/* Menu Suspenso */
+
 .dropdown-menu {
     display: none;
     position: fixed;
-    top: 60px; /* Alinhado com a parte inferior da top-bar */
+    top: 60px; 
     right: 10px;
     background: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1001;
-    width: 200px; /* Largura maior */
+    width: 200px;
 }
 
 .dropdown-menu ul {
@@ -69,30 +69,28 @@
 }
 
 .dropdown-menu ul li {
-    padding: 15px 20px; /* Padding maior para mais espaço */
+    padding: 15px 20px; 
     cursor: pointer;
     color: #333;
-    font-size: 16px; /* Fonte maior */
-    border-bottom: 1px solid #eee; /* Divisória entre os itens */
+    font-size: 16px; 
+    border-bottom: 1px solid #eee; 
 }
 
 .dropdown-menu ul li:last-child {
-    border-bottom: none; /* Remove a borda do último item */
+    border-bottom: none; 
 }
 
 .dropdown-menu ul li:hover {
     background: #f1f1f1;
 }
 
-/* Conteúdo principal */
 .content {
-    padding-top: 60px; /* Para evitar que o conteúdo fique escondido atrás da top-bar */
-    padding-bottom: 60px; /* Para evitar que o conteúdo fique escondido atrás da bottom-bar */
+    padding-top: 60px; 
+    padding-bottom: 60px; 
     height: calc(100% - 120px);
     overflow-y: auto;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .top-bar, .bottom-bar {
         height: 50px;
@@ -113,7 +111,7 @@
     }
 
     .dropdown-menu {
-        top: 50px; /* Ajuste para a altura menor da top-bar em dispositivos móveis */
-        width: 180px; /* Largura menor em dispositivos móveis */
+        top: 50px; 
+        width: 180px; 
     }
 }
