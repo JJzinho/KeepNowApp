@@ -204,15 +204,13 @@
         <div class="unit-photo-container">
             <!-- Informações com imagem e título no topo -->
             <div class="info-section">
-                <!-- Imagem e título -->
                 <div class="image-title-container">
                     <div class="unit-photo">
                         <img src="https://img.expoimovel.com/imagens_classificados/2971/216782_AV_T3279_01.JPG" alt="Foto da Unidade">
                     </div>
                     <h1 class="editable" id="titulo">Cond. Maria Augusta</h1>
                 </div>
-
-                <!-- Informações em lista -->
+                
                 <div class="info-list">
                     <p><strong>CNPJ:</strong> <span class="editable" id="cnpj">00.0000/00</span></p>
                     <p><strong>Endereço:</strong> <span class="editable" id="endereco">Av. Rosa e Silva, 1241 - Graças</span></p>
@@ -229,42 +227,44 @@
                     <h2>Documentos</h2>
                     <div class="doc-item">
                         <span class="doc-circle"></span>
-                        <button class="doc-btn">Plantas</button>
-                    </div>
-                    <div class="doc-item">
-                        <span class="doc-circle" id="circule-error"></span>
-                        <button class="doc-btn" onclick="window.location.href='manutencao.html'">Manutenção</button>
+                        <button class="doc-btn" onclick="window.location.href='plantas.html'">Plantas</button>                
                     </div>
                     <div class="doc-item">
                         <span class="doc-circle"></span>
-                        <button class="doc-btn">Limpeza</button>
+                        <button class="doc-btn" onclick="window.location.href='limpeza.html'">Limpeza</button>
                     </div>
                     <div class="doc-item">
                         <span class="doc-circle"></span>
-                        <button class="doc-btn">Documentos</button>
+                        <button class="doc-btn" onclick="window.location.href='documentos.html'">Documentos</button>
                     </div>
+                <div class="doc-item">
+                    <span class="doc-circle"></span>
+                    <button class="doc-btn" onclick="window.location.href='atas.html'">ATAS</button>
                 </div>
-
+             <div class="doc-item">
+                <span class="doc-circle"></span>
+                <button class="doc-btn" onclick="window.location.href='obras.html'">Obras</button>
+            </div>
+            <div class="doc-item">
+            <span class="doc-circle" id="circule-error"></span>
+                <button class="doc-btn" onclick="window.location.href='manutencao.html'">Manutenção</button>
+        </div>
                 <!-- Botões de editar e salvar -->
                 <button class="edit-btn" onclick="enableEdit()">Editar Informações</button>
                 <button class="save-btn" onclick="saveChanges()">Salvar</button>
             </div>
         </div>
     </div>
-
     <div class="bottom-bar">
         <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
-        <button class="nav-btn">🔍</button>
+        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
         <button class="nav-btn" id="menu-btn">☰</button>
     </div>
-
     <div id="menu">
         <button>Perfil</button>
         <button id="logout-btn">Sair</button> 
     </div>
-
     <div id="overlay"></div>
-
     <script>
         function enableEdit() {
             const editables = document.querySelectorAll('.editable');

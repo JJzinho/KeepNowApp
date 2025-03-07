@@ -214,20 +214,34 @@
             cursor: pointer;
         }
 
-        /* Menu Lateral (Perfil e Sair) */
-        #menu {
-            position: fixed;
-            right: 0;
-            top: 60px;
-            background-color: #fff;
-            border-left: 1px solid #ccc;
-            box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 20px;
-            z-index: 1001;
-        }
+        .dropdown-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 200px;
+    background-color: orange;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Show the dropdown menu when the button is clicked */
+.show {
+    display: flex;
+}
 
         #menu button {
             background: none;
@@ -333,13 +347,13 @@
 
     <div class="bottom-bar">
         <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
-        <button class="nav-btn">🔍</button>
+        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
         <button class="nav-btn" id="menu-btn">☰</button>
     </div>
 
-    <div id="menu">
-        <button>Perfil</button>
-        <button id="logout-btn">Sair</button> 
+    <div id="dropdown-menu" class="dropdown-menu">
+        <a href="#" class="dropdown-item">Perfil</a>
+        <a href="#" class="dropdown-item">Sair</a>
     </div>
 
     <div id="overlay"></div>
@@ -375,6 +389,24 @@
             menu.style.display = 'none';
             overlay.style.display = 'none';
         });
+
+        document.getElementById('menu-btn').addEventListener('click', function() {
+    var dropdownMenu = document.getElementById('dropdown-menu');
+    dropdownMenu.classList.toggle('show');
+});
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.nav-btn')) {
+        var dropdowns = document.getElementsByClassName('dropdown-menu');
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
     </script>
 </body>
 </html>

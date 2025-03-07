@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo da Top-Bar (Navbar Superior) */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .top-bar .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        /* Estilo do Corpo da Página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Impede a rolagem da página */
+        }
+
+        /* Estilo do Container Principal */
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: fixed; /* Fixa o container no centro */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, textarea, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #documentList {
+            margin-top: 20px;
+            max-height: 300px; /* Altura máxima para a lista de documentos */
+            overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+        }
+
+        .document-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .document-item .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-item .info strong {
+            font-size: 18px;
+        }
+
+        .document-item .info small {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .document-item .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .document-item .actions button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .document-item .actions button.edit-btn {
+            background-color: #ffc107;
+        }
+
+        .document-item .actions button:hover {
+            opacity: 0.8;
+        }
+
+        /* Estilo da Bottom-Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .bottom-bar .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .bottom-bar .nav-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top-Bar (Navbar Superior) -->
+    <div class="top-bar">
+        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <h1>Documentos</h1>
+        <form id="documentForm">
+            <input type="text" id="documentName" placeholder="Nome do Documento" required>
+            <textarea id="documentDescription" placeholder="Descrição Breve" required></textarea>
+            <input type="file" id="documentFile" accept=".txt,.pdf,.doc,.docx" required>
+            <button type="submit" id="submitBtn">Adicionar Documento</button>
+        </form>
+
+        <div id="documentList"></div>
+    </div>
+
+    <!-- Bottom-Bar -->
+    <div class="bottom-bar">
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
+        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
+        <button class="nav-btn" id="menu-btn">☰</button>
+    </div>
+
+    <script>
+        // Array para armazenar os documentos
+        let documents = [];
+        let editingDocumentId = null; // Variável para controlar o documento em edição
+
+        document.getElementById('documentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Pegar valores do formulário
+            const name = document.getElementById('documentName').value;
+            const description = document.getElementById('documentDescription').value;
+            const file = document.getElementById('documentFile').files[0];
+
+            if (name && description && file) {
+                const now = new Date();
+                const timestamp = now.toLocaleString(); // Data e hora formatadas
+
+                if (editingDocumentId !== null) {
+                    // Editar documento existente
+                    const documentIndex = documents.findIndex(doc => doc.id === editingDocumentId);
+                    if (documentIndex !== -1) {
+                        documents[documentIndex] = {
+                            ...documents[documentIndex],
+                            name: name,
+                            description: description,
+                            file: file,
+                            updatedAt: timestamp
+                        };
+                    }
+                    editingDocumentId = null; // Resetar o ID de edição
+                } else {
+                    // Criar um novo documento
+                    const documentItem = {
+                        id: Date.now(), // ID único
+                        name: name,
+                        description: description,
+                        file: file,
+                        createdAt: timestamp,
+                        updatedAt: timestamp
+                    };
+                    documents.push(documentItem);
+                }
+
+                // Atualizar a lista no DOM
+                updateDocumentList();
+
+                // Limpar o formulário
+                document.getElementById('documentForm').reset();
+                document.getElementById('submitBtn').textContent = 'Adicionar Documento';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        });
+
+        function updateDocumentList() {
+            const documentList = document.getElementById('documentList');
+            documentList.innerHTML = ''; // Limpar a lista antes de atualizar
+
+            documents.forEach(doc => {
+                const div = document.createElement('div');
+                div.className = 'document-item';
+                div.dataset.id = doc.id;
+
+                div.innerHTML = `
+                    <div class="info">
+                        <strong>${doc.name}</strong>
+                        <small>Criado em: ${doc.createdAt} | Atualizado em: ${doc.updatedAt}</small>
+                    </div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="editDocument(${doc.id})">Editar</button>
+                        <button onclick="viewDocument(${doc.id})">Ver</button>
+                        <button onclick="deleteDocument(${doc.id})">Excluir</button>
+                    </div>
+                `;
+
+                documentList.appendChild(div);
+            });
+        }
+
+        function editDocument(id) {
+            const documentItem = documents.find(doc => doc.id === id);
+            if (documentItem) {
+                // Preencher o formulário com os dados do documento
+                document.getElementById('documentName').value = documentItem.name;
+                document.getElementById('documentDescription').value = documentItem.description;
+                document.getElementById('submitBtn').textContent = 'Salvar Edição';
+                editingDocumentId = id; // Definir o ID do documento em edição
+            }
+        }
+
+        function viewDocument(id) {
+            const documentItem = documents.find(doc => doc.id === id);
+            if (documentItem) {
+                const fileURL = URL.createObjectURL(documentItem.file);
+                window.open(fileURL, '_blank');
+            }
+        }
+
+        function deleteDocument(id) {
+            const confirmDelete = confirm(`Tem certeza que deseja remover este documento?`);
+            if (confirmDelete) {
+                documents = documents.filter(doc => doc.id !== id);
+                updateDocumentList();
+            }
+        }
+
+        // Inicializar a lista de documentos
+        updateDocumentList();
+    </script>
+</body>
+</html>

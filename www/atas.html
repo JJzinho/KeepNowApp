@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo da Top-Bar (Navbar Superior) */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .top-bar .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        /* Estilo do Corpo da Página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Impede a rolagem da página */
+        }
+
+        /* Estilo do Container Principal */
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* Aumentei a largura para caber mais conteúdo */
+            text-align: center;
+            position: fixed; /* Fixa o container no centro */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, textarea, select, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Estilo da Lista de Atas em Grade */
+        #minutesList {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Cria colunas responsivas */
+            gap: 15px; /* Espaço entre os itens */
+        }
+
+        .minutes-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .minutes-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .minutes-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .minutes-item .info strong {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .minutes-item .info small {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .minutes-item .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .minutes-item .actions button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .minutes-item .actions button.edit-btn {
+            background-color: #ffc107;
+        }
+
+        .minutes-item .actions button:hover {
+            opacity: 0.8;
+        }
+
+        /* Estilo da Bottom-Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .bottom-bar .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .bottom-bar .nav-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top-Bar (Navbar Superior) -->
+    <div class="top-bar">
+        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <h1>Atas</h1>
+        <form id="minutesForm">
+            <input type="text" id="eventName" placeholder="Nome do Evento" required>
+            <textarea id="eventDescription" placeholder="Descrição do Evento" required></textarea>
+            <input type="file" id="eventFile" accept=".pdf,.doc,.docx" required>
+            <button type="submit" id="submitBtn">Criar Ata</button>
+        </form>
+
+        <div id="minutesList"></div>
+    </div>
+
+    <!-- Bottom-Bar -->
+    <div class="bottom-bar">
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
+        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
+        <button class="nav-btn" id="menu-btn">☰</button>
+    </div>
+
+    <script>
+        // Array para armazenar as atas
+        let minutes = [];
+        let editingMinutesId = null; // Variável para controlar a ata em edição
+
+        document.getElementById('minutesForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Pegar valores do formulário
+            const eventName = document.getElementById('eventName').value;
+            const eventDescription = document.getElementById('eventDescription').value;
+            const eventFile = document.getElementById('eventFile').files[0];
+
+            if (eventName && eventDescription && eventFile) {
+                const now = new Date();
+                const timestamp = now.toLocaleString(); // Data e hora formatadas
+
+                if (editingMinutesId !== null) {
+                    // Editar ata existente
+                    const minutesIndex = minutes.findIndex(minute => minute.id === editingMinutesId);
+                    if (minutesIndex !== -1) {
+                        minutes[minutesIndex] = {
+                            ...minutes[minutesIndex],
+                            eventName: eventName,
+                            eventDescription: eventDescription,
+                            eventFile: eventFile,
+                            updatedAt: timestamp
+                        };
+                    }
+                    editingMinutesId = null; // Resetar o ID de edição
+                } else {
+                    // Criar uma nova ata
+                    const minutesItem = {
+                        id: Date.now(), // ID único
+                        eventName: eventName,
+                        eventDescription: eventDescription,
+                        eventFile: eventFile,
+                        createdAt: timestamp,
+                        updatedAt: timestamp
+                    };
+                    minutes.push(minutesItem);
+                }
+
+                // Atualizar a lista no DOM
+                updateMinutesList();
+
+                // Limpar o formulário
+                document.getElementById('minutesForm').reset();
+                document.getElementById('submitBtn').textContent = 'Criar Ata';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        });
+
+        function updateMinutesList() {
+            const minutesList = document.getElementById('minutesList');
+            minutesList.innerHTML = ''; // Limpar a lista antes de atualizar
+
+            minutes.forEach(minute => {
+                const div = document.createElement('div');
+                div.className = 'minutes-item';
+                div.dataset.id = minute.id;
+
+                div.innerHTML = `
+                    <div class="info">
+                        <strong>${minute.eventName}</strong>
+                        <small>${minute.eventDescription}</small>
+                        <small>Criado em: ${minute.createdAt} | Atualizado em: ${minute.updatedAt}</small>
+                    </div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="editMinutes(${minute.id})">Editar</button>
+                        <button onclick="viewMinutes(${minute.id})">Ver Documento</button>
+                        <button onclick="deleteMinutes(${minute.id})">Excluir</button>
+                    </div>
+                `;
+
+                minutesList.appendChild(div);
+            });
+        }
+
+        function editMinutes(id) {
+            const minutesItem = minutes.find(minute => minute.id === id);
+            if (minutesItem) {
+                // Preencher o formulário com os dados da ata
+                document.getElementById('eventName').value = minutesItem.eventName;
+                document.getElementById('eventDescription').value = minutesItem.eventDescription;
+                document.getElementById('submitBtn').textContent = 'Salvar Edição';
+                editingMinutesId = id; // Definir o ID da ata em edição
+            }
+        }
+
+        function viewMinutes(id) {
+            const minutesItem = minutes.find(minute => minute.id === id);
+            if (minutesItem) {
+                const fileURL = URL.createObjectURL(minutesItem.eventFile);
+                window.open(fileURL, '_blank');
+            }
+        }
+
+        function deleteMinutes(id) {
+            const confirmDelete = confirm(`Tem certeza que deseja remover esta ata?`);
+            if (confirmDelete) {
+                minutes = minutes.filter(minute => minute.id !== id);
+                updateMinutesList();
+            }
+        }
+
+        // Inicializar a lista de atas
+        updateMinutesList();
+    </script>
+</body>
+</html>

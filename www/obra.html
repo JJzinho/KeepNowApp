@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo da Top-Bar (Navbar Superior) */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .top-bar .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        /* Estilo do Corpo da Página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Impede a rolagem da página */
+        }
+
+        /* Estilo do Container Principal */
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* Aumentei a largura para caber mais conteúdo */
+            text-align: center;
+            position: fixed; /* Fixa o container no centro */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, textarea, select, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Estilo da Lista de Obras em Grade */
+        #worksList {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Cria colunas responsivas */
+            gap: 15px; /* Espaço entre os itens */
+        }
+
+        .work-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .work-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .work-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .work-item .info strong {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .work-item .info small {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .work-item .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .work-item .actions button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .work-item .actions button.edit-btn {
+            background-color: #ffc107;
+        }
+
+        .work-item .actions button:hover {
+            opacity: 0.8;
+        }
+
+        /* Estilo da Bottom-Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .bottom-bar .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .bottom-bar .nav-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top-Bar (Navbar Superior) -->
+    <div class="top-bar">
+        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <h1>Obras</h1>
+        <form id="worksForm">
+            <input type="text" id="workName" placeholder="Nome da Obra" required>
+            <select id="workType" required>
+                <option value="">Selecione o tipo de obra</option>
+                <option value="manutencao">Manutenção</option>
+                <option value="reparo">Reparo</option>
+                <option value="estrutura">Estrutural</option>
+                <option value="outro">Outro</option>
+            </select>
+            <textarea id="workDescription" placeholder="Descrição da Obra" required></textarea>
+            <input type="file" id="workFile" accept=".pdf,.doc,.docx" required>
+            <button type="submit" id="submitBtn">Criar Obra</button>
+        </form>
+
+        <div id="worksList"></div>
+    </div>
+
+    <!-- Bottom-Bar -->
+    <div class="bottom-bar">
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
+        <button class="nav-btn">🔍</button>
+        <button class="nav-btn" id="menu-btn">☰</button>
+    </div>
+
+    <script>
+        // Array para armazenar as obras
+        let works = [];
+        let editingWorkId = null; // Variável para controlar a obra em edição
+
+        document.getElementById('worksForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Pegar valores do formulário
+            const workName = document.getElementById('workName').value;
+            const workType = document.getElementById('workType').value;
+            const workDescription = document.getElementById('workDescription').value;
+            const workFile = document.getElementById('workFile').files[0];
+
+            if (workName && workType && workDescription && workFile) {
+                const now = new Date();
+                const timestamp = now.toLocaleString(); // Data e hora formatadas
+
+                if (editingWorkId !== null) {
+                    // Editar obra existente
+                    const workIndex = works.findIndex(work => work.id === editingWorkId);
+                    if (workIndex !== -1) {
+                        works[workIndex] = {
+                            ...works[workIndex],
+                            workName: workName,
+                            workType: workType,
+                            workDescription: workDescription,
+                            workFile: workFile,
+                            updatedAt: timestamp
+                        };
+                    }
+                    editingWorkId = null; // Resetar o ID de edição
+                } else {
+                    // Criar uma nova obra
+                    const workItem = {
+                        id: Date.now(), // ID único
+                        workName: workName,
+                        workType: workType,
+                        workDescription: workDescription,
+                        workFile: workFile,
+                        createdAt: timestamp,
+                        updatedAt: timestamp
+                    };
+                    works.push(workItem);
+                }
+
+                // Atualizar a lista no DOM
+                updateWorksList();
+
+                // Limpar o formulário
+                document.getElementById('worksForm').reset();
+                document.getElementById('submitBtn').textContent = 'Criar Obra';
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        });
+
+        function updateWorksList() {
+            const worksList = document.getElementById('worksList');
+            worksList.innerHTML = ''; // Limpar a lista antes de atualizar
+
+            works.forEach(work => {
+                const div = document.createElement('div');
+                div.className = 'work-item';
+                div.dataset.id = work.id;
+
+                div.innerHTML = `
+                    <div class="info">
+                        <strong>${work.workName}</strong>
+                        <small>Tipo: ${work.workType}</small>
+                        <small>${work.workDescription}</small>
+                        <small>Criado em: ${work.createdAt} | Atualizado em: ${work.updatedAt}</small>
+                    </div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="editWork(${work.id})">Editar</button>
+                        <button onclick="viewWork(${work.id})">Ver Documento</button>
+                        <button onclick="deleteWork(${work.id})">Excluir</button>
+                    </div>
+                `;
+
+                worksList.appendChild(div);
+            });
+        }
+
+        function editWork(id) {
+            const workItem = works.find(work => work.id === id);
+            if (workItem) {
+                // Preencher o formulário com os dados da obra
+                document.getElementById('workName').value = workItem.workName;
+                document.getElementById('workType').value = workItem.workType;
+                document.getElementById('workDescription').value = workItem.workDescription;
+                document.getElementById('submitBtn').textContent = 'Salvar Edição';
+                editingWorkId = id; // Definir o ID da obra em edição
+            }
+        }
+
+        function viewWork(id) {
+            const workItem = works.find(work => work.id === id);
+            if (workItem) {
+                const fileURL = URL.createObjectURL(workItem.workFile);
+                window.open(fileURL, '_blank');
+            }
+        }
+
+        function deleteWork(id) {
+            const confirmDelete = confirm(`Tem certeza que deseja remover esta obra?`);
+            if (confirmDelete) {
+                works = works.filter(work => work.id !== id);
+                updateWorksList();
+            }
+        }
+
+        // Inicializar a lista de obras
+        updateWorksList();
+    </script>
+</body>
+</html>

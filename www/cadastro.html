@@ -98,6 +98,44 @@
             background: #e65c00;
         }
 
+        /* Botão "Cancelar" */
+        .cancelar-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .cancelar-btn:hover {
+            background: #cc0000;
+        }
+
+        /* Seção de Manutenção */
+        .manutencao-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ccc;
+        }
+
+        .item-manutencao {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .item-manutencao .cancelar-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
         /* Bottom Bar */
         .bottom-bar {
             position: fixed;
@@ -119,6 +157,35 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 200px;
+            background-color: orange;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .dropdown-item {
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .show {
+            display: flex;
         }
     </style>
 </head>
@@ -160,33 +227,43 @@
             <label>Atas (opcional):</label>
             <input type="file" id="atas" name="atas" accept=".pdf">
 
-            <label>Manutenção:</label>
-            <div id="manutencao">
-                <div class="item-manutencao">
-                    <input type="text" placeholder="Nome do item" required>
-                    <input type="text" placeholder="Localização (opcional)">
-                    <input type="text" placeholder="Período de manutenção" required>
-                    <select>
-                        <option value="nao">Não há fornecedor</option>
-                        <option value="sim">Sim, há fornecedor</option>
-                    </select>
-                    <input type="text" placeholder="Nome do fornecedor (se houver)">
-                    <input type="text" placeholder="Contato do fornecedor (se houver)">
+            <!-- Seção de Manutenção -->
+            <div class="manutencao-section">
+                <label>Manutenção:</label>
+                <div id="manutencao">
+                    <div class="item-manutencao">
+                        <input type="text" placeholder="Nome do item" required>
+                        <input type="text" placeholder="Localização (opcional)">
+                        <input type="text" placeholder="Período de manutenção" required>
+                        <select>
+                            <option value="nao">Não há fornecedor</option>
+                            <option value="sim">Sim, há fornecedor</option>
+                        </select>
+                        <input type="text" placeholder="Nome do fornecedor (se houver)">
+                        <input type="text" placeholder="Contato do fornecedor (se houver)">
+                        <button type="button" class="cancelar-btn" onclick="removerItemManutencao(this)">X</button>
+                    </div>
                 </div>
+                <button type="button" class="add-item-btn" onclick="adicionarItemManutencao()">Adicionar item de manutenção</button>
             </div>
-            <button type="button" class="add-item-btn" onclick="adicionarItemManutencao()">Adicionar item de manutenção</button>
 
-            <button type="submit">Salvar</button>
+            <button type="submit" class="salvar-btn">Salvar Condomínio</button>
         </form>
     </div>
 
     <div class="bottom-bar">
         <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
-        <button class="nav-btn">🔍</button>
+        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
         <button class="nav-btn" id="menu-btn">☰</button>
     </div>
 
+    <div id="dropdown-menu" class="dropdown-menu">
+        <a href="#" class="dropdown-item">Perfil</a>
+        <a href="#" class="dropdown-item">Sair</a>
+    </div>
+
     <script>
+        // Função para adicionar itens de manutenção
         function adicionarItemManutencao() {
             const container = document.getElementById('manutencao');
             const novoItem = document.createElement('div');
@@ -201,21 +278,76 @@
                 </select>
                 <input type="text" placeholder="Nome do fornecedor (se houver)">
                 <input type="text" placeholder="Contato do fornecedor (se houver)">
+                <button type="button" class="cancelar-btn" onclick="removerItemManutencao(this)">X</button>
             `;
             container.appendChild(novoItem);
         }
 
+        // Função para remover itens de manutenção
+        function removerItemManutencao(botao) {
+            const item = botao.parentElement;
+            item.remove();
+        }
+
+        // Evento de submit do formulário
         document.getElementById('cadastroForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            // Simulação de salvamento dos dados
+
+            // Captura os dados do formulário
             const nomeCondominio = document.getElementById('nome').value;
             const cnpjCondominio = document.getElementById('cnpj').value;
             const enderecoCondominio = document.getElementById('endereco').value;
             const blocosCondominio = document.getElementById('blocos').value;
             const moradoresCondominio = document.getElementById('moradores').value;
 
+            // Captura os itens de manutenção
+            const itensManutencao = [];
+            document.querySelectorAll('.item-manutencao').forEach(item => {
+                const nomeItem = item.querySelector('input[type="text"]').value;
+                const localizacao = item.querySelectorAll('input[type="text"]')[1].value;
+                const periodo = item.querySelectorAll('input[type="text"]')[2].value;
+                const fornecedor = item.querySelector('select').value;
+                const nomeFornecedor = item.querySelectorAll('input[type="text"]')[3].value;
+                const contatoFornecedor = item.querySelectorAll('input[type="text"]')[4].value;
+
+                itensManutencao.push({
+                    nomeItem,
+                    localizacao,
+                    periodo,
+                    fornecedor,
+                    nomeFornecedor,
+                    contatoFornecedor
+                });
+            });
+
             // Redireciona para a dashboard com os dados cadastrados
-            window.location.href = `dashboard.html?nome=${encodeURIComponent(nomeCondominio)}&cnpj=${encodeURIComponent(cnpjCondominio)}&endereco=${encodeURIComponent(enderecoCondominio)}&blocos=${encodeURIComponent(blocosCondominio)}&moradores=${encodeURIComponent(moradoresCondominio)}`;
+            const queryParams = new URLSearchParams({
+                nome: nomeCondominio,
+                cnpj: cnpjCondominio,
+                endereco: enderecoCondominio,
+                blocos: blocosCondominio,
+                moradores: moradoresCondominio,
+                manutencao: JSON.stringify(itensManutencao)
+            });
+
+            window.location.href = `dashboard.html?${queryParams.toString()}`;
+        });
+
+        // Evento para abrir/fechar o menu suspenso
+        document.getElementById('menu-btn').addEventListener('click', function(event) {
+            event.stopPropagation();
+            var dropdownMenu = document.getElementById('dropdown-menu');
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Fechar o menu suspenso ao clicar fora dele
+        document.addEventListener('click', function(event) {
+            var dropdownMenu = document.getElementById('dropdown-menu');
+            var menuBtn = document.getElementById('menu-btn');
+
+            if (!dropdownMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+            }
         });
     </script>
 </body>
