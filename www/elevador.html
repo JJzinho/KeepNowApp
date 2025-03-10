@@ -191,10 +191,6 @@
                 max-width: 350px; /* Limita a largura máxima */
             }
 
-            .bottom-bar .nav-btn {
-                font-size: 20px; /* Reduz o tamanho dos ícones */
-            }
-
             .historico-content {
                 padding: 10px; /* Reduz o padding interno */
             }
@@ -222,13 +218,85 @@
                 width: 350px; /* Mantém a largura fixa */
             }
         }
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-top: 50px;
+        }
+
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        .carousel-prev {
+            left: 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .carousel-next {
+            right: 0;
+            border-radius: 5px 0 0 5px;
+        }
+
+        @media (max-width: 600px) {
+            .slide img {
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
+
+    </div>
+    <div class="carousel-container">
+        <div class="carousel-slide">
+            <div class="slide">
+                <img src="https://th.bing.com/th/id/R.f8a050e9508de375e80f84b2cd0ae2cb?rik=sehSCMU5Sm%2bigA&riu=http%3a%2f%2fwww.msdesigns.com.br%2fwp-content%2fuploads%2f2019%2f09%2felevador.jpg&ehk=kYnppTtklzrqvKyxlyzOtYh9npnwFER9XQ9fEHgAp8U%3d&risl=&pid=ImgRaw&r=0" alt="Manutenção 1">
+            </div>
+            <div class="slide">
+                <img src="https://th.bing.com/th/id/R.c27ed11427eebcecca3bec303f7aa4e5?rik=tue9eovpJkU5UQ&pid=ImgRaw&r=0" alt="Manutenção 2">
+            </div>
+            <div class="slide">
+                <img src="https://th.bing.com/th/id/OIP.gJo6XKkU6Tw0byQ3l4FtzgHaFS?w=570&h=407&rs=1&pid=ImgDetMain" alt="Manutenção 3">
+            </div>
+        </div>
+        <button class="carousel-btn carousel-prev">❮</button>
+        <button class="carousel-btn carousel-next">❯</button>
     </div>
 
+    <div class="content">
     <div class="content">
         <div class="card">
             <div class="title">
@@ -383,6 +451,41 @@
 
         // Exibe o histórico ao carregar a página (caso já existam chamadas salvas)
         exibirHistorico();
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideWrapper = document.querySelector('.carousel-slide');
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            slideWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // Autoplay a cada 5 segundos
+        let autoplay = setInterval(nextSlide, 5000);
+
+        // Pausar autoplay ao interagir
+        document.querySelector('.carousel-container').addEventListener('mouseenter', () => {
+            clearInterval(autoplay);
+        });
+
+        document.querySelector('.carousel-container').addEventListener('mouseleave', () => {
+            autoplay = setInterval(nextSlide, 5000);
+        });
+
+        // Eventos dos botões
+        document.querySelector('.carousel-prev').addEventListener('click', prevSlide);
+        document.querySelector('.carousel-next').addEventListener('click', nextSlide);
     </script>
 </body>
 </html>

@@ -37,13 +37,13 @@
         }
 
         .container {
-            max-width: 600px; /* Aumentei um pouco para melhorar a leitura */
+            max-width: 600px;
             margin: auto;
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px; /* Espaçamento entre o top-bar e o conteúdo */
+            margin-top: 20px;
         }
 
         h2 {
@@ -61,6 +61,12 @@
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .empresa:hover {
+            background-color: #f9f9f9;
         }
 
         .empresa img {
@@ -69,6 +75,16 @@
             background: #ccc;
             border-radius: 5px;
             margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .empresa div {
+            flex: 1;
+        }
+
+        .empresa strong {
+            color: #3a2376;
+            font-size: 16px;
         }
 
         .empresa p {
@@ -87,6 +103,11 @@
             border-radius: 5px;
             text-decoration: none;
             margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .botao:hover {
+            background-color: #2a1a5a;
         }
 
         .bottom-bar {
@@ -109,6 +130,11 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .bottom-bar .nav-btn:hover {
+            color: #ddd;
         }
 
         .dropdown-menu {
@@ -118,6 +144,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             z-index: 1001;
+            right: 10px;
+            bottom: 70px;
         }
 
         .dropdown-menu.show {
@@ -129,6 +157,7 @@
             padding: 10px 20px;
             color: #333;
             text-decoration: none;
+            transition: background-color 0.3s ease;
         }
 
         .dropdown-item:hover {
@@ -144,10 +173,10 @@
     <div class="container">
         <h2>Empresas de Manutenção:</h2>
         <h3>Empresas Cadastradas</h3>
-        <p>Entre em contato com empresas registradas pelo usuário através do aplicativo.</p>
+        <p>Entre em contato com empresas parceiras da KeepNow</p>
         
-        <div class="empresa">
-            <img src="placeholder.png" alt="Empresa">
+        <div class="empresa" onclick="window.location.href='vanoli.html'">
+            <img src="images/icons/vanoli.png" alt="VANOLI. ENG.">
             <div>
                 <strong>VANOLI. ENG.</strong>
                 <p>Empresa especializada em:</p>
@@ -157,8 +186,8 @@
             </div>
         </div>
         
-        <div class="empresa">
-            <img src="placeholder.png" alt="Empresa">
+        <div class="empresa" onclick="window.location.href='backempress.html'">
+            <img src="images/icons/logo de uma empressa chamada back empress.png" alt="BACK. EMPRESS.">
             <div>
                 <strong>BACK. EMPRESS.</strong>
                 <p>Empresa especializada em:</p>
@@ -168,8 +197,8 @@
             </div>
         </div>
         
-        <div class="empresa">
-            <img src="placeholder.png" alt="Empresa">
+        <div class="empresa" onclick="window.location.href='frontempress.html'">
+            <img src="images/icons/logo de uma empressa chamada front empress.png" alt="FRONT. EMPRESS.">
             <div>
                 <strong>FRONT. EMPRESS.</strong>
                 <p>Empresa especializada em:</p>

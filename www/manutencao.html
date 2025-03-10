@@ -16,11 +16,17 @@
             background: linear-gradient(90deg, #0346c4, #ff7300);
             padding: 10px;
             text-align: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
 
         .top-bar .logo {
             max-width: 100px;
             height: auto;
+            width: 100%;
         }
 
         .content {
@@ -30,107 +36,93 @@
             align-items: center;
             justify-content: flex-start;
             margin-top: 80px;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .info-section {
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 250px;
+            margin: 90px auto 20px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-inner {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .maintenance-background {
+            width: 100%;
+            padding: 20px 0;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            display: flex;
+            justify-content: center;
+        }
+
+        .maintenance-section {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .image-title-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .unit-photo img {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1.editable {
-            font-size: 1.5em;
-            margin: 10px 0 0;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .grid-container p {
-            margin: 5px 0;
-        }
-
-        .editable {
-            border: 1px solid #ccc;
-            padding: 5px;
-            margin: 5px 0;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .dropdown {
+            margin-left: auto;
+            margin-right: auto;
             position: relative;
-            display: inline-block;
-            margin: 10px 0;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            z-index: 1000;
-            width: 300px;
-            text-align: left;
+        .dropdown-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
-        @media (max-width: 600px) {
-            .dropdown-content {
-                width: 90%;
-                left: 5%;
-                transform: translateX(0);
-            }
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .show {
-            display: block;
+        .item-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 300px;
+            margin: 5px 0;
         }
 
         .nav-btn {
@@ -141,66 +133,32 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 5px 0;
+            flex: 1;
+            margin-right: 10px;
         }
 
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #0346c4, #ff7300);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .bottom-bar .nav-btn {
+        .arrow-btn {
             background: none;
             border: none;
-            color: white;
+            color: #1e3c72;
             font-size: 24px;
             cursor: pointer;
+            padding: 5px;
+            margin-left: 10px;
         }
 
-        .dropdown-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .maintenance-section {
-            margin-top: 20px;
-            width: 100%;
-            text-align: center;
+        .dropdown-content {
+            display: none;
+            position: absolute;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .add-item-btn {
-            background-color: rgb(255, 187, 0); /* Botão amarelo */
-            color: black; /* Texto preto para melhor contraste */
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            margin-top: 20px;
-            margin-bottom: 20px; /* Adicionado para evitar colar no bottom-bar */
-            width: 100%;
-            max-width: 200px;
-        }
-
-        .add-item-btn:hover {
-            background-color: #ffae00; /* Amarelo mais claro no hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+            width: 350px;
+            text-align: left;
+            margin-top: 5px;
         }
 
         .form-container {
@@ -219,89 +177,27 @@
             z-index: 1001;
         }
 
-        .form-container input,
-        .form-container button {
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .form-container button {
-            background: linear-gradient(90deg, #1e3c72, #2a5298);
-            color: white;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background: linear-gradient(90deg, #2a5298, #1e3c72);
-        }
-
-        .item-list {
-            margin-top: 10px;
-            width: 100%;
-            max-width: 800px;
+            height: 60px;
+            background: linear-gradient(90deg, #0346c4, #ff7300);
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
-
-        .item-list .dropdown {
-            margin: 5px;
-        }
-
-        .carousel {
-            position: relative;
-            width: 100%;
-            max-width: 400px; /* Reduzido de 600px para 400px */
-            margin: 20px auto;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .carousel-inner {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-item {
-            min-width: 100%;
-            box-sizing: border-box;
-        }
-
-        .carousel-item img {
-            width: 100%;
-            display: block;
-        }
-
-        .carousel-control {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
+        .bottom-bar .nav-btn {
+            background: none;
             border: none;
-            padding: 10px;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
-            z-index: 100;
         }
 
-        .carousel-control.prev {
-            left: 10px;
-        }
-
-        .carousel-control.next {
-            right: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .carousel {
-                max-width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
@@ -325,34 +221,38 @@
         <button class="carousel-control next" onclick="nextSlide()">❯</button>
     </div>
 
-    <div class="maintenance-section">
-        <h1>Manutenção</h1>
-        <div class="dropdown-container">
-            <div class="dropdown">
-                <button onclick="toggleDropdown('elevador')" class="nav-btn">Elevador</button>
+    <div class="maintenance-background">
+        <div class="maintenance-section">
+            <h1>Manutenção</h1>
+            <div class="dropdown-container">
+                <div class="item-container">
+                    <button class="nav-btn" onclick="window.location.href='elevador.html'">Elevador</button>
+                    <button class="arrow-btn" onclick="toggleDropdown('elevador')">▼</button>
+                </div>
                 <div id="elevadorDropdown" class="dropdown-content">
-                    <a href="#">Fornecedor: ACTA</a>
-                    <a href="#">Telefone: (11) 91968-9899</a>
-                    <a href="#">Última manutenção: 20/01/2025</a>
-                    <a href="#">Vigência de contrato: 20/01/2025 ≥ 20/01/2025</a>
-                    <button type="button" class="nav-btn" onclick="window.location.href='elevador.html'">Entrar</button>
+                    <p><strong>Fornecedor:</strong> ACTA</p>
+                    <p><strong>Telefone:</strong> (11) 91968-9899</p>
+                    <p><strong>Última manutenção:</strong> 20/01/2025</p>
+                    <p><strong>Vigência de contrato:</strong> 20/01/2025 ≥ 20/01/2025</p>
                 </div>
             </div>
+            <div class="item-list" id="itemList"></div>
+            <button class="nav-btn" onclick="mostrarFormulario()" style="background: #ffbb00; color: black; margin-top: 20px;">
+                Adicionar Item
+            </button>
         </div>
-        <div class="item-list" id="itemList"></div>
-        <button class="add-item-btn" onclick="mostrarFormulario()">Adicionar Item</button>
     </div>
 
     <div class="form-container" id="formContainer">
         <input type="text" id="nomeItem" placeholder="Nome do Item">
         <input type="text" id="fornecedor" placeholder="Fornecedor">
         <input type="text" id="telefoneFornecedor" placeholder="Telefone">
-        <input type="text" id="ultimaAtualizacao" placeholder="Última Atualização (deixe -)" value="-">
+        <input type="text" id="ultimaAtualizacao" placeholder="Última Atualização" value="-">
         <label for="inicioContrato">Vigência do Contrato:</label>
         <input type="date" id="inicioContrato">
         <input type="date" id="fimContrato">
-        <button onclick="salvarItem()">Salvar</button>
-        <button onclick="cancelarFormulario()">Cancelar</button>
+        <button class="nav-btn" onclick="salvarItem()">Salvar</button>
+        <button class="nav-btn" onclick="cancelarFormulario()" style="background: #ccc; color: black;">Cancelar</button>
     </div>
 
     <div class="bottom-bar">
@@ -367,26 +267,25 @@
         const totalItems = document.querySelectorAll('.carousel-item').length;
 
         function showSlide(index) {
-            if (index < 0) {
-                index = totalItems - 1;
-            } else if (index >= totalItems) {
-                index = 0;
-            }
+            if (index < 0) index = totalItems - 1;
+            else if (index >= totalItems) index = 0;
+            
             currentIndex = index;
-            const offset = -currentIndex * 100;
-            carouselInner.style.transform = `translateX(${offset}%)`;
+            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
         }
 
-        function nextSlide() {
-            showSlide(currentIndex + 1);
-        }
-
-        function prevSlide() {
-            showSlide(currentIndex - 1);
-        }
-
-        // Auto-rotate the carousel every 5 seconds
+        function nextSlide() { showSlide(currentIndex + 1); }
+        function prevSlide() { showSlide(currentIndex - 1); }
         setInterval(nextSlide, 5000);
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id + 'Dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            
+            document.querySelectorAll('.dropdown-content').forEach(element => {
+                if(element.id !== id + 'Dropdown') element.style.display = 'none';
+            });
+        }
 
         function mostrarFormulario() {
             document.getElementById("formContainer").style.display = "block";
@@ -396,7 +295,6 @@
             const nomeItem = document.getElementById("nomeItem").value;
             const fornecedor = document.getElementById("fornecedor").value;
             const telefone = document.getElementById("telefoneFornecedor").value;
-            const ultimaAtualizacao = document.getElementById("ultimaAtualizacao").value;
             const inicioContrato = document.getElementById("inicioContrato").value;
             const fimContrato = document.getElementById("fimContrato").value;
 
@@ -405,62 +303,40 @@
                 return;
             }
 
-            const itemList = document.getElementById("itemList");
-            const novoItemContainer = document.createElement("div");
-
-            novoItemContainer.innerHTML = `
-                <div class="dropdown">
-                    <button onclick="toggleDropdown('${nomeItem.replace(/\s+/g, '')}')" class="nav-btn">${nomeItem}</button>
-                    <div id="${nomeItem.replace(/\s+/g, '')}Dropdown" class="dropdown-content">
-                        <p><strong>Fornecedor:</strong> ${fornecedor}</p>
-                        <p><strong>Telefone:</strong> ${telefone}</p>
-                        <p><strong>Última Atualização:</strong> ${ultimaAtualizacao}</p>
-                        <p><strong>Vigência do Contrato:</strong> ${inicioContrato} a ${fimContrato}</p>
-                    </div>
+            const newItem = document.createElement('div');
+            newItem.className = 'dropdown-container';
+            newItem.innerHTML = `
+                <div class="item-container">
+                    <button class="nav-btn">${nomeItem}</button>
+                    <button class="arrow-btn" onclick="toggleDropdown('${nomeItem.replace(/\s/g, '')}')">▼</button>
+                </div>
+                <div id="${nomeItem.replace(/\s/g, '')}Dropdown" class="dropdown-content">
+                    <p><strong>Fornecedor:</strong> ${fornecedor}</p>
+                    <p><strong>Telefone:</strong> ${telefone}</p>
+                    <p><strong>Última Atualização:</strong> -</p>
+                    <p><strong>Vigência de contrato:</strong> ${inicioContrato} ≥ ${fimContrato}</p>
                 </div>
             `;
-            itemList.appendChild(novoItemContainer);
 
-            // Limpa o formulário
+            document.getElementById("itemList").appendChild(newItem);
+            document.getElementById("formContainer").style.display = "none";
             document.getElementById("nomeItem").value = "";
             document.getElementById("fornecedor").value = "";
             document.getElementById("telefoneFornecedor").value = "";
-            document.getElementById("ultimaAtualizacao").value = "-";
             document.getElementById("inicioContrato").value = "";
             document.getElementById("fimContrato").value = "";
-
-            // Oculta o formulário após salvar
-            document.getElementById("formContainer").style.display = "none";
         }
 
-        function toggleDropdown(id) {
-            // Fecha todos os dropdowns abertos
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            for (var i = 0; i < dropdowns.length; i++) {
-                if (dropdowns[i].id !== id + "Dropdown") {
-                    dropdowns[i].classList.remove("show");
-                }
-            }
-
-            // Abre ou fecha o dropdown clicado
-            var dropdown = document.getElementById(id + "Dropdown");
-            dropdown.classList.toggle("show");
-        }
-
-        // Fecha os dropdowns ao clicar fora
-        window.onclick = function(event) {
-            if (!event.target.matches('.nav-btn')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
         function cancelarFormulario() {
             document.getElementById("formContainer").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.nav-btn') && !event.target.matches('.arrow-btn')) {
+                document.querySelectorAll('.dropdown-content').forEach(element => {
+                    element.style.display = 'none';
+                });
+            }
         }
     </script>
 </body>
