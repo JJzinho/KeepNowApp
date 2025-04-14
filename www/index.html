@@ -3,626 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condomínio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@500;700&display=swap" rel="stylesheet">
+    <title>Cadastro de Condomínio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
     <style>
         :root {
             --primary: #4B39EF;
-            --primary-background: #F1F4F8;
-            --secondary-background: #FFFFFF;
-            --info: #FFFFFF;
-            --orange: #FF7000;
-            --orange-light: #FF6F00;
-            --orange-lighter: #FF9A00;
-            --error: #FF5963;
-            --alternate: #E0E3E7;
-            --primary-text: #14181B;
-            --secondary-text: #57636C;
-            --success: #4CAF50;
+            --background: #F1F4F8;
+            --card-bg: #FFFFFF;
+            --text-primary: #14181B;
+            --text-secondary: #57636C;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--primary-background); line-height: 1.5; }
-        .app-bar { background-color: var(--primary); height: 50px; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); position: relative; }
-        .app-bar .menu-button { background: none; border: none; color: var(--info); font-size: 30px; cursor: pointer; z-index: 1; }
-        .app-bar .logo { position: absolute; left: 50%; transform: translateX(-50%); height: 65px; top: -5px; }
-        .condo-image { width: 271px; max-width: 90%; height: 130px; object-fit: cover; border-radius: 8px; margin: 10px auto; display: block; }
-        .condo-name { text-align: center; font-family: 'Inter Tight', sans-serif; font-size: 24px; font-weight: bold; margin: 5px 0 15px 0; color: var(--primary-text); }
-        .info-card { background-color: var(--secondary-background); border-radius: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); margin: 16px; padding: 16px; }
-        .info-title { text-align: center; font-family: 'Inter Tight', sans-serif; font-size: 18px; font-weight: bold; margin-bottom: 16px; color: var(--primary-text); }
-        .info-row, .modal-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 14px; color: var(--secondary-text); }
-        .info-row span:last-child, .modal-row span:last-child { color: var(--primary-text); margin-left: 5px; word-break: break-word; }
-        .info-icon, .modal-row .info-icon { color: var(--orange); margin-right: 8px; font-size: 20px; flex-shrink: 0;}
-        .button { padding: 8px 16px; border-radius: 16px; border: none; color: white; font-family: 'Inter Tight', sans-serif; font-size: 14px; cursor: pointer; height: 35px; width: 150px; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
-        .button-primary { background-color: var(--primary); }
-        .button-orange { background-color: var(--orange-lighter); }
-        .button-success { background-color: var(--success); }
-        .tickets-card { background-color: var(--secondary-background); border-radius: 8px; box-shadow: 0 2px 4px rgba(9, 15, 19, 0.2); margin: 16px; padding: 12px; width: calc(100% - 32px); }
-        .tickets-title { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 600; text-align: center; margin: 4px 0 16px 0; color: var(--primary-text); }
-        .contacts-list-title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: bold; color: var(--primary-text); margin: 16px 0 8px 5px; text-align: left; }
-        .tickets-buttons { display: flex; flex-wrap: wrap; justify-content: space-evenly; margin-top: 16px; gap: 10px; }
-        .contacts-list { margin-top: 8px; max-height: 250px; overflow-y: auto; border: 1px solid var(--alternate); border-radius: 8px; padding: 5px; }
-        .contact-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--alternate); }
-        .contact-item:last-child { border-bottom: none; }
-        .contact-info { flex: 1; margin-right: 8px; overflow: hidden;}
-        .contact-name { font-weight: bold; margin-bottom: 4px; color: var(--primary-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        .contact-phone { color: var(--secondary-text); font-size: 14px; white-space: nowrap;}
-        .contact-occurrence { background-color: var(--primary); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; margin-top: 4px; display: inline-block; white-space: nowrap;}
-        .contact-actions { display: flex; gap: 5px; } /* Reduced gap */
-        .contact-btn { background: none; border: none; color: var(--primary); cursor: pointer; padding: 4px; display: flex; align-items: center; }
-        .contact-btn i { font-size: 20px;}
-        .menu-card { background-color: var(--secondary-background); border-radius: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); margin: 16px; padding: 16px; }
-        .menu-item { width: 95%; max-width: 300px; height: 50px; background-color: var(--secondary-background); border-radius: 16px; border: 1px solid var(--orange-light); margin: 10px auto; display: flex; align-items: center; cursor: pointer; transition: background-color 0.2s ease; }
-        .menu-item:hover { background-color: #f8f9fa; }
-        .menu-item-icon { width: 20px; height: 20px; background-color: var(--primary); border-radius: 50%; margin-left: 15px; flex-shrink: 0; }
-        .menu-item-text { font-family: 'Inter', sans-serif; color: var(--orange-light); font-size: 16px; font-weight: bold; margin-left: 15px; flex-grow: 1; text-align: left; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0s 0.2s linear; }
-        .modal-overlay:not(.hidden) { opacity: 1; visibility: visible; transition: opacity 0.2s ease; }
-        .modal-container { background-color: var(--secondary-background); border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative; transform: scale(0.95); transition: transform 0.2s ease; opacity: 0;}
-        .modal-overlay:not(.hidden) .modal-container { transform: scale(1); opacity: 1;}
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--alternate); }
-        .modal-title { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: bold; text-align: center; flex-grow: 1; color: var(--primary-text); margin: 0 10px; }
-        .modal-close-btn { background: none; border: none; color: var(--primary); font-size: 28px; cursor: pointer; padding: 0; line-height: 1; }
-        .modal-edit-btn { background: none; border: none; color: var(--primary); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; }
-        .modal-close-x { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 28px; font-weight: bold; color: var(--secondary-text); cursor: pointer; padding: 5px; line-height: 1; z-index: 10; }
-        .modal-close-x:hover { color: var(--primary-text); }
-        .modal-section-title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: bold; color: var(--primary); margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--alternate); }
-        .form-group { margin-bottom: 16px; }
-        .form-label { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--primary-text); margin-bottom: 6px; display: block; font-weight: 600; }
-        .form-control, .form-select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--alternate); background-color: var(--secondary-background); font-family: 'Inter', sans-serif; font-size: 14px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-        .form-control:focus, .form-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(75, 57, 239, 0.2); }
-        .form-select { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2357636C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 40px; }
-        .form-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; margin-top: 24px; gap: 12px; }
-        .btn { padding: 10px 20px; border-radius: 8px; font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: bold; cursor: pointer; border: none; transition: background-color 0.2s ease, box-shadow 0.2s ease; }
-        .btn:hover { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .btn-secondary { background-color: var(--secondary-background); color: var(--secondary-text); border: 1px solid var(--alternate); }
-        .btn-secondary:hover { background-color: #f8f9fa; }
-        .btn-primary { background-color: var(--primary); color: var(--info); }
-        .btn-primary:hover { background-color: #3a2dbd; }
-        .btn-success { background-color: var(--success); color: white; }
-        .btn-success:hover { background-color: #43a047; }
-        .hidden { opacity: 0; visibility: hidden; position: absolute; left: -9999px; } /* Ensure fully hidden */
-        .modal-overlay.hidden { transition: opacity 0.2s ease, visibility 0s 0.2s linear; }
-        .modal-overlay.hidden .modal-container { transform: scale(0.95); opacity: 0;}
 
-        .preview-container { background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 20px; border: 1px solid var(--alternate); }
-        .preview-title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 12px; color: var(--primary); padding-bottom: 8px; border-bottom: 1px solid var(--alternate); }
-        .preview-item { margin-bottom: 10px; font-size: 14px; display: flex;}
-        .preview-label { font-weight: bold; color: var(--primary-text); margin-right: 8px; flex-shrink: 0;}
-        .preview-value { color: var(--secondary-text); word-break: break-word;}
-        .whatsapp-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--alternate); }
-        .whatsapp-section .preview-title { border-bottom: none; margin-bottom: 12px; }
-        .whatsapp-section p { font-size: 14px; color: var(--secondary-text); margin-bottom: 8px; }
-        #supplier-select { margin-bottom: 12px; }
-        #no-supplier { margin-top: 10px; }
-        #add-supplier-btn-from-preview { display: inline-flex; /* Changed to inline-flex */ width: auto; /* Auto width */ align-items: center; justify-content: center; margin-top: 10px; }
-        #add-supplier-btn-from-preview i { font-size: 18px; margin-right: 8px; vertical-align: middle; }
-        .whatsapp-btn { background-color: #25D366; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 16px; transition: background-color 0.2s ease; }
-        .whatsapp-btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
-        .whatsapp-btn:not(:disabled):hover { background-color: #128C7E; }
-        .whatsapp-btn i { margin-right: 8px; font-size: 18px; }
-        .status-message { padding: 12px; border-radius: 8px; margin-bottom: 16px; text-align: center; font-family: 'Inter', sans-serif; font-size: 14px; }
-        .status-success { background-color: #e8f5e9; color: var(--success); border: 1px solid #c8e6c9; }
-        .status-info { background-color: #e3f2fd; color: var(--primary); border: 1px solid #bbdefb; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(75, 57, 239, 0.2);
+        }
+
+        .image-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            max-width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background-color: #3A2DBD;
+        }
     </style>
 </head>
 <body>
-    <div class="app-bar">
-        <img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo">
-    </div>
-
-    <img src="https://images.unsplash.com/photo-1571905837410-87605d34ad73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTRC20_AddresslbnwwfHx8fDE3NDQwNDIzNDZ8MA&ixlib=rb-4.0.3&q=80&w=1080" alt="Condomínio" class="condo-image">
-    <h1 class="condo-name" id="condo-name-display"></h1>
-
-    <div class="info-card">
-        <h2 class="info-title">Informações</h2>
-        <div class="info-row">
-            <span class="material-icons info-icon">location_on</span>
-            <span id="info-card-location"></span>
-        </div>
-        <div class="info-row">
-            <span class="material-icons info-icon">business</span> <span id="info-card-cnpj"></span>
-        </div>
-        <div class="info-row">
-            <span class="material-icons info-icon">phone</span>
-            <span id="info-card-phone"></span>
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="button button-primary" id="show-more-btn">Exibir mais</button>
-        </div>
-    </div>
-
-    <div class="tickets-card">
-        <h3 class="tickets-title">Chamados</h3>
-        <h4 class="contacts-list-title">Fornecedores</h4>
-        <div class="contacts-list" id="contacts-list">
-            <div class="status-message status-info">Carregando lista...</div>
-        </div>
-        <div class="tickets-buttons">
-            <button class="button button-primary" id="create-ticket-btn">Criar novo chamado</button>
-            <button class="button button-orange" id="view-contacts-btn">Gerenciar fornecedores</button>
-        </div>
-    </div>
-
-    <div class="menu-card">
-        <a href="documentos.html" class="menu-item">
-            <div class="menu-item-icon"></div>
-            <span class="menu-item-text">Documentos</span>
-        </a>
-        <a href="manutencao.html" class="menu-item">
-            <div class="menu-item-icon"></div>
-            <span class="menu-item-text">Manutenção</span>
-        </a>
-        <a href="checklist.html" class="menu-item">
-            <div class="menu-item-icon"></div>
-            <span class="menu-item-text">Check-list</span>
-        </a>
-        <a href="solicitacao-moradores.html" class="menu-item">
-            <div class="menu-item-icon"></div>
-            <span class="menu-item-text">Solicitação moradores</span>
-        </a>
-        
-    </div>
-    <div id="info-modal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <button class="modal-close-x" onclick="hideModal(document.getElementById('info-modal'))">X</button>
-            <div class="modal-header">
-                <div class="modal-title">Informações Gerais</div>
-                <button class="modal-edit-btn" id="edit-info-btn"><span class="material-icons">edit</span></button>
+    <div class="container">
+        <h1>Cadastro de Condomínio</h1>
+        <form id="condominioForm">
+            <div class="form-group">
+                <label for="nomecondo">Nome do Condomínio</label>
+                <input type="text" id="nomecondo" required>
             </div>
-            <div class="modal-row"><span class="material-icons info-icon">location_on</span><span id="modal-location"></span></div>
-            <div class="modal-row"><span class="material-icons info-icon">map</span><span id="modal-cep"></span></div> <div class="modal-row"><span class="material-icons info-icon">phone</span><span id="modal-phone"></span></div>
-            <div class="modal-row"><span class="material-icons info-icon">business</span><span id="modal-cnpj"></span></div>
-            <div class="modal-section-title">Adicionais</div>
-            <div class="modal-row"><span class="material-icons info-icon">people_outline</span><span id="modal-residents"></span></div>
-            <div class="modal-row"><span class="material-icons info-icon">apartment</span><span id="modal-units"></span></div> <div class="modal-row"><span class="material-icons info-icon">domain</span><span id="modal-blocks"></span></div>
-            <div class="modal-row"><span class="material-icons info-icon">admin_panel_settings</span><span id="modal-admin"></span></div>
-        </div>
-    </div>
 
-    <div id="ticket-modal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <button class="modal-close-x" onclick="hideModal(document.getElementById('ticket-modal'))">X</button>
-            <h2 class="modal-title">Criar Chamado</h2>
-            <form id="ticket-form">
-                <div class="form-group"><label class="form-label" for="occurrence-type">Ocorrência</label><select class="form-select" id="occurrence-type" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
-                <div class="form-group"><label class="form-label" for="location">Localização</label><input type="text" class="form-control" id="location" placeholder="Ex: Bloco A, Garagem..." required></div>
-                <div class="form-group"><label class="form-label" for="description">Descrição</label><input type="text" class="form-control" id="description" placeholder="Breve descrição" required></div>
-                <div class="form-group"><label class="form-label" for="priority">Prioridade</label><select class="form-select" id="priority" required><option value="" selected disabled>Selecione...</option><option value="Baixo">Baixo</option><option value="Média">Média</option><option value="Alta">Alta</option><option value="Urgência">Urgência</option></select></div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="hideModal(document.getElementById('ticket-modal'))">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Próximo</button>
+            <div class="form-group">
+                <label for="endereco">Endereço Completo</label>
+                <input type="text" id="endereco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" id="cep" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone do Condomínio</label>
+                <input type="tel" id="telefone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefonesindico">Telefone do Síndico</label>
+                <input type="tel" id="telefonesindico" required>
+            </div>
+
+            <div class="form-group">
+                <label for="unidades">Unidades</label>
+                <input type="number" id="unidades" required>
+            </div>
+
+            <div class="form-group">
+                <label for="moradores">Moradores</label>
+                <input type="number" id="moradores" required>
+            </div>
+
+            <div class="form-group">
+                <label for="torres">Torres/Blocos</label>
+                <input type="number" id="torres" required>
+            </div>
+
+            <div class="form-group">
+                <label for="admin">Administradora</label>
+                <input type="text" id="admin" required>
+            </div>
+
+            <div class="form-group">
+                <label>Foto do Condomínio</label>
+                <div class="image-upload" onclick="document.getElementById('foto').click()">
+                    <span class="material-icons">upload</span>
+                    <p>Clique para enviar uma foto</p>
                 </div>
-            </form>
-        </div>
-    </div>
+                <input type="file" id="foto" accept="image/*" hidden>
+                <div class="image-preview" id="imagePreview"></div>
+            </div>
 
-    <div id="preview-modal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <button class="modal-close-x" onclick="hideModal(document.getElementById('preview-modal'))">X</button>
-            <h2 class="modal-title">Pré-visualização do Chamado</h2>
-            <div class="preview-container">
-                <div class="preview-title">Detalhes</div>
-                <div class="preview-item"><span class="preview-label">Ocorrência:</span><span class="preview-value" id="preview-occurrence"></span></div>
-                <div class="preview-item"><span class="preview-label">Localização:</span><span class="preview-value" id="preview-location"></span></div>
-                <div class="preview-item"><span class="preview-label">Descrição:</span><span class="preview-value" id="preview-description"></span></div>
-                <div class="preview-item"><span class="preview-label">Prioridade:</span><span class="preview-value" id="preview-priority"></span></div>
-            </div>
-            <div class="whatsapp-section">
-                <h3 class="preview-title">Enviar para Fornecedor</h3>
-                <div id="supplier-info">
-                    <p>Selecione o fornecedor para esta ocorrência:</p>
-                    <select class="form-select" id="supplier-select"><option value="" selected disabled>Carregando...</option></select>
-                    <div id="no-supplier" class="hidden">
-                        <div class="status-message status-info">Nenhum fornecedor cadastrado para este tipo.</div>
-                        <button type="button" class="btn btn-success" id="add-supplier-btn-from-preview"><i class="material-icons">add</i> Adicionar Novo Fornecedor</button>
-                    </div>
-                </div>
-                <button class="whatsapp-btn" id="send-whatsapp-btn" disabled><i class="fab fa-whatsapp"></i> Enviar via WhatsApp</button>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="back-to-form-btn">Voltar</button>
-                <button type="button" class="btn btn-primary" id="confirm-ticket-btn">Confirmar Chamado</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="supplier-modal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <button class="modal-close-x" id="close-supplier-modal-x">X</button>
-            <h2 class="modal-title" id="supplier-modal-title">Adicionar Fornecedor</h2>
-            <form id="supplier-form">
-                <input type="hidden" id="supplier-id">
-                <div class="form-group"><label class="form-label" for="supplier-name">Nome</label><input type="text" class="form-control" id="supplier-name" required></div>
-                <div class="form-group"><label class="form-label" for="supplier-phone">Telefone (Ex: 55119...)</label><input type="tel" class="form-control" id="supplier-phone" placeholder="55 DDD Número" required pattern="^\d{12,13}$" title="Inclua 55, DDD e número (12-13 dígitos)"></div>
-                <div class="form-group"><label class="form-label" for="supplier-occurrence">Serviço Principal</label><select class="form-select" id="supplier-occurrence" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancel-supplier-btn">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="manage-suppliers-modal" class="modal-overlay hidden">
-        <div class="modal-container">
-             <button class="modal-close-x" onclick="hideModal(document.getElementById('manage-suppliers-modal'))">X</button>
-            <h2 class="modal-title">Fornecedores Cadastrados</h2>
-            <div class="contacts-list" id="manage-contacts-list">
-                <div class="status-message status-info">Carregando...</div>
-            </div>
-            <div class="form-actions" style="justify-content: space-between;">
-                <button type="button" class="btn btn-secondary" id="close-manage-suppliers-btn">Fechar</button>
-                <button type="button" class="btn btn-success" id="new-supplier-btn"><i class="material-icons" style="font-size: 18px; margin-right: 8px; vertical-align: middle;">add</i> Novo Fornecedor</button>
-            </div>
-        </div>
+            <button type="submit" class="button">Salvar Cadastro</button>
+        </form>
     </div>
 
     <script>
-        // --- Data ---
-        const condoData = {
-            nomecondo: "Residencial Solar", endereco: "Rua das Flores, 123 - Centro", cep: "12345-678",
-            telefonecondo: "5511987654321", cnpj: "12.345.678/0001-90", moradores: "120",
-            unidades: "80", blocos: "4", admin: "Imóveis Seguros Ltda."
-        };
-        let suppliers = [
-            { id: 1, name: "Hidráulica Master", phone: "5511987654321", occurrence: "Hidraulica" },
-            { id: 2, name: "Elétrica Total", phone: "5511976543210", occurrence: "Eletrica" },
-            { id: 3, name: "Elevadores Seguros", phone: "5511965432109", occurrence: "Elevador" },
-            { id: 4, name: "Geradores Potentes", phone: "5511954321098", occurrence: "Gerador" }
-        ];
-        let currentTicket = {};
-        let supplierModalContext = null; // 'manage' or 'preview'
+        // Aplicar máscaras
+        new Cleave('#cep', {
+            blocks: [5,3],
+            delimiter: '-',
+            numericOnly: true
+        });
 
-        // --- Utility Functions ---
-        const cleanPhone = (phone) => ('' + phone).replace(/\D/g, '');
-        function formatPhone(phone) {
-            const cleaned = cleanPhone(phone);
-            const match = cleaned.match(/^(\d{2})(\d{2})(\d{4,5})(\d{4})$/);
-            if (match) return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}`;
-            const fallbackMatch = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
-            if (fallbackMatch) return `(${fallbackMatch[1]}) ${fallbackMatch[2]}-${fallbackMatch[3]}`;
-            return phone; // Return original if no match
-        }
-        const getOccurrenceName = (key) => ({'Hidraulica':'Hidráulica','Eletrica':'Elétrica','Elevador':'Elevador','Gerador':'Gerador'}[key] || key);
-        const showModal = (modal) => {
-            if (!modal) { console.error("showModal: Modal element not found"); return; }
-            modal.classList.remove('hidden');
-        };
-        const hideModal = (modal) => {
-             if (!modal) { console.error("hideModal: Modal element not found"); return; }
-             modal.classList.add('hidden');
-        };
+        new Cleave('#cnpj', {
+            blocks: [2,3,3,4,2],
+            delimiters: ['.','.','/','-'],
+            numericOnly: true
+        });
 
-        // --- DOM Element Ready Function ---
-        document.addEventListener('DOMContentLoaded', () => {
+        new Cleave('#telefone', {
+            blocks: [4,4],
+            delimiter: '-',
+            numericOnly: true
+        });
 
-            // --- Get DOM Elements ---
-            // Ensure elements exist before assigning listeners or manipulating
-            const condoNameDisplay = document.getElementById('condo-name-display');
-            const infoCardLocation = document.getElementById('info-card-location');
-            const infoCardCnpj = document.getElementById('info-card-cnpj');
-            const infoCardPhone = document.getElementById('info-card-phone');
-            const showMoreBtn = document.getElementById('show-more-btn');
-            const infoModal = document.getElementById('info-modal');
-            const editInfoBtn = document.getElementById('edit-info-btn');
-            const createTicketBtn = document.getElementById('create-ticket-btn');
-            const viewContactsBtn = document.getElementById('view-contacts-btn');
-            const ticketModal = document.getElementById('ticket-modal');
-            const previewModal = document.getElementById('preview-modal');
-            const supplierModal = document.getElementById('supplier-modal');
-            const manageSuppliersModal = document.getElementById('manage-suppliers-modal');
-            const ticketForm = document.getElementById('ticket-form');
-            const supplierForm = document.getElementById('supplier-form');
-            const contactsListDiv = document.getElementById('contacts-list');
-            const manageContactsListDiv = document.getElementById('manage-contacts-list');
-            const supplierSelect = document.getElementById('supplier-select');
-            const noSupplierDiv = document.getElementById('no-supplier');
-            const whatsappBtn = document.getElementById('send-whatsapp-btn');
-            const supplierModalTitle = document.getElementById('supplier-modal-title');
-            const backToFormBtn = document.getElementById('back-to-form-btn');
-            const addSupplierBtnFromPreview = document.getElementById('add-supplier-btn-from-preview');
-            const confirmTicketBtn = document.getElementById('confirm-ticket-btn');
-            const closeSupplierModalX = document.getElementById('close-supplier-modal-x');
-            const cancelSupplierBtn = document.getElementById('cancel-supplier-btn');
-            const closeManageSuppliersBtn = document.getElementById('close-manage-suppliers-btn');
-            const newSupplierBtn = document.getElementById('new-supplier-btn');
-            const menuItems = document.querySelectorAll('.menu-item');
+        new Cleave('#telefonesindico', {
+            blocks: [0,2,5,4],
+            delimiters: ['(',') ','-'],
+            numericOnly: true
+        });
 
-             // Simple check if core elements exist
-            if (!ticketModal || !previewModal || !supplierModal || !manageSuppliersModal || !ticketForm || !supplierForm) {
-                 console.error("Core modal or form elements not found! Aborting script setup.");
-                 alert("Erro crítico: Elementos essenciais da página não foram encontrados.");
-                 return;
+        // Preview da imagem
+        document.getElementById('foto').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = `<img src="${reader.result}" style="width:100%">`;
             }
+            reader.readAsDataURL(e.target.files[0]);
+        });
 
-            // --- Render Functions ---
-            function updateCondoDataOnUI() {
-                if(condoNameDisplay) condoNameDisplay.textContent = condoData.nomecondo;
-                if(infoCardLocation) infoCardLocation.textContent = condoData.endereco;
-                if(infoCardCnpj) infoCardCnpj.textContent = condoData.cnpj;
-                if(infoCardPhone) infoCardPhone.textContent = formatPhone(condoData.telefonecondo);
+        // Salvar dados
+        document.getElementById('condominioForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                nomecondo: document.getElementById('nomecondo').value,
+                endereco: document.getElementById('endereco').value,
+                cidade: document.getElementById('cidade').value,
+                cep: document.getElementById('cep').value,
+                cnpj: document.getElementById('cnpj').value,
+                telefone: document.getElementById('telefone').value,
+                telefonesindico: document.getElementById('telefonesindico').value,
+                unidades: document.getElementById('unidades').value,
+                moradores: document.getElementById('moradores').value,
+                torres: document.getElementById('torres').value,
+                admin: document.getElementById('admin').value,
+                foto: document.getElementById('foto').files[0] ? 
+                      document.getElementById('imagePreview').querySelector('img').src : null
+            };
 
-                // Update modal fields only if modal exists
-                if(infoModal) {
-                    const modalLocation = document.getElementById('modal-location');
-                    const modalCep = document.getElementById('modal-cep');
-                    const modalPhone = document.getElementById('modal-phone');
-                    const modalCnpj = document.getElementById('modal-cnpj');
-                    const modalResidents = document.getElementById('modal-residents');
-                    const modalUnits = document.getElementById('modal-units');
-                    const modalBlocks = document.getElementById('modal-blocks');
-                    const modalAdmin = document.getElementById('modal-admin');
-
-                    if(modalLocation) modalLocation.textContent = `Localização: ${condoData.endereco}`;
-                    if(modalCep) modalCep.textContent = `CEP: ${condoData.cep}`;
-                    if(modalPhone) modalPhone.textContent = `Telefone: ${formatPhone(condoData.telefonecondo)}`;
-                    if(modalCnpj) modalCnpj.textContent = `CNPJ: ${condoData.cnpj}`;
-                    if(modalResidents) modalResidents.textContent = `Moradores: ${condoData.moradores}`;
-                    if(modalUnits) modalUnits.textContent = `Unidades: ${condoData.unidades}`;
-                    if(modalBlocks) modalBlocks.textContent = `Blocos: ${condoData.blocos}`;
-                    if(modalAdmin) modalAdmin.textContent = `Administradora: ${condoData.admin}`;
-                }
-            }
-
-            function renderSuppliersList(container) {
-                if (!container) return;
-                container.innerHTML = ''; // Clear previous list
-                const fragment = document.createDocumentFragment(); // More efficient updates
-
-                if (suppliers.length === 0) {
-                    container.innerHTML = `<div class="status-message status-info">${container.id === 'contacts-list' ? 'Nenhum fornecedor. Clique em "Gerenciar".' : 'Nenhum fornecedor cadastrado.'}</div>`;
-                    return;
-                }
-
-                suppliers.sort((a, b) => a.name.localeCompare(b.name)).forEach(supplier => {
-                    const item = document.createElement('div');
-                    item.className = 'contact-item';
-                    item.innerHTML = `
-                        <div class="contact-info">
-                            <div class="contact-name">${supplier.name}</div>
-                            <div class="contact-phone">${formatPhone(supplier.phone)}</div>
-                            <span class="contact-occurrence">${getOccurrenceName(supplier.occurrence)}</span>
-                        </div>
-                        <div class="contact-actions">
-                            <button class="contact-btn edit-btn" title="Editar"><i class="material-icons">edit</i></button>
-                            <button class="contact-btn delete-btn" title="Excluir"><i class="material-icons">delete</i></button>
-                        </div>`;
-
-                    // Add event listeners using addEventListener
-                    const editBtn = item.querySelector('.edit-btn');
-                    const deleteBtn = item.querySelector('.delete-btn');
-                    if(editBtn) editBtn.addEventListener('click', () => handleEditSupplier(supplier.id));
-                    if(deleteBtn) deleteBtn.addEventListener('click', () => handleDeleteSupplier(supplier.id));
-
-                    fragment.appendChild(item);
-                });
-                container.appendChild(fragment);
-            }
-
-            function updatePreviewModal() {
-                const occurrenceElem = document.getElementById('preview-occurrence');
-                const locationElem = document.getElementById('preview-location');
-                const descriptionElem = document.getElementById('preview-description');
-                const priorityElem = document.getElementById('preview-priority');
-
-                if(occurrenceElem) occurrenceElem.textContent = getOccurrenceName(currentTicket.occurrence);
-                if(locationElem) locationElem.textContent = currentTicket.location;
-                if(descriptionElem) descriptionElem.textContent = currentTicket.description;
-                if(priorityElem) priorityElem.textContent = currentTicket.priority;
-                updateSupplierDropdownList();
-            }
-
-            function updateSupplierDropdownList() {
-                if(!supplierSelect || !noSupplierDiv || !whatsappBtn) return; // Check elements
-
-                const suppliersForOccurrence = suppliers.filter(s => s.occurrence === currentTicket.occurrence);
-                supplierSelect.innerHTML = `<option value="" selected disabled>Selecione...</option>`;
-                noSupplierDiv.classList.add('hidden');
-                supplierSelect.classList.remove('hidden'); // Make sure select is visible initially
-                supplierSelect.disabled = true;
-                whatsappBtn.disabled = true;
-
-                if (suppliersForOccurrence.length > 0) {
-                    suppliersForOccurrence.sort((a, b) => a.name.localeCompare(b.name)).forEach(s => {
-                        supplierSelect.innerHTML += `<option value="${s.id}">${s.name} - ${formatPhone(s.phone)}</option>`;
-                    });
-                    supplierSelect.disabled = false;
-                } else {
-                    noSupplierDiv.classList.remove('hidden');
-                    supplierSelect.classList.add('hidden'); // Hide select if no options
-                }
-                supplierSelect.value = ""; // Reset selection
-            }
-
-            // --- Event Handlers ---
-            function handleEditSupplier(id) {
-                const supplier = suppliers.find(s => s.id === id);
-                if (!supplier || !supplierModal || !supplierForm || !supplierModalTitle) return;
-
-                supplierModalTitle.textContent = "Editar Fornecedor";
-                supplierForm.reset(); // Clear form first
-                const supplierIdInput = document.getElementById('supplier-id');
-                const supplierNameInput = document.getElementById('supplier-name');
-                const supplierPhoneInput = document.getElementById('supplier-phone');
-                const supplierOccurrenceInput = document.getElementById('supplier-occurrence');
-
-                if(supplierIdInput) supplierIdInput.value = supplier.id;
-                if(supplierNameInput) supplierNameInput.value = supplier.name;
-                if(supplierPhoneInput) supplierPhoneInput.value = cleanPhone(supplier.phone);
-                if(supplierOccurrenceInput) supplierOccurrenceInput.value = supplier.occurrence;
-
-                // Determine context
-                if (manageSuppliersModal && !manageSuppliersModal.classList.contains('hidden')) {
-                    supplierModalContext = 'manage';
-                    hideModal(manageSuppliersModal);
-                } else if (previewModal && !previewModal.classList.contains('hidden')) {
-                     supplierModalContext = 'preview'; // Added context possibility
-                     hideModal(previewModal);
-                 } else {
-                    supplierModalContext = 'manage'; // Default if opened some other way or from main list
-                }
-                showModal(supplierModal);
-            }
-
-            function handleDeleteSupplier(id) {
-                const supplier = suppliers.find(s => s.id === id);
-                if (!supplier) return;
-                if (confirm(`Tem certeza que deseja excluir "${supplier.name}"?`)) {
-                    suppliers = suppliers.filter(s => s.id !== id); // More direct update
-                    renderSuppliersList(contactsListDiv);
-                    renderSuppliersList(manageContactsListDiv);
-                    if (previewModal && !previewModal.classList.contains('hidden') && currentTicket.occurrence === supplier.occurrence) {
-                        updateSupplierDropdownList();
-                    }
-                     console.log(`Fornecedor ID ${id} excluído.`);
-                }
-            }
-
-            function handleSendWhatsApp() {
-                if(!supplierSelect) return;
-                const supplierId = supplierSelect.value;
-                const supplier = suppliers.find(s => s.id === parseInt(supplierId));
-                if (!supplier) { alert('Selecione um fornecedor válido.'); return; }
-
-                const message = `*Novo Chamado - ${condoData.nomecondo}*\n\n` +
-                               `*Ocorrência:* ${getOccurrenceName(currentTicket.occurrence)}\n` +
-                               `*Localização:* ${currentTicket.location}\n` +
-                               `*Descrição:* ${currentTicket.description}\n` +
-                               `*Prioridade:* ${currentTicket.priority}\n\n` +
-                               `_Por favor, verificar disponibilidade._`;
-                window.open(`https://wa.me/${cleanPhone(supplier.phone)}?text=${encodeURIComponent(message)}`, '_blank');
-            }
-
-            function handleSupplierFormSubmit(event) {
-                event.preventDefault();
-                if (!supplierForm) return;
-
-                const idInput = document.getElementById('supplier-id');
-                const nameInput = document.getElementById('supplier-name');
-                const phoneInputElem = document.getElementById('supplier-phone');
-                const occurrenceInput = document.getElementById('supplier-occurrence');
-
-                const id = idInput ? idInput.value : null;
-                const name = nameInput ? nameInput.value.trim() : null;
-                const phoneInput = phoneInputElem ? phoneInputElem.value : null;
-                const occurrence = occurrenceInput ? occurrenceInput.value : null;
-
-                if (!name || !phoneInput || !occurrence) { alert('Preencha todos os campos obrigatórios.'); return; }
-                const phone = cleanPhone(phoneInput);
-                if (!/^\d{12,13}$/.test(phone)) { alert('Telefone inválido. Use o formato 55 + DDD + Número (12 ou 13 dígitos).'); return; }
-
-                let message = '';
-                if (id) { // Editing
-                    const index = suppliers.findIndex(s => s.id === parseInt(id));
-                    if (index !== -1) {
-                        suppliers[index] = { id: parseInt(id), name, phone, occurrence };
-                        message = `Fornecedor "${name}" atualizado.`;
-                    } else { alert("Erro ao encontrar fornecedor para atualizar."); return; }
-                } else { // Adding
-                    const newId = suppliers.length > 0 ? Math.max(0, ...suppliers.map(s => s.id)) + 1 : 1;
-                    suppliers.push({ id: newId, name, phone, occurrence });
-                    message = `Fornecedor "${name}" adicionado.`;
-                }
-
-                renderSuppliersList(contactsListDiv);
-                renderSuppliersList(manageContactsListDiv);
-                console.log(message); // Log instead of alert
-
-                // Use context to return correctly
-                hideModal(supplierModal);
-                if (supplierModalContext === 'preview' && previewModal) {
-                    updateSupplierDropdownList();
-                    showModal(previewModal);
-                } else if (manageSuppliersModal) { // Default or 'manage' context
-                    showModal(manageSuppliersModal);
-                }
-                supplierModalContext = null; // Reset context
-                supplierForm.reset();
-                if(idInput) idInput.value = ''; // Clear hidden ID
-            }
-
-            function handleCancelSupplierForm() {
-                hideModal(supplierModal);
-                // Use context to return correctly
-                if (supplierModalContext === 'preview' && previewModal) {
-                    showModal(previewModal);
-                } else if (manageSuppliersModal) { // Default or 'manage' context
-                    showModal(manageSuppliersModal);
-                }
-                supplierModalContext = null;
-                if(supplierForm) supplierForm.reset();
-                const supplierIdInput = document.getElementById('supplier-id');
-                if(supplierIdInput) supplierIdInput.value = '';
-            }
-
-            // --- Initial Setup ---
-            updateCondoDataOnUI();
-            renderSuppliersList(contactsListDiv);
-
-            // --- Attach Event Listeners ---
-            if(showMoreBtn && infoModal) showMoreBtn.addEventListener('click', () => showModal(infoModal));
-            if(editInfoBtn) editInfoBtn.addEventListener('click', () => alert('Editar Info Gerais não implementado.'));
-            if(createTicketBtn && ticketModal) createTicketBtn.addEventListener('click', () => { if(ticketForm) ticketForm.reset(); currentTicket={}; showModal(ticketModal); });
-            if(viewContactsBtn && manageSuppliersModal) viewContactsBtn.addEventListener('click', () => { renderSuppliersList(manageContactsListDiv); showModal(manageSuppliersModal); });
-            if(ticketForm && previewModal && ticketModal) ticketForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const occurrenceType = document.getElementById('occurrence-type');
-                const location = document.getElementById('location');
-                const description = document.getElementById('description');
-                const priority = document.getElementById('priority');
-                currentTicket = {
-                    occurrence: occurrenceType ? occurrenceType.value : '',
-                    location: location ? location.value.trim() : '',
-                    description: description ? description.value.trim() : '',
-                    priority: priority ? priority.value : ''
-                };
-                updatePreviewModal();
-                hideModal(ticketModal);
-                showModal(previewModal);
-            });
-            if(backToFormBtn && previewModal && ticketModal) backToFormBtn.addEventListener('click', () => { hideModal(previewModal); showModal(ticketModal); });
-            if(addSupplierBtnFromPreview && supplierModal && previewModal) addSupplierBtnFromPreview.addEventListener('click', () => {
-                if(supplierModalTitle) supplierModalTitle.textContent = "Adicionar Fornecedor";
-                if(supplierForm) supplierForm.reset();
-                const supplierIdInput = document.getElementById('supplier-id');
-                if(supplierIdInput) supplierIdInput.value = '';
-                supplierModalContext = 'preview';
-                hideModal(previewModal);
-                showModal(supplierModal);
-            });
-            if(supplierSelect) supplierSelect.addEventListener('change', (e) => { if(whatsappBtn) whatsappBtn.disabled = !e.target.value; });
-            if(whatsappBtn) whatsappBtn.addEventListener('click', handleSendWhatsApp);
-            if(confirmTicketBtn && previewModal) confirmTicketBtn.addEventListener('click', () => {
-                 console.log('Chamado confirmado (simulação):', currentTicket);
-                 alert('Chamado registrado com sucesso! (Simulação)');
-                 hideModal(previewModal);
-                 // Maybe clear currentTicket = {};
-            });
-            if(closeSupplierModalX) closeSupplierModalX.addEventListener('click', handleCancelSupplierForm);
-            if(cancelSupplierBtn) cancelSupplierBtn.addEventListener('click', handleCancelSupplierForm);
-            if(supplierForm) supplierForm.addEventListener('submit', handleSupplierFormSubmit);
-            if(closeManageSuppliersBtn && manageSuppliersModal) closeManageSuppliersBtn.addEventListener('click', () => hideModal(manageSuppliersModal));
-            if(newSupplierBtn && supplierModal && manageSuppliersModal) newSupplierBtn.addEventListener('click', () => {
-                if(supplierModalTitle) supplierModalTitle.textContent = "Adicionar Novo Fornecedor";
-                if(supplierForm) supplierForm.reset();
-                const supplierIdInput = document.getElementById('supplier-id');
-                if(supplierIdInput) supplierIdInput.value = '';
-                supplierModalContext = 'manage';
-                hideModal(manageSuppliersModal);
-                showModal(supplierModal);
-            });
-            if(menuItems) menuItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const action = this.dataset.action;
-                    const text = this.querySelector('.menu-item-text')?.textContent || 'Item';
-                    alert(`Ação: ${action || text} (Não implementado)`);
-                });
-            });
-
-        }); // End DOMContentLoaded
+            localStorage.setItem('condominioData', JSON.stringify(formData));
+            window.location.href = 'condominio.html';
+        });
     </script>
-
 </body>
 </html>
