@@ -3,304 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentos</title>
+    <title>Meus Documentos</title>
     <style>
-        * {
+        /* --- Theme Variables --- */
+        :root {
+            --ff-primary: #007bff;
+            --ff-secondary: #6c757d;
+            --ff-success: #28a745;
+            --ff-danger: #dc3545;
+            --ff-light: #f8f9fa;
+            --ff-dark: #343a40;
+            --ff-primary-text: #212529;
+            --ff-secondary-text: #6c757d;
+            --ff-background: #ffffff;
+            --ff-secondary-background: #f8f9fa;
+            --ff-body-background: #f4f7f9;
+            --ff-border-color: #dee2e6;
+            --ff-border-radius: 8px;
+            --ff-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --ff-spacing-unit: 1rem; /* 16px base */
+        }
+
+        /* --- Base & Reset Styles --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        /* Estilo da Top-Bar (Navbar Superior) */
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #0346c4, #ff7300);
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        html {
+            font-size: 100%;
+             scroll-behavior: smooth;
         }
 
-        .top-bar .logo {
-            max-width: 100px;
-            height: auto;
-        }
-
-        /* Estilo do Corpo da Página */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden; /* Impede a rolagem da página */
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--ff-body-background);
+            color: var(--ff-primary-text);
+            line-height: 1.6;
+            padding: var(--ff-spacing-unit); /* Padding direto no body */
         }
 
-        /* Estilo do Container Principal */
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Fallback Font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        img, embed, iframe, object, video {
+            max-width: 100%;
+            height: auto;
+            display: block; /* Evita espaços extras abaixo de imagens */
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+        }
+
+        /* --- Document Manager Container (Main Area) --- */
+        .document-manager-container {
+            max-width: 800px; /* Limita largura em telas maiores */
+            margin: 0 auto; /* Centraliza */
+            background-color: transparent;
+        }
+
+        .app-title {
+             text-align: center;
+             font-size: 1.5rem;
+             font-weight: 500;
+             color: var(--ff-primary-text);
+             margin-bottom: calc(var(--ff-spacing-unit) * 1.5);
+        }
+
+
+        /* --- Add Page Controls --- */
+        .add-page-controls {
+            margin-bottom: calc(var(--ff-spacing-unit) * 1.5);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--ff-spacing-unit) * 0.75);
+            background-color: var(--ff-background); /* Coloca controles em um card */
+            padding: var(--ff-spacing-unit);
+            border-radius: var(--ff-border-radius);
+            box-shadow: var(--ff-box-shadow);
+        }
+
+        #new-page-name {
             width: 100%;
-            max-width: 500px;
-            text-align: center;
-            position: fixed; /* Fixa o container no centro */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
+            font-size: 1rem;
+            padding: calc(var(--ff-spacing-unit) * 0.7);
+            border: 1px solid var(--ff-border-color);
+            border-radius: var(--ff-border-radius);
+            background-color: var(--ff-secondary-background);
         }
+         #new-page-name:focus {
+             outline: none;
+             border-color: var(--ff-primary);
+             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+         }
 
-        h1 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        input, textarea, button {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #28a745;
-            color: #fff;
-            cursor: pointer;
+        #add-page-btn {
+            width: 100%;
+            padding: calc(var(--ff-spacing-unit) * 0.8);
+            font-size: 1rem;
+            background-color: var(--ff-primary);
+            color: var(--ff-background);
             border: none;
+            border-radius: var(--ff-border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        #add-page-btn:hover {
+             background-color: darken(var(--ff-primary), 10%);
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        button:hover {
-            background-color: #218838;
+
+        /* --- Pages Container --- */
+        .pages-container {
+            display: grid;
+            grid-template-columns: 1fr; /* Sempre uma coluna */
+            gap: calc(var(--ff-spacing-unit) * 1.2); /* Espaço entre cards */
         }
 
-        #documentList {
-            margin-top: 20px;
-            max-height: 300px; /* Altura máxima para a lista de documentos */
-            overflow-y: auto; /* Adiciona rolagem vertical se necessário */
-        }
-
-        .document-item {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
+        /* --- Page Section (Card Style) --- */
+        .page-section {
+            background-color: var(--ff-background);
+            border: 1px solid var(--ff-border-color);
+            border-radius: var(--ff-border-radius);
+            box-shadow: var(--ff-box-shadow);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            overflow: hidden; /* Necessário para transição de max-height */
         }
 
-        .document-item .info {
+        .page-header {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             cursor: pointer;
+             padding: var(--ff-spacing-unit); /* Boa área de toque */
+             border-bottom: 1px solid var(--ff-border-color); /* Linha separadora */
+              transition: background-color 0.2s ease;
+        }
+         .page-header:hover {
+              background-color: rgba(0,0,0, 0.02); /* Leve feedback no hover */
+         }
+
+
+        .page-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--ff-primary-text);
+             margin-right: var(--ff-spacing-unit); /* Espaço antes dos botões */
+             overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        .header-buttons {
+             display: flex;
+             align-items: center;
+             gap: calc(var(--ff-spacing-unit) / 3);
+             flex-shrink: 0; /* Impede que botões encolham */
+        }
+
+        .toggle-menu-btn, .delete-page-btn {
+            background: none; border: none;
+            font-size: 1.2rem; cursor: pointer;
+            color: var(--ff-secondary-text);
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.3s ease; /* Add transform transition */
+        }
+        .toggle-menu-btn:hover, .delete-page-btn:hover {
+             background-color: rgba(0, 0, 0, 0.05);
+        }
+        .delete-page-btn { color: var(--ff-danger); }
+        .delete-page-btn:hover { color: var(--ff-background); background-color: var(--ff-danger); }
+
+        /* Rotate toggle icon when open */
+        .toggle-menu-btn.open {
+            transform: rotate(180deg);
+        }
+
+
+        /* --- Menu Content (Collapsible Area) --- */
+        .menu-content {
+            /* Animação com max-height */
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            visibility: hidden;
+            transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), /* Ease com bounce */
+                        opacity 0.3s ease-in-out,
+                        visibility 0.3s ease-in-out,
+                        padding 0.3s ease-in-out; /* Anima padding também */
+            padding: 0 var(--ff-spacing-unit); /* Padding horizontal quando fechado (0 vertical) */
+            display: flex;
+            flex-direction: column;
+            gap: var(--ff-spacing-unit);
+        }
+
+        .menu-content.open {
+            visibility: visible;
+            opacity: 1;
+            max-height: 1500px; /* Valor alto para acomodar qualquer conteúdo */
+            padding: var(--ff-spacing-unit); /* Padding total quando aberto */
+        }
+
+
+        .file-upload-area, .date-inputs, .history-list {
+            display: flex; flex-direction: column;
+            gap: calc(var(--ff-spacing-unit) / 2);
+        }
+        .date-inputs {
+             flex-direction: column; /* Garante empilhamento */
+             gap: calc(var(--ff-spacing-unit) * 0.8); /* Espaço entre data inicio/fim */
+        }
+         .date-inputs > div { /* Container para cada label+input de data */
+              display: flex; flex-direction: column; gap: 5px;
+         }
+
+        label { /* Estilo geral para labels */
+             font-weight: 500;
+             color: var(--ff-primary-text);
+             font-size: 0.9em;
+        }
+
+
+        .file-input, .start-date, .end-date {
+            padding: calc(var(--ff-spacing-unit) * 0.7);
+            font-size: 1rem;
+            width: 100%;
+            border: 1px solid var(--ff-border-color);
+            border-radius: var(--ff-border-radius);
+            background-color: var(--ff-secondary-background);
+        }
+         .file-input:focus, .start-date:focus, .end-date:focus {
+             outline: none; border-color: var(--ff-primary);
+             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+         }
+
+
+        .preview-area {
+            margin-top: calc(var(--ff-spacing-unit) / 2);
+            padding: var(--ff-spacing-unit);
+            border: 1px dashed var(--ff-border-color);
+            border-radius: var(--ff-border-radius);
+            min-height: 120px; /* Um pouco mais alto */
+            background-color: var(--ff-background);
+            overflow: auto; max-height: 280px;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+        }
+        .preview-area p { color: var(--ff-secondary-text); }
+        .preview-area img, .preview-area embed, .preview-area iframe {
+            max-height: 240px;
+            border-radius: calc(var(--ff-border-radius) / 2);
+        }
+
+        .save-doc-btn {
+            padding: calc(var(--ff-spacing-unit) * 0.8);
+            font-size: 1rem;
+            background-color: var(--ff-success);
+            color: var(--ff-background); border: none;
+            border-radius: var(--ff-border-radius); cursor: pointer;
+            font-weight: 500; text-align: center;
+            width: 100%; transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .save-doc-btn:disabled {
+            background-color: var(--ff-secondary); opacity: 0.7;
+            cursor: not-allowed; box-shadow: none;
+        }
+        .save-doc-btn:not(:disabled):hover {
+            background-color: darken(var(--ff-success), 10%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- History List --- */
+        .history-list {
+            margin-top: var(--ff-spacing-unit);
+            border-top: 1px solid var(--ff-border-color);
+            padding-top: var(--ff-spacing-unit);
+        }
+        .history-list h4 {
+            margin: 0 0 calc(var(--ff-spacing-unit) / 2) 0;
+            color: var(--ff-primary-text); font-weight: 500; font-size: 0.95em;
+        }
+        .history-list ul {
+            list-style: none; padding: 0; margin: 0;
+            font-size: 0.9em; color: var(--ff-primary-text);
+            max-height: 180px; overflow-y: auto;
+        }
+        .history-list li {
+            background-color: var(--ff-secondary-background);
+            padding: calc(var(--ff-spacing-unit) / 2);
+            margin-bottom: calc(var(--ff-spacing-unit) / 2);
+            border-radius: calc(var(--ff-border-radius) / 2);
+            border: 1px solid var(--ff-border-color);
+            word-break: break-all;
+            /* Make space for the download button */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: var(--ff-spacing-unit);
+        }
+         .history-list li:last-child { margin-bottom: 0; }
+        .history-list li > div { /* Container for text content */
+            flex-grow: 1; /* Allow text to take up space */
+        }
+        .history-list li span { /* Modification date */
+            display: block; font-size: 0.85em;
+            color: var(--ff-secondary-text);
+            margin-top: calc(var(--ff-spacing-unit) / 4);
         }
 
-        .document-item .info strong {
-            font-size: 18px;
-        }
-
-        .document-item .info small {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .document-item .actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .document-item .actions button {
-            background-color: #dc3545;
-            color: #fff;
+        /* --- Download History Button --- */
+        .download-history-btn {
+            background-color: var(--ff-secondary);
+            color: var(--ff-background);
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            border-radius: calc(var(--ff-border-radius) / 2);
+            padding: calc(var(--ff-spacing-unit)*0.25) calc(var(--ff-spacing-unit)*0.5);
+            font-size: 0.75rem; /* Smaller font size */
             cursor: pointer;
-            font-size: 14px;
+            transition: background-color 0.2s ease;
+            white-space: nowrap; /* Prevent wrapping */
+            flex-shrink: 0; /* Prevent button shrinking */
+        }
+        .download-history-btn:hover {
+            background-color: darken(var(--ff-secondary), 10%);
+        }
+        /* Simple Download Icon (Optional - requires font library or SVG) */
+        /* .download-history-btn::before { content: '↓ '; } */
+
+
+        /* Media Query para telas um pouco maiores (Ajustes finos) */
+        @media (min-width: 600px) {
+             .add-page-controls {
+                 flex-direction: row; /* Controles lado a lado */
+                 align-items: center;
+             }
+             #new-page-name { width: auto; flex-grow: 1; }
+             #add-page-btn { width: auto; }
+
+             /* Opcional: mais colunas em tablets, se necessário */
+             /* .pages-container { grid-template-columns: repeat(2, 1fr); } */
         }
 
-        .document-item .actions button.edit-btn {
-            background-color: #ffc107;
-        }
-
-        .document-item .actions button:hover {
-            opacity: 0.8;
-        }
-
-        /* Estilo da Bottom-Bar */
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #0346c4, #ff7300);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-sizing: border-box;
-            z-index: 1000;
-        }
-
-        .bottom-bar .nav-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .bottom-bar .nav-btn:hover {
-            opacity: 0.8;
-        }
     </style>
 </head>
 <body>
-    <!-- Top-Bar (Navbar Superior) -->
-    <div class="top-bar">
-        <img src="images/icons/image-removebg-preview.png" alt="Logo" class="logo">
-    </div>
 
-    <!-- Conteúdo Principal -->
-    <div class="container">
-        <h1>Documentos</h1>
-        <form id="documentForm">
-            <input type="text" id="documentName" placeholder="Nome do Documento" required>
-            <textarea id="documentDescription" placeholder="Descrição Breve" required></textarea>
-            <input type="file" id="documentFile" accept=".txt,.pdf,.doc,.docx" required>
-            <button type="submit" id="submitBtn">Adicionar Documento</button>
-        </form>
+    <main class="document-manager-container">
+        <h1 class="app-title">Meus Documentos</h1>
 
-        <div id="documentList"></div>
-    </div>
+        <div class="add-page-controls">
+            <input type="text" id="new-page-name" placeholder="Nome da Nova Pasta">
+            <button id="add-page-btn">Criar Nova Pasta</button>
+        </div>
 
-    <!-- Bottom-Bar -->
-    <div class="bottom-bar">
-        <button class="nav-btn" onclick="window.location.href='dashboard.html'">🏠</button>
-        <button class="nav-btn" onclick="window.location.href='hub.html'">🔍</button>
-        <button class="nav-btn" id="menu-btn">☰</button>
-    </div>
+        <div id="pages-container" class="pages-container">
+            </div>
+    </main>
+
+    <template id="page-template">
+        <div class="page-section">
+            <div class="page-header">
+                <h2 class="page-title">Nome da Página</h2>
+                <div class="header-buttons">
+                    <button class="delete-page-btn" title="Excluir Pasta">🗑️</button>
+                    <button class="toggle-menu-btn" title="Abrir/Fechar Detalhes">▼</button>
+                 </div>
+            </div>
+            <div class="menu-content">
+                <div class="file-upload-area">
+                    <label for="file-input-{{id}}">Arquivo (PDF ou Imagem):</label>
+                    <input type="file" class="file-input" id="file-input-{{id}}" accept=".pdf, image/*">
+                    <div class="preview-area">
+                         <p>Nenhum arquivo selecionado.</p>
+                    </div>
+                </div>
+                <div class="date-inputs" style="display: none;">
+                     <div>
+                         <label for="start-date-{{id}}">Data de Início:</label>
+                         <input type="date" class="start-date" id="start-date-{{id}}">
+                     </div>
+                     <div>
+                         <label for="end-date-{{id}}">Data de Término:</label>
+                         <input type="date" class="end-date" id="end-date-{{id}}">
+                     </div>
+                </div>
+                 <button class="save-doc-btn" disabled>Salvar / Atualizar Documento</button>
+                <div class="history-list">
+                    <h4>Histórico de Modificações:</h4>
+                    <div class="history-explanation" style="font-size: 0.8em; color: var(--ff-secondary-text); margin-bottom: 5px;">(Downloads contêm apenas informações do histórico, não o arquivo original.)</div>
+                    <ul>
+                        <li>Nenhuma modificação anterior.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <script>
-        // Array para armazenar os documentos
-        let documents = [];
-        let editingDocumentId = null; // Variável para controlar o documento em edição
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elementos Globais
+            const addPageBtn = document.getElementById('add-page-btn');
+            const newPageNameInput = document.getElementById('new-page-name');
+            const pagesContainer = document.getElementById('pages-container');
+            const pageTemplate = document.getElementById('page-template');
 
-        document.getElementById('documentForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+            const STORAGE_KEY = 'documentPagesData_v5_mobile_info_dl'; // Nova chave
 
-            // Pegar valores do formulário
-            const name = document.getElementById('documentName').value;
-            const description = document.getElementById('documentDescription').value;
-            const file = document.getElementById('documentFile').files[0];
-
-            if (name && description && file) {
-                const now = new Date();
-                const timestamp = now.toLocaleString(); // Data e hora formatadas
-
-                if (editingDocumentId !== null) {
-                    // Editar documento existente
-                    const documentIndex = documents.findIndex(doc => doc.id === editingDocumentId);
-                    if (documentIndex !== -1) {
-                        documents[documentIndex] = {
-                            ...documents[documentIndex],
-                            name: name,
-                            description: description,
-                            file: file,
-                            updatedAt: timestamp
-                        };
-                    }
-                    editingDocumentId = null; // Resetar o ID de edição
-                } else {
-                    // Criar um novo documento
-                    const documentItem = {
-                        id: Date.now(), // ID único
-                        name: name,
-                        description: description,
-                        file: file,
-                        createdAt: timestamp,
-                        updatedAt: timestamp
-                    };
-                    documents.push(documentItem);
+            // --- Funções de Armazenamento Local ---
+            function getStoredPages() {
+                try {
+                    const data = localStorage.getItem(STORAGE_KEY);
+                    return data ? JSON.parse(data) : [];
+                } catch (error) {
+                    console.error("Erro ao ler localStorage:", error);
+                    localStorage.removeItem(STORAGE_KEY);
+                    return [];
                 }
-
-                // Atualizar a lista no DOM
-                updateDocumentList();
-
-                // Limpar o formulário
-                document.getElementById('documentForm').reset();
-                document.getElementById('submitBtn').textContent = 'Adicionar Documento';
-            } else {
-                alert('Por favor, preencha todos os campos.');
             }
-        });
 
-        function updateDocumentList() {
-            const documentList = document.getElementById('documentList');
-            documentList.innerHTML = ''; // Limpar a lista antes de atualizar
+            function savePages(pages) {
+                 try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
+                 } catch (error) {
+                     console.error("Erro ao salvar no localStorage:", error);
+                     alert("Não foi possível salvar as alterações.");
+                 }
+            }
 
-            documents.forEach(doc => {
-                const div = document.createElement('div');
-                div.className = 'document-item';
-                div.dataset.id = doc.id;
+            // --- Funções da Interface ---
+             function createPageElement(pageData) {
+                const uniqueId = pageData.id.replace(/[^a-zA-Z0-9-_]/g, '');
+                const templateHtml = pageTemplate.innerHTML.replace(/\{\{id\}\}/g, uniqueId);
+                const templateNode = document.createElement('div');
+                templateNode.innerHTML = templateHtml;
+                const pageSection = templateNode.firstElementChild;
 
-                div.innerHTML = `
-                    <div class="info">
-                        <strong>${doc.name}</strong>
-                        <small>Criado em: ${doc.createdAt} | Atualizado em: ${doc.updatedAt}</small>
-                    </div>
-                    <div class="actions">
-                        <button class="edit-btn" onclick="editDocument(${doc.id})">Editar</button>
-                        <button onclick="viewDocument(${doc.id})">Ver</button>
-                        <button onclick="deleteDocument(${doc.id})">Excluir</button>
-                    </div>
-                `;
+                // Seleciona elementos
+                const pageHeader = pageSection.querySelector('.page-header');
+                const pageTitle = pageSection.querySelector('.page-title');
+                const toggleBtn = pageSection.querySelector('.toggle-menu-btn');
+                const deleteBtn = pageSection.querySelector('.delete-page-btn');
+                const menuContent = pageSection.querySelector('.menu-content');
+                const fileInput = pageSection.querySelector('.file-input');
+                const previewArea = pageSection.querySelector('.preview-area');
+                const dateInputsContainer = pageSection.querySelector('.date-inputs');
+                const startDateInput = pageSection.querySelector('.start-date');
+                const endDateInput = pageSection.querySelector('.end-date');
+                const saveBtn = pageSection.querySelector('.save-doc-btn');
+                const historyListUl = pageSection.querySelector('.history-list ul');
 
-                documentList.appendChild(div);
+                // Configurações Iniciais
+                pageSection.dataset.pageId = pageData.id;
+                pageTitle.textContent = pageData.name;
+                pageTitle.title = pageData.name;
+
+                 const oldUrl = previewArea.dataset.objectUrl;
+                 if (oldUrl) URL.revokeObjectURL(oldUrl);
+
+                // Restaura estado atual
+                if (pageData.currentDocument) {
+                    displayPreview(pageData.currentDocument.fileType, pageData.currentDocument.fileName, previewArea);
+                    startDateInput.value = pageData.currentDocument.startDate || '';
+                    endDateInput.value = pageData.currentDocument.endDate || '';
+                    dateInputsContainer.style.display = 'flex'; // Mostra container das datas
+                    saveBtn.disabled = false;
+                } else {
+                     previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
+                     dateInputsContainer.style.display = 'none'; // Esconde datas se não houver doc
+                     saveBtn.disabled = true;
+                }
+                updateHistoryList(pageData.history || [], historyListUl); // Passa UL para adicionar listeners
+
+                // Event Listeners do Card
+                pageHeader.addEventListener('click', (e) => {
+                     if (e.target === toggleBtn || e.target === deleteBtn || deleteBtn.contains(e.target) || toggleBtn.contains(e.target)) return;
+                    toggleMenu(menuContent, toggleBtn);
+                });
+                toggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(menuContent, toggleBtn); });
+                deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); handleDeletePage(pageSection, pageData, previewArea); });
+                fileInput.addEventListener('change', (event) => { handleFileSelection(event.target.files[0], previewArea, dateInputsContainer, saveBtn, pageSection, pageData); });
+                saveBtn.addEventListener('click', () => { handleSaveDocument(pageSection, pageData, startDateInput, endDateInput, historyListUl, fileInput); });
+
+                return pageSection;
+            }
+
+            function toggleMenu(menuContent, toggleBtn) {
+                 menuContent.classList.toggle('open');
+                 toggleBtn.classList.toggle('open');
+             }
+
+            function handleDeletePage(pageSection, pageData, previewArea) {
+                 if (confirm(`Tem certeza que deseja excluir a pasta "${pageData.name}"?`)) {
+                     const pages = getStoredPages();
+                     const updatedPages = pages.filter(p => p.id !== pageData.id);
+                     savePages(updatedPages);
+                      const currentPreviewUrl = previewArea.dataset.objectUrl;
+                      if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
+                     pageSection.remove();
+                 }
+            }
+
+            // --- Funções Auxiliares (handleFileSelection, handleSaveDocument, displayPreview) ---
+            // (Estas funções permanecem as mesmas da V4)
+            function handleFileSelection(file, previewArea, dateInputsContainer, saveBtn, pageSection, pageData) {
+                 const oldUrl = previewArea.dataset.objectUrl;
+                 if (oldUrl) { URL.revokeObjectURL(oldUrl); previewArea.dataset.objectUrl = ''; }
+
+                 if (file) {
+                     const fileUrl = URL.createObjectURL(file);
+                     previewArea.dataset.objectUrl = fileUrl;
+                     displayPreview(file.type, file.name, previewArea, fileUrl);
+                     dateInputsContainer.style.display = 'flex';
+                     saveBtn.disabled = false;
+                     pageSection.currentFile = file;
+                 } else {
+                     pageSection.currentFile = null;
+                     if (!pageData.currentDocument) {
+                         previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
+                         dateInputsContainer.style.display = 'none';
+                         saveBtn.disabled = true;
+                         pageSection.querySelector('.start-date').value = '';
+                         pageSection.querySelector('.end-date').value = '';
+                     } else {
+                         displayPreview(pageData.currentDocument.fileType, pageData.currentDocument.fileName, previewArea);
+                         saveBtn.disabled = false;
+                     }
+                 }
+            }
+
+            function handleSaveDocument(pageSection, pageData, startDateInput, endDateInput, historyListUl, fileInput) {
+                 const pages = getStoredPages();
+                 const pageIndex = pages.findIndex(p => p.id === pageData.id);
+                 if (pageIndex === -1) { console.error("Página não encontrada"); return; }
+
+                 const currentPage = pages[pageIndex];
+                 const fileToSave = pageSection.currentFile;
+                 const newStartDate = startDateInput.value;
+                 const newEndDate = endDateInput.value;
+                 let documentChanged = false;
+
+                 if (fileToSave) {
+                     if (currentPage.currentDocument) {
+                         if (!currentPage.history) currentPage.history = [];
+                         currentPage.history.push({ ...currentPage.currentDocument, modifiedDate: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) });
+                         if (currentPage.history.length > 10) currentPage.history.shift();
+                     }
+                     currentPage.currentDocument = { fileName: fileToSave.name, fileType: fileToSave.type, startDate: newStartDate, endDate: newEndDate, savedDate: new Date().toISOString() };
+                     documentChanged = true;
+                 } else if (currentPage.currentDocument) {
+                     if (currentPage.currentDocument.startDate !== newStartDate || currentPage.currentDocument.endDate !== newEndDate) {
+                         currentPage.currentDocument.startDate = newStartDate;
+                         currentPage.currentDocument.endDate = newEndDate;
+                         documentChanged = true;
+                     }
+                 } else { alert("Selecione um arquivo para salvar."); return; }
+
+                 if (documentChanged) {
+                     savePages(pages);
+                     pageData.currentDocument = currentPage.currentDocument;
+                     pageData.history = currentPage.history;
+                     updateHistoryList(currentPage.history || [], historyListUl); // Passa UL para listeners
+                     alert(`Documento salvo/atualizado na pasta "${currentPage.name}"!`);
+                     if (fileToSave) fileInput.value = '';
+                 } else { alert("Nenhuma alteração detectada."); }
+                 pageSection.currentFile = null;
+            }
+
+             function displayPreview(fileType, fileName, previewAreaElement, fileUrl = null) {
+                 previewAreaElement.innerHTML = '';
+                 let previewElement = null;
+                 const oldUrl = previewAreaElement.dataset.objectUrl;
+                 if (oldUrl && oldUrl !== fileUrl) { URL.revokeObjectURL(oldUrl); previewAreaElement.dataset.objectUrl = ''; }
+
+                 if (fileType.startsWith('image/')) {
+                    previewElement = document.createElement('img');
+                    previewElement.src = fileUrl || '';
+                    previewElement.alt = `Preview de ${fileName}`;
+                    previewElement.onerror = () => { previewAreaElement.innerHTML = '<p>Erro ao carregar imagem.</p>'; };
+                 } else if (fileType === 'application/pdf') {
+                     if (fileUrl) {
+                         previewElement = document.createElement('embed');
+                         previewElement.src = fileUrl;
+                         previewElement.type = "application/pdf";
+                         previewElement.style.width = "100%"; previewElement.style.height = "200px";
+                         const fallbackText = document.createElement('p');
+                         fallbackText.style.fontSize = '0.9em'; fallbackText.style.marginTop = '10px';
+                         fallbackText.innerHTML = `Preview pode não funcionar. <a href="${fileUrl}" target="_blank" rel="noopener noreferrer">Abrir ${fileName} em nova aba</a>.`;
+                         const container = document.createElement('div');
+                         container.style.textAlign = 'center'; container.appendChild(previewElement); container.appendChild(fallbackText);
+                         previewElement = container;
+                     } else {
+                         previewElement = document.createElement('p'); previewElement.textContent = `📄 PDF Salvo: ${fileName}`;
+                     }
+                 } else {
+                     previewElement = document.createElement('p'); previewElement.textContent = `📄 Arquivo: ${fileName}`;
+                 }
+                 if (previewElement) { previewAreaElement.appendChild(previewElement); }
+                 else { previewAreaElement.innerHTML = '<p>Sem preview disponível.</p>'; }
+                 if(fileUrl) previewAreaElement.dataset.objectUrl = fileUrl;
+            }
+
+            // --- Função de Histórico Atualizada ---
+            function updateHistoryList(history, ulElement) {
+                ulElement.innerHTML = ''; // Limpa
+                const explanationDiv = ulElement.closest('.history-list').querySelector('.history-explanation'); // Encontra a explicação
+                 if (!history || history.length === 0) {
+                     const li = document.createElement('li'); li.textContent = 'Nenhuma modificação anterior.'; li.style.color = 'var(--ff-secondary-text)';
+                     ulElement.appendChild(li);
+                     if (explanationDiv) explanationDiv.style.display = 'none'; // Esconde explicação se não há histórico
+                     return;
+                 }
+                 if (explanationDiv) explanationDiv.style.display = 'block'; // Mostra explicação se há histórico
+
+                history.slice().reverse().forEach(doc => {
+                    const li = document.createElement('li');
+
+                    const textDiv = document.createElement('div'); // Div para o texto
+                    textDiv.textContent = `Arquivo: ${doc.fileName || '?'}`;
+                    const dateSpan = document.createElement('span');
+                    dateSpan.textContent = `Substituído em: ${doc.modifiedDate || '?'}`;
+                    textDiv.appendChild(dateSpan);
+
+                    const downloadBtn = document.createElement('button'); // Botão de download
+                    downloadBtn.className = 'download-history-btn';
+                    downloadBtn.textContent = 'Info'; // Texto mais curto
+                    downloadBtn.title = 'Baixar informações do histórico';
+
+                    // Armazena dados no botão para fácil acesso no clique
+                    downloadBtn.dataset.filename = doc.fileName || 'arquivo_desconhecido';
+                    downloadBtn.dataset.filetype = doc.fileType || 'desconhecido';
+                    downloadBtn.dataset.startdate = doc.startDate || 'N/A';
+                    downloadBtn.dataset.enddate = doc.endDate || 'N/A';
+                    downloadBtn.dataset.saveddate = doc.savedDate || 'N/A';
+                    downloadBtn.dataset.modifieddate = doc.modifiedDate || 'N/A';
+
+                    // Adiciona listener diretamente no botão criado
+                    downloadBtn.addEventListener('click', handleDownloadHistoryInfo);
+
+                    li.appendChild(textDiv);
+                    li.appendChild(downloadBtn);
+                    ulElement.appendChild(li);
+                });
+            }
+
+            // --- Função para Download da Informação do Histórico ---
+            function handleDownloadHistoryInfo(event) {
+                 event.stopPropagation(); // Impede que o clique se propague para o LI/Header
+
+                 const btn = event.currentTarget;
+                 const filename = btn.dataset.filename;
+                 const modifiedDate = btn.dataset.modifieddate;
+
+                 // Prepara o conteúdo do arquivo de texto
+                 const fileContent = `Informações do Histórico de Documento\n` +
+                                     `--------------------------------------\n` +
+                                     `Nome do Arquivo Original: ${filename}\n` +
+                                     `Tipo Original: ${btn.dataset.filetype}\n` +
+                                     `Data de Início (na época): ${btn.dataset.startdate}\n` +
+                                     `Data de Término (na época): ${btn.dataset.enddate}\n` +
+                                     `Data de Salvamento (na época): ${btn.dataset.saveddate ? new Date(btn.dataset.saveddate).toLocaleString('pt-BR') : 'N/A'}\n` +
+                                     `Data da Substituição: ${modifiedDate}\n` +
+                                     `--------------------------------------\n` +
+                                     `Gerado em: ${new Date().toLocaleString('pt-BR')}\n`+
+                                     `IMPORTANTE: Este arquivo contém apenas informações sobre o documento e NÃO o arquivo original.`;
+
+                // Cria um Blob com o conteúdo
+                const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+
+                // Cria um link temporário para download
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                // Limpa e formata nome do arquivo para download
+                const safeFilename = filename.replace(/[^a-z0-9._-]/gi, '_').substring(0, 50);
+                link.download = `historico_${safeFilename}.txt`;
+
+                // Simula o clique no link e limpa
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url); // Libera memória
+            }
+
+            // --- Carregamento Inicial e Listener Global ---
+            function loadPagesFromStorage() {
+                const storedPages = getStoredPages();
+                pagesContainer.innerHTML = '';
+                storedPages.forEach(pageData => {
+                     if (!pageData.id || !pageData.name) { console.warn("Registro inválido:", pageData); return; }
+                    const pageElement = createPageElement(pageData);
+                    pagesContainer.appendChild(pageElement);
+                });
+            }
+
+            addPageBtn.addEventListener('click', () => {
+                const pageName = newPageNameInput.value.trim();
+                if (!pageName) { alert('Digite um nome para a pasta.'); newPageNameInput.focus(); return; }
+                const newPageData = { id: `page_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`, name: pageName, currentDocument: null, history: [] };
+                const pages = getStoredPages(); pages.push(newPageData); savePages(pages);
+                const newPageElement = createPageElement(newPageData); pagesContainer.appendChild(newPageElement);
+                newPageNameInput.value = '';
             });
-        }
 
-        function editDocument(id) {
-            const documentItem = documents.find(doc => doc.id === id);
-            if (documentItem) {
-                // Preencher o formulário com os dados do documento
-                document.getElementById('documentName').value = documentItem.name;
-                document.getElementById('documentDescription').value = documentItem.description;
-                document.getElementById('submitBtn').textContent = 'Salvar Edição';
-                editingDocumentId = id; // Definir o ID do documento em edição
-            }
-        }
+            loadPagesFromStorage(); // Carrega os dados ao iniciar
 
-        function viewDocument(id) {
-            const documentItem = documents.find(doc => doc.id === id);
-            if (documentItem) {
-                const fileURL = URL.createObjectURL(documentItem.file);
-                window.open(fileURL, '_blank');
-            }
-        }
-
-        function deleteDocument(id) {
-            const confirmDelete = confirm(`Tem certeza que deseja remover este documento?`);
-            if (confirmDelete) {
-                documents = documents.filter(doc => doc.id !== id);
-                updateDocumentList();
-            }
-        }
-
-        // Inicializar a lista de documentos
-        updateDocumentList();
+        }); // Fim do DOMContentLoaded
     </script>
+
 </body>
 </html>
