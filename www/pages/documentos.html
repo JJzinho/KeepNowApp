@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Documentos</title>
+    <link rel="stylesheet" href="../styles/documentos.css">
+</head>
+<body>
+    <div class="app-bar">
+        <a href="../index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
+    </div>
+
+    <main class="document-manager-container">
+        <h1 class="app-title">Meus Documentos</h1>
+
+        <div class="add-page-controls">
+            <input type="text" id="new-page-name" placeholder="Nome da Nova Pasta">
+            <button id="add-page-btn">Criar Nova Pasta</button>
+        </div>
+
+        <div id="pages-container" class="pages-container">
+            </div>
+    </main>
+
+    <template id="page-template">
+        <div class="page-section">
+            <div class="page-header">
+                <h2 class="page-title">Nome da Página</h2>
+                <div class="header-buttons">
+                    <button class="delete-page-btn" title="Excluir Pasta">🗑️</button>
+                    <button class="toggle-menu-btn" title="Abrir/Fechar Detalhes">▼</button>
+                 </div>
+            </div>
+            <div class="menu-content">
+                <div class="file-upload-area">
+                    <label for="file-input-{{id}}">Arquivo (PDF ou Imagem):</label>
+                    <input type="file" class="file-input" id="file-input-{{id}}" accept=".pdf, image/*">
+                    <div class="preview-area">
+                         <p>Nenhum arquivo selecionado.</p>
+                    </div>
+                </div>
+                <div class="date-inputs" style="display: none;">
+                     <div>
+                         <label for="start-date-{{id}}">Data de Expedição:</label>
+                         <input type="date" class="start-date" id="start-date-{{id}}">
+                     </div>
+                     <div>
+                         <label for="end-date-{{id}}">Data de Validade:</label>
+                         <input type="date" class="end-date" id="end-date-{{id}}">
+                     </div>
+                </div>
+                 <button class="save-doc-btn" disabled>Salvar / Atualizar Documento</button>
+                <div class="history-list">
+                    <h4>Histórico de Modificações:</h4>
+                    <div class="history-explanation" style="font-size: 0.8em; color: var(--ff-secondary-text); margin-bottom: 5px;">(Downloads contêm apenas informações do histórico, não o arquivo original.)</div>
+                    <ul>
+                        <li>Nenhuma modificação anterior.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="../script/documentos.js"></script>
+</body>
+</html>

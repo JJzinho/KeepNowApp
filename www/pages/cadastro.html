@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Condomínio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <style>
+        :root {
+            --primary: #4B39EF;
+            --background: #F1F4F8;
+            --card-bg: #FFFFFF;
+            --text-primary: #14181B;
+            --text-secondary: #57636C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(75, 57, 239, 0.2);
+        }
+
+        .image-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            max-width: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background-color: #3A2DBD;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Condomínio</h1>
+        <form id="condominioForm">
+            <div class="form-group">
+                <label for="nomecondo">Nome do Condomínio</label>
+                <input type="text" id="nomecondo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço Completo</label>
+                <input type="text" id="endereco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input type="text" id="cep" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone do Condomínio</label>
+                <input type="tel" id="telefone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefonesindico">Telefone do Síndico</label>
+                <input type="tel" id="telefonesindico" required>
+            </div>
+
+            <div class="form-group">
+                <label for="unidades">Unidades</label>
+                <input type="number" id="unidades" required>
+            </div>
+
+            <div class="form-group">
+                <label for="moradores">Moradores</label>
+                <input type="number" id="moradores" required>
+            </div>
+
+            <div class="form-group">
+                <label for="torres">Torres/Blocos</label>
+                <input type="number" id="torres" required>
+            </div>
+
+            <div class="form-group">
+                <label for="admin">Administradora</label>
+                <input type="text" id="admin" required>
+            </div>
+
+            <div class="form-group">
+                <label>Foto do Condomínio</label>
+                <div class="image-upload" onclick="document.getElementById('foto').click()">
+                    <span class="material-icons">upload</span>
+                    <p>Clique para enviar uma foto</p>
+                </div>
+                <input type="file" id="foto" accept="image/*" hidden>
+                <div class="image-preview" id="imagePreview"></div>
+            </div>
+
+            <button type="submit" class="button">Salvar Cadastro</button>
+        </form>
+    </div>
+
+    <script>
+       document.getElementById('condominioForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        nomecondo: document.getElementById('nomecondo').value,
+        endereco: document.getElementById('endereco').value,
+        cidade: document.getElementById('cidade').value,
+        cep: document.getElementById('cep').value,
+        cnpj: document.getElementById('cnpj').value,
+        telefonecondo: document.getElementById('telefone').value,
+        telefonesindico: document.getElementById('telefonesindico').value,
+        unidades: document.getElementById('unidades').value,
+        moradores: document.getElementById('moradores').value,
+        torres: document.getElementById('torres').value,
+        admin: document.getElementById('admin').value,
+        foto: document.getElementById('foto').files[0] ? 
+              document.getElementById('imagePreview').querySelector('img').src : 
+              'https://images.unsplash.com/photo-1571905837410-87605d34ad73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTRC20_AddresslbnwwfHx8fDE3NDQwNDIzNDZ8MA&ixlib=rb-4.0.3&q=80&w=1080'
+    };
+
+    localStorage.setItem('condominioData', JSON.stringify(formData));
+    window.location.href = 'index.html';
+});
+
+// Carregar dados existentes ao entrar na página
+document.addEventListener('DOMContentLoaded', () => {
+    const savedData = JSON.parse(localStorage.getItem('condominioData'));
+    if (savedData) {
+        document.getElementById('nomecondo').value = savedData.nomecondo || '';
+        document.getElementById('endereco').value = savedData.endereco || '';
+        document.getElementById('cidade').value = savedData.cidade || '';
+        document.getElementById('cep').value = savedData.cep || '';
+        document.getElementById('cnpj').value = savedData.cnpj || '';
+        document.getElementById('telefone').value = savedData.telefonecondo || '';
+        document.getElementById('telefonesindico').value = savedData.telefonesindico || '';
+        document.getElementById('unidades').value = savedData.unidades || '';
+        document.getElementById('moradores').value = savedData.moradores || '';
+        document.getElementById('torres').value = savedData.torres || '';
+        document.getElementById('admin').value = savedData.admin || '';
+        
+        if (savedData.foto) {
+            document.getElementById('imagePreview').innerHTML = 
+                `<img src="${savedData.foto}" style="width:100%">`;
+        }
+    }
+});
+    </script>
+</body>
+</html>

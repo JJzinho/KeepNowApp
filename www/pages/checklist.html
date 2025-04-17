@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Manutenção Predial</title>
+    <link rel="stylesheet" href="../styles/checklist.css">
+</head>
+<body>
+    <div class="app-bar">
+        <a href="../index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
+    </div>
+        <div class="filters">
+            <select id="system-filter">
+                <option value="">Todos Sistemas</option>
+                <option value="Hidrossanitário">Hidrossanitário</option>
+                <option value="Incêndio">Proteção Incêndio</option>
+                <option value="Elétrico">Elétrico</option>
+                <option value="Climatização">Climatização</option>
+                <option value="Estrutural">Estrutural</option>
+            </select>
+            
+            <select id="period-filter">
+                <option value="">Todas Periodicidades</option>
+                <option value="DIÁRIA">Diária</option>
+                <option value="SEMANAL">Semanal</option>
+                <option value="MENSAL">Mensal</option>
+                <option value="TRIMESTRAL">Trimestral</option>
+                <option value="SEMESTRAL">Semestral</option>
+                <option value="ANUAL">Anual</option>
+            </select>
+            
+            <button id="reset">Limpar Filtros</button>
+        </div>
+
+        <div id="checklist">
+            <!-- Itens serão inseridos aqui -->
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <button onclick="closeModal()" class="btn" style="width: 100%; margin-top: 15px;">OK</button>
+        </div>
+    </div>
+    <script src="../script/chesklist.js"></script>
+</body>
+</html>

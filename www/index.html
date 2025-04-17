@@ -3,236 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Condomínio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Condomínio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
-    <style>
-        :root {
-            --primary: #4B39EF;
-            --background: #F1F4F8;
-            --card-bg: #FFFFFF;
-            --text-primary: #14181B;
-            --text-secondary: #57636C;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background);
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(75, 57, 239, 0.2);
-        }
-
-        .image-upload {
-            border: 2px dashed #ddd;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .image-preview {
-            margin-top: 20px;
-            max-width: 300px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .button {
-            background-color: var(--primary);
-            color: white;
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .button:hover {
-            background-color: #3A2DBD;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="./styles/index.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Cadastro de Condomínio</h1>
-        <form id="condominioForm">
-            <div class="form-group">
-                <label for="nomecondo">Nome do Condomínio</label>
-                <input type="text" id="nomecondo" required>
-            </div>
+    <div class="app-bar">
+        <a href="./index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
 
-            <div class="form-group">
-                <label for="endereco">Endereço Completo</label>
-                <input type="text" id="endereco" required>
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <i class="material-icons">menu</i>
+            </button>
+                <a href="#" class="navbar-item">
+                    <i class="material-icons">notifications</i>
+                    <span>Notificações</span>
+                    <span class="notification-badge">3</span>
+                </a>
+                <a href="../www/pages/configuracoes.html" class="navbar-item">
+                    <i class="material-icons">settings</i>
+                    <span>Configurações</span>
+                </a>
             </div>
-
-            <div class="form-group">
-                <label for="cidade">Cidade</label>
-                <input type="text" id="cidade" required>
-            </div>
-
-            <div class="form-group">
-                <label for="cep">CEP</label>
-                <input type="text" id="cep" required>
-            </div>
-
-            <div class="form-group">
-                <label for="cnpj">CNPJ</label>
-                <input type="text" id="cnpj" required>
-            </div>
-
-            <div class="form-group">
-                <label for="telefone">Telefone do Condomínio</label>
-                <input type="tel" id="telefone" required>
-            </div>
-
-            <div class="form-group">
-                <label for="telefonesindico">Telefone do Síndico</label>
-                <input type="tel" id="telefonesindico" required>
-            </div>
-
-            <div class="form-group">
-                <label for="unidades">Unidades</label>
-                <input type="number" id="unidades" required>
-            </div>
-
-            <div class="form-group">
-                <label for="moradores">Moradores</label>
-                <input type="number" id="moradores" required>
-            </div>
-
-            <div class="form-group">
-                <label for="torres">Torres/Blocos</label>
-                <input type="number" id="torres" required>
-            </div>
-
-            <div class="form-group">
-                <label for="admin">Administradora</label>
-                <input type="text" id="admin" required>
-            </div>
-
-            <div class="form-group">
-                <label>Foto do Condomínio</label>
-                <div class="image-upload" onclick="document.getElementById('foto').click()">
-                    <span class="material-icons">upload</span>
-                    <p>Clique para enviar uma foto</p>
-                </div>
-                <input type="file" id="foto" accept="image/*" hidden>
-                <div class="image-preview" id="imagePreview"></div>
-            </div>
-
-            <button type="submit" class="button">Salvar Cadastro</button>
-        </form>
+        </div>
     </div>
+    <img src="" alt="Condomínio" class="condo-image" id="condo-image-display"> <h1 class="condo-name" id="condo-name-display"></h1>
+    <div class="info-card">
+        <h2 class="info-title">Informações</h2>
+        <div class="info-row">
+            <span class="material-icons info-icon">location_on</span>
+            <span id="info-card-location"></span>
+        </div>
+        <div class="info-row">
+            <span class="material-icons info-icon">business</span> <span id="info-card-cnpj"></span>
+        </div>
+        <div class="info-row">
+            <span class="material-icons info-icon">phone</span>
+            <span id="info-card-phone"></span>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="button button-primary" id="show-more-btn">Exibir mais</button>
+        </div>
+    </div>
+    <div class="tickets-card">
+        <h3 class="tickets-title">Chamados</h3>
+        <h4 class="contacts-list-title">Fornecedores</h4>
+        <div class="contacts-list" id="contacts-list">
+            <div class="status-message status-info">Carregando lista...</div>
+        </div>
+        <div class="tickets-buttons">
+            <button class="button button-primary" id="create-ticket-btn">Criar novo chamado</button>
+            <button class="button button-orange" id="view-contacts-btn">Gerenciar fornecedores</button>
+            <a href="../www/pages/chamados.html" class="button button-primary">
+                Visualizar chamados
+              </a>
+        </div>
+    </div>
+    <div class="menu-card">
+        <a href="./pages/documentos.html" class="menu-item">
+            <div class="menu-item-icon"></div>
+            <span class="menu-item-text">Documentos</span>
+        </a>
+        <a href="./pages/manutencao.html" class="menu-item">
+            <div class="menu-item-icon"></div>
+            <span class="menu-item-text">Manutenção</span>
+        </a>
+        <a href="./pages/checklist.html" class="menu-item">
+            <div class="menu-item-icon"></div>
+            <span class="menu-item-text">Check-list</span>
+        </a>
+        <a href="./pages/solicitacao-moradores.html" class="menu-item">
+            <div class="menu-item-icon"></div>
+            <span class="menu-item-text">Parceiros KeepNow</span>
+        </a>
+    </div>
+    <div id="info-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">Informações Gerais</div>
+                <button class="modal-edit-btn" id="edit-info-btn"><span class="material-icons">edit</span></button>
+                <button class="modal-close-x">&times;</button>
+            </div>
+            <div class="modal-row">
+                <span class="material-icons info-icon">badge</span>
+                 <span class="info-display" id="modal-name-display"></span>
+                <input type="text" placeholder="Nome do Condomínio" class="form-control info-edit hidden" id="edit-modal-name">
+            </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">location_on</span>
+                 <span class="info-display" id="modal-location"></span>
+                 <input type="text" placeholder="Endereço Completo" class="form-control info-edit hidden" id="edit-modal-location">
+             </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">map</span>
+                 <span class="info-display" id="modal-cep"></span>
+                 <input type="text" placeholder="CEP" maxlength="9" class="form-control info-edit hidden" id="edit-modal-cep"> </div>
+             <div class="modal-row">
+                <span class="material-icons info-icon">location_city</span>
+                <span class="info-display" id="modal-city"></span>
+                <input type="text" placeholder="Cidade" class="form-control info-edit hidden" id="edit-modal-city">
+            </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">phone</span>
+                 <span class="info-display" id="modal-phone"></span>
+                  <input type="tel" placeholder="Telefone Condomínio" maxlength="19" class="form-control info-edit hidden" id="edit-modal-phone">
+             </div>
+              <div class="modal-row">
+                <span class="material-icons info-icon">support_agent</span>
+                <span class="info-display" id="modal-manager-phone"></span>
+                 <input type="tel" placeholder="Telefone Síndico" maxlength="19" class="form-control info-edit hidden" id="edit-modal-manager-phone">
+            </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">business</span>
+                 <span class="info-display" id="modal-cnpj"></span>
+                 <input type="text" placeholder="CNPJ" maxlength="18" class="form-control info-edit hidden" id="edit-modal-cnpj"> </div>
 
-    <script>
-        // Aplicar máscaras
-        new Cleave('#cep', {
-            blocks: [5,3],
-            delimiter: '-',
-            numericOnly: true
-        });
-
-        new Cleave('#cnpj', {
-            blocks: [2,3,3,4,2],
-            delimiters: ['.','.','/','-'],
-            numericOnly: true
-        });
-
-        new Cleave('#telefone', {
-            blocks: [4,4],
-            delimiter: '-',
-            numericOnly: true
-        });
-
-        new Cleave('#telefonesindico', {
-            blocks: [0,2,5,4],
-            delimiters: ['(',') ','-'],
-            numericOnly: true
-        });
-
-        // Preview da imagem
-        document.getElementById('foto').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const preview = document.getElementById('imagePreview');
-                preview.innerHTML = `<img src="${reader.result}" style="width:100%">`;
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        });
-
-        // Salvar dados
-        document.getElementById('condominioForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                nomecondo: document.getElementById('nomecondo').value,
-                endereco: document.getElementById('endereco').value,
-                cidade: document.getElementById('cidade').value,
-                cep: document.getElementById('cep').value,
-                cnpj: document.getElementById('cnpj').value,
-                telefone: document.getElementById('telefone').value,
-                telefonesindico: document.getElementById('telefonesindico').value,
-                unidades: document.getElementById('unidades').value,
-                moradores: document.getElementById('moradores').value,
-                torres: document.getElementById('torres').value,
-                admin: document.getElementById('admin').value,
-                foto: document.getElementById('foto').files[0] ? 
-                      document.getElementById('imagePreview').querySelector('img').src : null
-            };
-
-            localStorage.setItem('condominioData', JSON.stringify(formData));
-            window.location.href = 'condominio.html';
-        });
-    </script>
+             <div class="modal-row">
+                <span class="material-icons info-icon">image</span>
+                 <img id="modal-image-preview" src="" alt="Prévia" class="info-display" style="max-width: 100px; max-height: 80px; margin-left: 0; border: 1px solid #eee;">
+                <span class="info-display hidden" id="modal-photo-url-display" style="word-break: break-all;"></span>
+                <label for="edit-modal-photo-file" class="info-edit-label info-edit hidden">Alterar Imagem Principal:</label>
+                <input type="file" class="form-control info-edit hidden" id="edit-modal-photo-file" accept="image/*">
+            </div>
+            <div class="modal-section-title">Adicionais</div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">people_outline</span>
+                 <span class="info-display" id="modal-residents"></span>
+                 <input type="number" placeholder="Nº Moradores" class="form-control info-edit hidden" id="edit-modal-residents" min="0">
+             </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">apartment</span>
+                 <span class="info-display" id="modal-units"></span>
+                 <input type="number" placeholder="Nº Unidades" class="form-control info-edit hidden" id="edit-modal-units" min="0">
+             </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">domain</span>
+                 <span class="info-display" id="modal-blocks"></span>
+                 <input type="number" placeholder="Nº Torres/Blocos" class="form-control info-edit hidden" id="edit-modal-blocks" min="0">
+             </div>
+             <div class="modal-row">
+                 <span class="material-icons info-icon">admin_panel_settings</span>
+                 <span class="info-display" id="modal-admin"></span>
+                 <input type="text" placeholder="Nome da Administradora" class="form-control info-edit hidden" id="edit-modal-admin">
+             </div>
+            <div class="modal-actions info-edit hidden">
+                 <button type="button" class="btn btn-secondary" id="cancel-edit-info-btn">Cancelar</button>
+                 <button type="button" class="btn btn-primary" id="save-edit-info-btn">Salvar</button>
+             </div>
+        </div>
+    </div>
+    <div id="ticket-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+           <button class="modal-close-x">&times;</button>>
+            <h2 class="modal-title">Criar Chamado</h2>
+            <form id="ticket-form">
+                <div class="form-group"><label class="form-label" for="occurrence-type">Ocorrência</label><select class="form-select" id="occurrence-type" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
+                <div class="form-group"><label class="form-label" for="location">Localização</label><input type="text" class="form-control" id="location" placeholder="Ex: Bloco A, Garagem..." required></div>
+                <div class="form-group"><label class="form-label" for="description">Descrição</label><input type="text" class="form-control" id="description" placeholder="Breve descrição" required></div>
+                <div class="form-group"><label class="form-label" for="priority">Prioridade</label><select class="form-select" id="priority" required><option value="" selected disabled>Selecione...</option><option value="Baixo">Baixo</option><option value="Média">Média</option><option value="Alta">Alta</option><option value="Urgência">Urgência</option></select></div>
+                <div class="form-actions">
+                    <button class="modal-close-x">&times;</button>
+                    <button type="submit" class="btn btn-primary">Próximo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="preview-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <button class="modal-close-x">&times;</button>
+            <h2 class="modal-title">Pré-visualização do Chamado</h2>
+            <div class="preview-container">
+                <div class="preview-title">Detalhes</div>
+                <div class="preview-item"><span class="preview-label">Ocorrência:</span><span class="preview-value" id="preview-occurrence"></span></div>
+                <div class="preview-item"><span class="preview-label">Localização:</span><span class="preview-value" id="preview-location"></span></div>
+                <div class="preview-item"><span class="preview-label">Descrição:</span><span class="preview-value" id="preview-description"></span></div>
+                <div class="preview-item"><span class="preview-label">Prioridade:</span><span class="preview-value" id="preview-priority"></span></div>
+            </div>
+            <div class="whatsapp-section">
+                <h3 class="preview-title">Enviar para Fornecedor</h3>
+                <div id="supplier-info">
+                    <p>Selecione o fornecedor para esta ocorrência:</p>
+                    <select class="form-select" id="supplier-select"><option value="" selected disabled>Carregando...</option></select>
+                    <div id="no-supplier" class="hidden">
+                        <div class="status-message status-info">Nenhum fornecedor cadastrado para este tipo.</div>
+                        <button type="button" class="btn btn-success" id="add-supplier-btn-from-preview"><i class="material-icons">add</i> Adicionar Novo Fornecedor</button>
+                    </div>
+                </div>
+                <button class="whatsapp-btn" id="send-whatsapp-btn" disabled><i class="fab fa-whatsapp"></i> Enviar via WhatsApp</button>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="back-to-form-btn">Voltar</button>
+                <button type="button" class="btn btn-primary" id="confirm-ticket-btn">Confirmar Chamado</button>
+            </div>
+        </div>
+    </div>
+     <div id="supplier-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <button class="modal-close-x" id="close-supplier-modal-x">X</button>
+            <h2 class="modal-title" id="supplier-modal-title">Adicionar Fornecedor</h2>
+            <form id="supplier-form">
+                <input type="hidden" id="supplier-id">
+                <div class="form-group"><label class="form-label" for="supplier-name">Nome</label><input type="text" class="form-control" id="supplier-name" required></div>
+                 <div class="form-group"><label class="form-label" for="supplier-phone">Telefone (Ex: +55 (11) 9...)</label><input type="tel" class="form-control" id="supplier-phone" placeholder="+55 (XX) XXXXX-XXXX" required maxlength="19"></div>
+                <div class="form-group"><label class="form-label" for="supplier-occurrence">Serviço Principal</label><select class="form-select" id="supplier-occurrence" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-supplier-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+     <div id="manage-suppliers-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <button class="modal-close-x">&times;</button>
+            <h2 class="modal-title">Fornecedores Cadastrados</h2>
+            <div class="contacts-list" id="manage-contacts-list">
+                <div class="status-message status-info">Carregando...</div>
+            </div>
+            <div class="form-actions" style="justify-content: space-between;">
+                <button type="button" class="btn btn-secondary" id="close-manage-suppliers-btn">Fechar</button>
+                <button type="button" class="btn btn-success" id="new-supplier-btn"><i class="material-icons" style="font-size: 18px; margin-right: 8px; vertical-align: middle;">add</i> Novo Fornecedor</button>
+            </div>
+        </div>
+    </div>
+    <script src="script/index.js"></script>
+    <script src="script/dados.js"></script>
 </body>
 </html>

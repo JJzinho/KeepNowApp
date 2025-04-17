@@ -1,0 +1,465 @@
+/* www/styles/chamados.css */
+:root {
+    --primary: #4B39EF; /* Azul KeepNow */
+    --primary-light: #a29dff;
+    --secondary: #6c757d; /* Cinza secundário */
+    --success: #28a745; /* Verde sucesso */
+    --danger: #dc3545; /* Vermelho perigo/cancelar */
+    --warning: #ffc107; /* Amarelo aviso/média */
+    --orange: #fd7e14; /* Laranja para alta prioridade */
+    --info: #17a2b8; /* Azul info */
+    --light: #f8f9fa; /* Fundo claro */
+    --dark: #343a40; /* Texto escuro */
+    --white: #FFFFFF;
+    --border-color: #dee2e6;
+    --card-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --font-main: 'Inter', sans-serif;
+    --font-tight: 'Inter Tight', sans-serif;
+    --border-radius: 8px;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--light);
+    margin: 0;
+    padding-bottom: 60px; /* Espaço no final */
+    color: var(--dark);
+}
+
+/* --- App Bar --- */
+.app-bar {
+    background-color: var(--primary);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky; /* Fixa no topo */
+    top: 0;
+    z-index: 100; /* Garante que fique acima do conteúdo */
+}
+
+.app-bar .logo {
+    height: 65px; /* Ajuste conforme necessário */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -5px; /* Para sobrepor um pouco */
+}
+
+.app-bar-link {
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    margin-left: auto; /* Empurra para a direita */
+}
+
+.app-bar-link i {
+    font-size: 1.2em;
+}
+
+/* --- Container Principal --- */
+.chamados-container {
+    padding: 15px;
+    max-width: 1000px; /* Limita largura em telas grandes */
+    margin: 0 auto; /* Centraliza */
+}
+
+.page-title {
+    text-align: center;
+    margin: 20px 0;
+    color: var(--dark);
+    font-family: var(--font-tight);
+    font-weight: 700;
+    font-size: 1.6em;
+}
+
+/* --- Navegação por Abas --- */
+.tab-nav {
+    display: flex;
+    background-color: var(--white);
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.tab-button {
+    flex: 1; /* Ocupa espaço igual */
+    padding: 12px 5px;
+    text-align: center;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent; /* Linha indicadora inativa */
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--secondary);
+    transition: all 0.2s ease;
+    font-size: 0.95em;
+    white-space: nowrap; /* Evita quebra de linha */
+}
+
+.tab-button:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.tab-button.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary); /* Linha indicadora ativa */
+    font-weight: 700;
+}
+
+.tab-count {
+    font-size: 0.8em;
+    color: var(--secondary);
+    font-weight: 500;
+    margin-left: 4px;
+    background-color: #e9ecef;
+    padding: 1px 5px;
+    border-radius: 10px;
+}
+.tab-button.active .tab-count {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+
+/* --- Conteúdo das Abas --- */
+.tab-content .tab-pane {
+    display: none; /* Esconde por padrão */
+    padding: 5px 0; /* Espaçamento vertical */
+}
+
+.tab-content .tab-pane.active {
+    display: block; /* Mostra a aba ativa */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Mensagem de status (lista vazia, carregando) */
+.status-message {
+    text-align: center;
+    color: var(--secondary);
+    padding: 30px 15px;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* --- Card de Chamado --- */
+.ticket-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    padding: 15px;
+    box-shadow: var(--card-shadow);
+    border-left: 5px solid var(--secondary); /* Borda padrão */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ticket-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+/* Cores da borda esquerda por status */
+#pendente-list .ticket-card { border-left-color: var(--warning); }
+#andamento-list .ticket-card { border-left-color: var(--info); }
+#concluido-list .ticket-card { border-left-color: var(--success); }
+#arquivado-list .ticket-card { border-left-color: var(--secondary); opacity: 0.9; }
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ticket-occurrence {
+    font-weight: 700;
+    font-family: var(--font-tight);
+    font-size: 1.2em;
+    color: var(--primary);
+    flex-grow: 1; /* Ocupa espaço */
+    margin-right: 10px; /* Espaço antes da prioridade */
+     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.ticket-priority {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    flex-shrink: 0; /* Não encolhe */
+}
+
+/* Cores de fundo da prioridade */
+.ticket-priority.Baixo { background-color: var(--success); }
+.ticket-priority.Média { background-color: var(--warning); color: var(--dark); } /* Texto escuro para amarelo */
+.ticket-priority.Alta { background-color: var(--orange); }
+.ticket-priority.Urgência { background-color: var(--danger); }
+
+.ticket-info {
+    font-size: 0.95em;
+    color: var(--secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre ícone e texto */
+}
+
+.ticket-info .material-icons {
+    font-size: 1.2em; /* Tamanho do ícone */
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.ticket-info span { /* O texto */
+    word-break: break-word; /* Quebra palavras longas */
+}
+
+/* Infos de tempo (Expiração/Arquivamento) */
+.expiration-info, .archival-info {
+    font-size: 0.85em;
+    margin-top: 8px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    display: inline-flex; /* Para ficar junto ao ícone */
+    align-items: center;
+    gap: 5px;
+}
+.expiration-info {
+    color: var(--danger);
+    background-color: #ffebee; /* Fundo vermelho claro */
+}
+.archival-info {
+    color: var(--secondary);
+    background-color: #e9ecef; /* Fundo cinza claro */
+}
+.expiration-info .material-icons, .archival-info .material-icons {
+    font-size: 1.1em;
+}
+
+
+/* --- Seções Específicas por Status --- */
+
+/* Observação (Em Andamento e Concluído/Arquivado) */
+.observation-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+.observation-section label, .observation-section strong {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9em;
+}
+.observation-section textarea {
+    width: 100%;
+    min-height: 70px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 0.95em;
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+.observation-section textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+/* Estilo para observação salva (não editável) */
+.observation-section p {
+    background-color: var(--light);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: 0.95em;
+    color: var(--dark);
+    white-space: pre-wrap; /* Mantém quebras de linha */
+    margin-top: 5px;
+}
+
+/* Resolução (Em Andamento) */
+.resolution-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+.resolution-section label {
+    display: inline-block; /* Para ficar lado a lado */
+    margin-right: 15px; /* Espaço entre opções */
+    font-size: 0.95em;
+    cursor: pointer;
+}
+.resolution-section input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+/* Estilo do título da seção de resolução */
+.resolution-section > label:first-of-type {
+    display: block; /* O título fica em linha própria */
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9em;
+    margin-right: 0;
+}
+
+
+/* Anexos (Concluído e Arquivado) */
+.attachment-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+.attachment-section label, .attachment-section strong {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9em;
+}
+.attachment-section input[type="file"] {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+.attachment-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    max-height: 150px; /* Limita altura se houver muitos anexos */
+    overflow-y: auto;
+}
+.attachment-list li {
+    background-color: #e9ecef;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: var(--dark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: 1px solid var(--border-color);
+}
+
+/* Razão do Arquivamento */
+.archived-reason {
+    font-size: 0.9em;
+    color: var(--secondary);
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+    font-style: italic;
+}
+
+
+/* --- Botões de Ação --- */
+.ticket-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Permite que botões quebrem linha em telas pequenas */
+    justify-content: flex-end; /* Alinha botões à direita */
+}
+
+.btn {
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9em;
+    display: inline-flex; /* Para alinhar ícone e texto */
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn .material-icons {
+    font-size: 1.1em; /* Tamanho do ícone no botão */
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Cores dos Botões */
+.btn-primary { background-color: var(--primary); color: var(--white); }
+.btn-primary:hover:not(:disabled) { background-color: #3a2dbd; }
+
+.btn-secondary { background-color: var(--secondary); color: var(--white); }
+.btn-secondary:hover:not(:disabled) { background-color: #5a6268; }
+
+.btn-danger { background-color: var(--danger); color: var(--white); }
+.btn-danger:hover:not(:disabled) { background-color: #c82333; }
+
+.btn-success { background-color: var(--success); color: var(--white); }
+.btn-success:hover:not(:disabled) { background-color: #218838; }
+
+.btn-warning { background-color: var(--warning); color: var(--dark); }
+.btn-warning:hover:not(:disabled) { background-color: #e0a800; }
+
+.btn-info { background-color: var(--info); color: var(--white); }
+.btn-info:hover:not(:disabled) { background-color: #138496; }
+
+
+/* --- Responsividade --- */
+@media (max-width: 600px) {
+    .page-title {
+        font-size: 1.4em;
+    }
+    .tab-button {
+        font-size: 0.85em;
+        padding: 10px 3px; /* Menos padding lateral */
+    }
+    .ticket-occurrence {
+        font-size: 1.1em;
+    }
+    .ticket-priority {
+        font-size: 0.75em;
+        padding: 3px 8px;
+    }
+    .ticket-info {
+        font-size: 0.9em;
+        gap: 5px;
+    }
+    .ticket-info .material-icons {
+        font-size: 1.1em;
+    }
+    .btn {
+        font-size: 0.85em;
+        padding: 7px 12px;
+    }
+    .ticket-actions {
+        justify-content: space-between; /* Botões ocupam toda a largura */
+    }
+    .ticket-actions .btn {
+        flex-grow: 1; /* Botões crescem para preencher */
+        text-align: center;
+        justify-content: center; /* Centraliza ícone e texto */
+    }
+    /* Garante que haja no máximo 2 botões por linha */
+    .ticket-actions .btn:nth-child(n+3) {
+         margin-top: 8px;
+     }
+}

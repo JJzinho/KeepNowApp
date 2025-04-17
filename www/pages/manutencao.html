@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manutenção</title>
+    <link rel="stylesheet" href="../styles/manutencao.css">
+</head>
+<body>
+
+    <div class="app-bar">
+        <a href="../index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
+    </div>
+
+    <div class="header">
+        <div class="container">
+            <h1>Manutenções</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <button onclick="toggleForm()" class="create-button">Criar Novo Chamado</button>
+
+        <!-- Formulário de Nova Atividade (expandível) -->
+        <div class="form-container" id="activityFormContainer">
+            <form id="activityForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ocorrência</label>
+                        <select id="occurrence" required>
+                            <option value="">Selecione</option>
+                            <option>Hidraulica</option>
+                            <option>Eletrica</option>
+                            <option>Elevador</option>
+                            <option>Gerador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Norma (opcional)</label>
+                        <input type="text" id="norm">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="description" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Equipe</label>
+                        <select id="team" required>
+                            <option value="">Selecione</option>
+                            <option>Especialização</option>
+                            <option>Capacitação</option>
+                            <option>Local</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Período</label>
+                        <select id="period" required onchange="toggleCustomInput()">
+                            <option value="">Selecione</option>
+                            <option>Segunda a sexta</option>
+                            <option>Segunda a sábado</option>
+                            <option>Mensal</option>
+                            <option>Trimestral</option>
+                            <option>Semestral</option>
+                            <option>Anual</option>
+                            <option>Customizado</option>
+                        </select>
+                        <input type="text" id="customPeriod" class="custom-period-input" 
+                               placeholder="Ex: 7 dias, 2 meses, 1 ano">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Manutenção</label>
+                        <select id="type" required>
+                            <option value="">Selecione</option>
+                            <option>Preditiva</option>
+                            <option>Preventiva</option>
+                            <option>Corretiva</option>
+                            <option>Melhorativa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <button type="submit">Criar Atividade</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Agenda de Atividades -->
+        <div class="activities-list">
+            <h2>Agenda de Atividades</h2>
+            <button class="toggle-archived" onclick="toggleArchived()">Mostrar Arquivadas</button>
+            <div id="activeActivities"></div>
+            <div class="archived-section" id="archivedSection">
+                <h3>Atividades Arquivadas</h3>
+                <div id="archivedActivities"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Realização -->
+    <div id="performModal" class="modal">
+        <div class="modal-content">
+            <h3>Registro de Atividade</h3>
+            <form id="performForm">
+                <input type="hidden" id="activityId">
+                
+                <div class="form-group">
+                    <h4>Pré-Atividade</h4>
+                    <label>Foto Antes (Obrigatório)</label>
+                    <input type="file" id="beforeImage" accept="image/*" required>
+                    
+                    <label>Descrição (Obrigatório)</label>
+                    <textarea id="beforeDescription" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <h4>Pós-Atividade (Opcional)</h4>
+                    <label>Foto Depois</label>
+                    <input type="file" id="afterImage" accept="image/*">
+                    
+                    <label>Descrição</label>
+                    <textarea id="afterDescription"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <button type="submit">Finalizar Atividade</button>
+                    <button type="button" onclick="closePerformModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Não Realização -->
+    <div id="notPerformedModal" class="modal">
+        <div class="modal-content">
+            <h3>Motivo da Não Realização</h3>
+            <form id="notPerformedForm">
+                <input type="hidden" id="notPerformedActivityId">
+                
+                <div class="form-group">
+                    <label>Motivo (Obrigatório)</label>
+                    <textarea id="reason" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <button type="submit">Confirmar</button>
+                    <button type="button" onclick="closeNotPerformedModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Relatório -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <h3>Relatório Completo</h3>
+            <div id="reportContent"></div>
+            <button onclick="downloadReport()">Baixar Relatório</button>
+            <button onclick="closeReport()">Fechar</button>
+        </div>
+    </div>
+
+    <script src="../script/manutencao.js"></script>
+</body>
+</html>
