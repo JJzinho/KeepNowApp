@@ -7,17 +7,14 @@
     <link rel="stylesheet" href="../styles/manutencao.css">
 </head>
 <body>
-
     <div class="app-bar">
         <a href="../index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
     </div>
-
     <div class="header">
         <div class="container">
             <h1>Manutenções</h1>
         </div>
     </div>
-
     <div class="container">
         <button onclick="toggleForm()" class="create-button">Criar Novo Chamado</button>
 
@@ -28,18 +25,28 @@
                         <label>Ocorrência</label>
                         <select id="occurrence" required>
                             <option value="">Selecione</option>
-                            <option>Hidraulica</option>
-                            <option>Eletrica</option>
+                            <option>Hidráulica</option>
+                            <option>Elétrica</option>
                             <option>Elevador</option>
                             <option>Gerador</option>
-                            </select>
+                            <option>Pintura</option>
+                            <option>Alvenaria / Estrutura</option>
+                            <option>Jardinagem / Paisagismo</option>
+                            <option>Limpeza Específica</option>
+                            <option>Segurança (Câmeras, Portões, Interfone)</option>
+                            <option>Ar Condicionado Central</option>
+                            <option>Controle de Pragas</option>
+                            <option>Telecomunicações (Antena, Cabeamento)</option>
+                            <option>Sistema de Incêndio</option>
+                            <option>Sistema de Gás</option>
+                            <option>Geral / Outros</option>
+                             </select>
                     </div>
                     <div class="form-group">
                         <label>Norma (opcional)</label>
                         <input type="text" id="norm">
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group" style="flex: 1;"> <label>Descrição</label>
                         <textarea id="description" required></textarea>
@@ -169,9 +176,7 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <script src="../script/manutencao.js"></script>
 </body>
 </html>
