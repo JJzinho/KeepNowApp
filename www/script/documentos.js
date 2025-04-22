@@ -1,3 +1,13 @@
+// --- Função de Conversão para Base64 ---
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Elementos Globais
     const addPageBtn = document.getElementById('add-page-btn');
@@ -5,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pagesContainer = document.getElementById('pages-container');
     const pageTemplate = document.getElementById('page-template');
 
-    const STORAGE_KEY = 'documentPagesData_v5_mobile_info_dl'; // Nova chave
+    const STORAGE_KEY = 'documentPagesData_v5_mobile_info_dl';
 
     // --- Funções de Armazenamento Local ---
     function getStoredPages() {
@@ -20,16 +30,176 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function savePages(pages) {
-         try {
+        try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
-         } catch (error) {
-             console.error("Erro ao salvar no localStorage:", error);
-             alert("Não foi possível salvar as alterações.");
-         }
+        } catch (error) {
+            console.error("Erro ao salvar no localStorage:", error);
+            alert("Não foi possível salvar as alterações.");
+        }
     }
 
-    // --- Funções da Interface ---
-     function createPageElement(pageData) {
+    // --- Função de Exibição de Preview ---
+    function displayPreview(fileType, fileName, previewAreaElement, fileData) {
+        previewAreaElement.innerHTML = '';
+        const dataUrl = `data:${fileType};base64,${fileData}`;
+        
+        if (fileType.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = dataUrl;
+            img.alt = `Preview de ${fileName}`;
+            previewAreaElement.appendChild(img);
+        } else if (fileType === 'application/pdf') {
+            const embed = document.createElement('embed');
+            embed.src = dataUrl;
+            embed.type = "application/pdf";
+            embed.style.width = "100%";
+            embed.style.height = "200px";
+            previewAreaElement.appendChild(embed);
+        } else {
+            previewAreaElement.innerHTML = `<p>📄 ${fileName}</p>`;
+        }
+    }
+
+    // --- Função de Seleção de Arquivo ---
+    async function handleFileSelection(file, previewArea, dateInputsContainer, saveBtn, pageSection, pageData) {
+        if (file) {
+            try {
+                const fileData = await readFileAsBase64(file);
+                displayPreview(file.type, file.name, previewArea, fileData);
+                dateInputsContainer.style.display = 'flex';
+                saveBtn.disabled = false;
+                pageSection.currentFile = file;
+            } catch (error) {
+                console.error("Erro ao processar arquivo:", error);
+                alert("Erro ao carregar arquivo!");
+            }
+        } else {
+            if (!pageData.currentDocument) {
+                previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
+                dateInputsContainer.style.display = 'none';
+                saveBtn.disabled = true;
+            }
+        }
+    }
+
+    // --- Função de Salvar Documento ---
+    async function handleSaveDocument(pageSection, pageData, startDateInput, endDateInput, historyListUl, fileInput) {
+        const pages = getStoredPages();
+        const pageIndex = pages.findIndex(p => p.id === pageData.id);
+        if (pageIndex === -1) return;
+
+        const currentPage = pages[pageIndex];
+        const fileToSave = pageSection.currentFile;
+        const newStartDate = startDateInput.value;
+        const newEndDate = endDateInput.value;
+        
+        if (fileToSave) {
+            try {
+                const fileData = await readFileAsBase64(fileToSave);
+                
+                if (currentPage.currentDocument) {
+                    currentPage.history.push({
+                        ...currentPage.currentDocument,
+                        modifiedDate: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+                    });
+                    if (currentPage.history.length > 10) currentPage.history.shift();
+                }
+
+                currentPage.currentDocument = {
+                    fileName: fileToSave.name,
+                    fileType: fileToSave.type,
+                    fileData: fileData,
+                    startDate: newStartDate,
+                    endDate: newEndDate,
+                    savedDate: new Date().toISOString()
+                };
+
+                savePages(pages);
+                updateHistoryList(currentPage.history, historyListUl);
+                alert(`Documento salvo em ${currentPage.name}!`);
+                fileInput.value = '';
+                
+            } catch (error) {
+                console.error("Erro ao ler arquivo:", error);
+                alert("Erro ao processar arquivo!");
+            }
+        }
+    }
+
+    // --- Função de Download do Histórico ---
+    function handleDownloadHistoryInfo(event) {
+        const btn = event.currentTarget;
+        const fileName = btn.dataset.filename;
+        const fileType = btn.dataset.filetype;
+        const fileData = btn.dataset.filedata;
+    
+        if (!fileData) {
+            alert("Arquivo original não disponível");
+            return;
+        }
+    
+        const byteCharacters = atob(fileData);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: fileType });
+    
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    }
+
+    // --- Função de Atualização do Histórico ---
+    function updateHistoryList(history, ulElement) {
+        ulElement.innerHTML = '';
+        const explanationDiv = ulElement.closest('.history-list').querySelector('.history-explanation');
+        
+        if (!history || history.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Nenhuma modificação anterior.';
+            ulElement.appendChild(li);
+            if (explanationDiv) explanationDiv.style.display = 'none';
+            return;
+        }
+        
+        if (explanationDiv) explanationDiv.style.display = 'block';
+
+        history.slice().reverse().forEach(doc => {
+            const li = document.createElement('li');
+            
+            // Texto do histórico
+            const textDiv = document.createElement('div');
+            textDiv.innerHTML = `
+                <strong>${doc.fileName}</strong>
+                <span>Atualizado em: ${doc.modifiedDate}</span>
+            `;
+            
+            // Botão de download
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'download-history-btn';
+            downloadBtn.textContent = '⬇️ Baixar';
+            
+            // Armazena todos os dados necessários
+            downloadBtn.dataset.filename = doc.fileName;
+            downloadBtn.dataset.filetype = doc.fileType;
+            downloadBtn.dataset.filedata = doc.fileData;
+            
+            downloadBtn.addEventListener('click', handleDownloadHistoryInfo);
+            
+            li.appendChild(textDiv);
+            li.appendChild(downloadBtn);
+            ulElement.appendChild(li);
+        });
+    }
+
+    // --- Função de Criação de Elementos de Página ---
+    function createPageElement(pageData) {
         const uniqueId = pageData.id.replace(/[^a-zA-Z0-9-_]/g, '');
         const templateHtml = pageTemplate.innerHTML.replace(/\{\{id\}\}/g, uniqueId);
         const templateNode = document.createElement('div');
@@ -55,26 +225,28 @@ document.addEventListener('DOMContentLoaded', () => {
         pageTitle.textContent = pageData.name;
         pageTitle.title = pageData.name;
 
-         const oldUrl = previewArea.dataset.objectUrl;
-         if (oldUrl) URL.revokeObjectURL(oldUrl);
-
         // Restaura estado atual
         if (pageData.currentDocument) {
-            displayPreview(pageData.currentDocument.fileType, pageData.currentDocument.fileName, previewArea);
+            displayPreview(
+                pageData.currentDocument.fileType,
+                pageData.currentDocument.fileName,
+                previewArea,
+                pageData.currentDocument.fileData
+            );
             startDateInput.value = pageData.currentDocument.startDate || '';
             endDateInput.value = pageData.currentDocument.endDate || '';
-            dateInputsContainer.style.display = 'flex'; // Mostra container das datas
+            dateInputsContainer.style.display = 'flex';
             saveBtn.disabled = false;
         } else {
-             previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
-             dateInputsContainer.style.display = 'none'; // Esconde datas se não houver doc
-             saveBtn.disabled = true;
+            previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
+            dateInputsContainer.style.display = 'none';
+            saveBtn.disabled = true;
         }
-        updateHistoryList(pageData.history || [], historyListUl); // Passa UL para adicionar listeners
+        updateHistoryList(pageData.history || [], historyListUl);
 
         // Event Listeners do Card
         pageHeader.addEventListener('click', (e) => {
-             if (e.target === toggleBtn || e.target === deleteBtn || deleteBtn.contains(e.target) || toggleBtn.contains(e.target)) return;
+            if (e.target === toggleBtn || e.target === deleteBtn || deleteBtn.contains(e.target) || toggleBtn.contains(e.target)) return;
             toggleMenu(menuContent, toggleBtn);
         });
         toggleBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(menuContent, toggleBtn); });
@@ -85,224 +257,57 @@ document.addEventListener('DOMContentLoaded', () => {
         return pageSection;
     }
 
+    // --- Funções Auxiliares ---
     function toggleMenu(menuContent, toggleBtn) {
-         menuContent.classList.toggle('open');
-         toggleBtn.classList.toggle('open');
-     }
+        menuContent.classList.toggle('open');
+        toggleBtn.classList.toggle('open');
+    }
 
     function handleDeletePage(pageSection, pageData, previewArea) {
-         if (confirm(`Tem certeza que deseja excluir a pasta "${pageData.name}"?`)) {
-             const pages = getStoredPages();
-             const updatedPages = pages.filter(p => p.id !== pageData.id);
-             savePages(updatedPages);
-              const currentPreviewUrl = previewArea.dataset.objectUrl;
-              if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
-             pageSection.remove();
-         }
+        if (confirm(`Tem certeza que deseja excluir a pasta "${pageData.name}"?`)) {
+            const pages = getStoredPages();
+            const updatedPages = pages.filter(p => p.id !== pageData.id);
+            savePages(updatedPages);
+            pageSection.remove();
+        }
     }
 
-    // --- Funções Auxiliares (handleFileSelection, handleSaveDocument, displayPreview) ---
-    // (Estas funções permanecem as mesmas da V4)
-    function handleFileSelection(file, previewArea, dateInputsContainer, saveBtn, pageSection, pageData) {
-         const oldUrl = previewArea.dataset.objectUrl;
-         if (oldUrl) { URL.revokeObjectURL(oldUrl); previewArea.dataset.objectUrl = ''; }
-
-         if (file) {
-             const fileUrl = URL.createObjectURL(file);
-             previewArea.dataset.objectUrl = fileUrl;
-             displayPreview(file.type, file.name, previewArea, fileUrl);
-             dateInputsContainer.style.display = 'flex';
-             saveBtn.disabled = false;
-             pageSection.currentFile = file;
-         } else {
-             pageSection.currentFile = null;
-             if (!pageData.currentDocument) {
-                 previewArea.innerHTML = '<p>Nenhum arquivo selecionado.</p>';
-                 dateInputsContainer.style.display = 'none';
-                 saveBtn.disabled = true;
-                 pageSection.querySelector('.start-date').value = '';
-                 pageSection.querySelector('.end-date').value = '';
-             } else {
-                 displayPreview(pageData.currentDocument.fileType, pageData.currentDocument.fileName, previewArea);
-                 saveBtn.disabled = false;
-             }
-         }
-    }
-
-    function handleSaveDocument(pageSection, pageData, startDateInput, endDateInput, historyListUl, fileInput) {
-         const pages = getStoredPages();
-         const pageIndex = pages.findIndex(p => p.id === pageData.id);
-         if (pageIndex === -1) { console.error("Página não encontrada"); return; }
-
-         const currentPage = pages[pageIndex];
-         const fileToSave = pageSection.currentFile;
-         const newStartDate = startDateInput.value;
-         const newEndDate = endDateInput.value;
-         let documentChanged = false;
-
-         if (fileToSave) {
-             if (currentPage.currentDocument) {
-                 if (!currentPage.history) currentPage.history = [];
-                 currentPage.history.push({ ...currentPage.currentDocument, modifiedDate: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) });
-                 if (currentPage.history.length > 10) currentPage.history.shift();
-             }
-             currentPage.currentDocument = { fileName: fileToSave.name, fileType: fileToSave.type, startDate: newStartDate, endDate: newEndDate, savedDate: new Date().toISOString() };
-             documentChanged = true;
-         } else if (currentPage.currentDocument) {
-             if (currentPage.currentDocument.startDate !== newStartDate || currentPage.currentDocument.endDate !== newEndDate) {
-                 currentPage.currentDocument.startDate = newStartDate;
-                 currentPage.currentDocument.endDate = newEndDate;
-                 documentChanged = true;
-             }
-         } else { alert("Selecione um arquivo para salvar."); return; }
-
-         if (documentChanged) {
-             savePages(pages);
-             pageData.currentDocument = currentPage.currentDocument;
-             pageData.history = currentPage.history;
-             updateHistoryList(currentPage.history || [], historyListUl); // Passa UL para listeners
-             alert(`Documento salvo/atualizado na pasta "${currentPage.name}"!`);
-             if (fileToSave) fileInput.value = '';
-         } else { alert("Nenhuma alteração detectada."); }
-         pageSection.currentFile = null;
-    }
-
-     function displayPreview(fileType, fileName, previewAreaElement, fileUrl = null) {
-         previewAreaElement.innerHTML = '';
-         let previewElement = null;
-         const oldUrl = previewAreaElement.dataset.objectUrl;
-         if (oldUrl && oldUrl !== fileUrl) { URL.revokeObjectURL(oldUrl); previewAreaElement.dataset.objectUrl = ''; }
-
-         if (fileType.startsWith('image/')) {
-            previewElement = document.createElement('img');
-            previewElement.src = fileUrl || '';
-            previewElement.alt = `Preview de ${fileName}`;
-            previewElement.onerror = () => { previewAreaElement.innerHTML = '<p>Erro ao carregar imagem.</p>'; };
-         } else if (fileType === 'application/pdf') {
-             if (fileUrl) {
-                 previewElement = document.createElement('embed');
-                 previewElement.src = fileUrl;
-                 previewElement.type = "application/pdf";
-                 previewElement.style.width = "100%"; previewElement.style.height = "200px";
-                 const fallbackText = document.createElement('p');
-                 fallbackText.style.fontSize = '0.9em'; fallbackText.style.marginTop = '10px';
-                 fallbackText.innerHTML = `Preview pode não funcionar. <a href="${fileUrl}" target="_blank" rel="noopener noreferrer">Abrir ${fileName} em nova aba</a>.`;
-                 const container = document.createElement('div');
-                 container.style.textAlign = 'center'; container.appendChild(previewElement); container.appendChild(fallbackText);
-                 previewElement = container;
-             } else {
-                 previewElement = document.createElement('p'); previewElement.textContent = `📄 PDF Salvo: ${fileName}`;
-             }
-         } else {
-             previewElement = document.createElement('p'); previewElement.textContent = `📄 Arquivo: ${fileName}`;
-         }
-         if (previewElement) { previewAreaElement.appendChild(previewElement); }
-         else { previewAreaElement.innerHTML = '<p>Sem preview disponível.</p>'; }
-         if(fileUrl) previewAreaElement.dataset.objectUrl = fileUrl;
-    }
-
-    // --- Função de Histórico Atualizada ---
-    function updateHistoryList(history, ulElement) {
-        ulElement.innerHTML = ''; // Limpa
-        const explanationDiv = ulElement.closest('.history-list').querySelector('.history-explanation'); // Encontra a explicação
-         if (!history || history.length === 0) {
-             const li = document.createElement('li'); li.textContent = 'Nenhuma modificação anterior.'; li.style.color = 'var(--ff-secondary-text)';
-             ulElement.appendChild(li);
-             if (explanationDiv) explanationDiv.style.display = 'none'; // Esconde explicação se não há histórico
-             return;
-         }
-         if (explanationDiv) explanationDiv.style.display = 'block'; // Mostra explicação se há histórico
-
-        history.slice().reverse().forEach(doc => {
-            const li = document.createElement('li');
-
-            const textDiv = document.createElement('div'); // Div para o texto
-            textDiv.textContent = `Arquivo: ${doc.fileName || '?'}`;
-            const dateSpan = document.createElement('span');
-            dateSpan.textContent = `Substituído em: ${doc.modifiedDate || '?'}`;
-            textDiv.appendChild(dateSpan);
-
-            const downloadBtn = document.createElement('button'); // Botão de download
-            downloadBtn.className = 'download-history-btn';
-            downloadBtn.textContent = 'Info'; // Texto mais curto
-            downloadBtn.title = 'Baixar informações do histórico';
-
-            // Armazena dados no botão para fácil acesso no clique
-            downloadBtn.dataset.filename = doc.fileName || 'arquivo_desconhecido';
-            downloadBtn.dataset.filetype = doc.fileType || 'desconhecido';
-            downloadBtn.dataset.startdate = doc.startDate || 'N/A';
-            downloadBtn.dataset.enddate = doc.endDate || 'N/A';
-            downloadBtn.dataset.saveddate = doc.savedDate || 'N/A';
-            downloadBtn.dataset.modifieddate = doc.modifiedDate || 'N/A';
-
-            // Adiciona listener diretamente no botão criado
-            downloadBtn.addEventListener('click', handleDownloadHistoryInfo);
-
-            li.appendChild(textDiv);
-            li.appendChild(downloadBtn);
-            ulElement.appendChild(li);
-        });
-    }
-
-    // --- Função para Download da Informação do Histórico ---
-    function handleDownloadHistoryInfo(event) {
-         event.stopPropagation(); // Impede que o clique se propague para o LI/Header
-
-         const btn = event.currentTarget;
-         const filename = btn.dataset.filename;
-         const modifiedDate = btn.dataset.modifieddate;
-
-         // Prepara o conteúdo do arquivo de texto
-         const fileContent = `Informações do Histórico de Documento\n` +
-                             `--------------------------------------\n` +
-                             `Nome do Arquivo Original: ${filename}\n` +
-                             `Tipo Original: ${btn.dataset.filetype}\n` +
-                             `Data de Início (na época): ${btn.dataset.startdate}\n` +
-                             `Data de Término (na época): ${btn.dataset.enddate}\n` +
-                             `Data de Salvamento (na época): ${btn.dataset.saveddate ? new Date(btn.dataset.saveddate).toLocaleString('pt-BR') : 'N/A'}\n` +
-                             `Data da Substituição: ${modifiedDate}\n` +
-                             `--------------------------------------\n` +
-                             `Gerado em: ${new Date().toLocaleString('pt-BR')}\n`+
-                             `IMPORTANTE: Este arquivo contém apenas informações sobre o documento e NÃO o arquivo original.`;
-
-        // Cria um Blob com o conteúdo
-        const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
-
-        // Cria um link temporário para download
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        // Limpa e formata nome do arquivo para download
-        const safeFilename = filename.replace(/[^a-z0-9._-]/gi, '_').substring(0, 50);
-        link.download = `historico_${safeFilename}.txt`;
-
-        // Simula o clique no link e limpa
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url); // Libera memória
-    }
-
-    // --- Carregamento Inicial e Listener Global ---
+    // --- Carregamento Inicial ---
     function loadPagesFromStorage() {
         const storedPages = getStoredPages();
         pagesContainer.innerHTML = '';
         storedPages.forEach(pageData => {
-             if (!pageData.id || !pageData.name) { console.warn("Registro inválido:", pageData); return; }
+            if (!pageData.id || !pageData.name) {
+                console.warn("Registro inválido:", pageData);
+                return;
+            }
             const pageElement = createPageElement(pageData);
             pagesContainer.appendChild(pageElement);
         });
     }
 
+    // --- Event Listeners Globais ---
     addPageBtn.addEventListener('click', () => {
         const pageName = newPageNameInput.value.trim();
-        if (!pageName) { alert('Digite um nome para a pasta.'); newPageNameInput.focus(); return; }
-        const newPageData = { id: `page_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`, name: pageName, currentDocument: null, history: [] };
-        const pages = getStoredPages(); pages.push(newPageData); savePages(pages);
-        const newPageElement = createPageElement(newPageData); pagesContainer.appendChild(newPageElement);
+        if (!pageName) {
+            alert('Digite um nome para a pasta.');
+            newPageNameInput.focus();
+            return;
+        }
+        const newPageData = {
+            id: `page_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+            name: pageName,
+            currentDocument: null,
+            history: []
+        };
+        const pages = getStoredPages();
+        pages.push(newPageData);
+        savePages(pages);
+        const newPageElement = createPageElement(newPageData);
+        pagesContainer.appendChild(newPageElement);
         newPageNameInput.value = '';
     });
 
-    loadPagesFromStorage(); // Carrega os dados ao iniciar
-
-}); // Fim do DOMContentLoaded
+    // Inicialização
+    loadPagesFromStorage();
+});

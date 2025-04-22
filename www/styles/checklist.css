@@ -180,3 +180,114 @@ button:active {
 .app-bar { background-color: var(--primary); height: 50px; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); position: relative; }
 .app-bar .menu-button { background: none; border: none; color: var(--info); font-size: 30px; cursor: pointer; z-index: 1; }
 .app-bar .logo { position: absolute; left: 50%; transform: translateX(-50%); height: 65px; top: -5px; }
+
+.controls-container {
+    margin-bottom: 20px;
+}
+
+.report-section {
+    margin-top: 10px;
+}
+
+#generate-report-button {
+    background-color: var(--primary);
+    color: var(--info);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    width: 100%; /* Make button full width */
+    font-size: 1em;
+}
+
+#generate-report-button:hover {
+    opacity: 0.9;
+}
+
+
+/* Skip Reason Modal Specific Styles */
+#skip-reason-modal .modal-content p {
+    margin-bottom: 10px; /* Reduce margin */
+    text-align: left;
+}
+#skip-reason-modal .modal-content strong {
+    color: var(--danger); /* Highlight item ID */
+}
+
+#skip-reason-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit; /* Use body font */
+    font-size: 0.95em;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between; /* Space out buttons */
+    gap: 10px; /* Add gap between buttons */
+}
+
+.modal-buttons button {
+    flex-grow: 1; /* Make buttons share space */
+    padding: 10px 15px; /* Ensure consistent padding */
+}
+
+/* Secondary button style */
+.btn-secondary {
+    background-color: #aaa; /* Grey background */
+    color: white;
+}
+.btn-secondary:hover {
+     opacity: 0.9;
+}
+
+
+/* Report Modal Specific Styles */
+#report-modal .modal-content {
+    text-align: left; /* Align text left for report */
+}
+
+#report-output {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Monospace for better alignment */
+    font-size: 0.85em;
+    line-height: 1.5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Light background for textarea */
+    white-space: pre; /* Preserve whitespace and line breaks */
+}
+
+/* Make modal potentially wider for report */
+.modal-large {
+     max-width: 700px;
+}
+
+
+/* Style for OK button in modals */
+.btn-modal-ok {
+     background-color: var(--secondary);
+     color: white;
+     border: none;
+     cursor: pointer;
+     transition: opacity 0.3s;
+     padding: 10px 15px;
+     width: 100%; /* Make button full width */
+     border-radius: 5px;
+     margin-top: 10px; /* Add space above button */
+}
+.btn-modal-ok:hover {
+      opacity: 0.9;
+}
+
+/* Ensure modal content scrolls if too tall */
+.modal-content {
+    max-height: 85vh; /* Max height relative to viewport */
+    overflow-y: auto; /* Enable vertical scroll if needed */
+}

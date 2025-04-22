@@ -10,6 +10,8 @@
     <div class="app-bar">
         <a href="../index.html"><img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/erdn-7awoaw/assets/60rvipp2d6di/image-removebg-preview.png" alt="Logo" class="logo"></a>
     </div>
+
+    <div class="controls-container">
         <div class="filters">
             <select id="system-filter">
                 <option value="">Todos Sistemas</option>
@@ -18,33 +20,73 @@
                 <option value="Elétrico">Elétrico</option>
                 <option value="Climatização">Climatização</option>
                 <option value="Estrutural">Estrutural</option>
+                <option value="Impermeabilização">Impermeabilização</option>
+                <option value="Gás">Gás</option>
+                <option value="Esquadrias">Esquadrias</option>
+                <option value="Revestimentos">Revestimentos</option>
+                <option value="Forros">Forros</option>
+                <option value="Vidros">Vidros</option>
+                <option value="Cobertura">Cobertura</option>
+                <option value="Logística">Logística</option>
+                <option value="Paisagismo">Paisagismo</option>
+                <option value="Pavimentação">Pavimentação</option>
+                <option value="Telecomunicações">Telecomunicações</option>
+                <option value="Decoração">Decoração</option>
             </select>
-            
             <select id="period-filter">
                 <option value="">Todas Periodicidades</option>
                 <option value="DIÁRIA">Diária</option>
                 <option value="SEMANAL">Semanal</option>
+                <option value="QUINZENAL">Quinzenal</option>
                 <option value="MENSAL">Mensal</option>
+                <option value="BIMESTRAL">Bimestral</option>
                 <option value="TRIMESTRAL">Trimestral</option>
                 <option value="SEMESTRAL">Semestral</option>
                 <option value="ANUAL">Anual</option>
+                <option value="BIENAL">Bienal</option>
+                <option value="TRIENAL">Trienal</option>
+                <option value="QUINQUENAL">Quinquenal</option>
             </select>
-            
             <button id="reset">Limpar Filtros</button>
         </div>
-
-        <div id="checklist">
-            <!-- Itens serão inseridos aqui -->
+        <div class="report-section">
+             <button id="generate-report-button">Gerar Relatório de Itens Pulados</button>
         </div>
     </div>
+
+    <div id="checklist">
+        </div>
 
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title"></h3>
             <p id="modal-message"></p>
-            <button onclick="closeModal()" class="btn" style="width: 100%; margin-top: 15px;">OK</button>
+            <button onclick="closeModal('modal')" class="btn btn-modal-ok">OK</button>
         </div>
     </div>
+
+    <div id="skip-reason-modal" class="modal">
+        <div class="modal-content">
+            <h3>Informar Motivo</h3>
+            <p>Por favor, descreva o motivo para pular o item <strong id="skip-item-id-display"></strong>:</p>
+            <textarea id="skip-reason-input" rows="4" placeholder="Digite o motivo aqui..."></textarea>
+            <div class="modal-buttons">
+                <button id="confirm-skip-button" class="btn btn-danger">Confirmar Pular</button>
+                <button onclick="closeModal('skip-reason-modal')" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+     <div id="report-modal" class="modal">
+        <div class="modal-content modal-large">
+             <h3>Relatório de Itens Pulados</h3>
+             <p>Copie o texto abaixo para seu documento ou PDF:</p>
+             <textarea id="report-output" rows="15" readonly></textarea>
+             <button onclick="closeModal('report-modal')" class="btn btn-modal-ok">Fechar</button>
+        </div>
+    </div>
+
+
     <script src="../script/chesklist.js"></script>
 </body>
 </html>
