@@ -21,7 +21,6 @@
     <div class="container">
         <button onclick="toggleForm()" class="create-button">Criar Novo Chamado</button>
 
-        <!-- Formulário de Nova Atividade (expandível) -->
         <div class="form-container" id="activityFormContainer">
             <form id="activityForm">
                 <div class="form-row">
@@ -33,7 +32,7 @@
                             <option>Eletrica</option>
                             <option>Elevador</option>
                             <option>Gerador</option>
-                        </select>
+                            </select>
                     </div>
                     <div class="form-group">
                         <label>Norma (opcional)</label>
@@ -42,8 +41,7 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Descrição</label>
+                    <div class="form-group" style="flex: 1;"> <label>Descrição</label>
                         <textarea id="description" required></textarea>
                     </div>
                 </div>
@@ -56,7 +54,17 @@
                             <option>Especialização</option>
                             <option>Capacitação</option>
                             <option>Local</option>
-                        </select>
+                             </select>
+                    </div>
+                     <div class="form-group">
+                        <label>Tipo de Manutenção</label>
+                        <select id="type" required>
+                            <option value="">Selecione</option>
+                            <option>Preditiva</option>
+                            <option>Preventiva</option>
+                            <option>Corretiva</option>
+                            <option>Melhorativa</option>
+                             </select>
                     </div>
                     <div class="form-group">
                         <label>Período</label>
@@ -69,19 +77,9 @@
                             <option>Semestral</option>
                             <option>Anual</option>
                             <option>Customizado</option>
-                        </select>
-                        <input type="text" id="customPeriod" class="custom-period-input" 
+                             </select>
+                        <input type="text" id="customPeriod" class="custom-period-input"
                                placeholder="Ex: 7 dias, 2 meses, 1 ano">
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo de Manutenção</label>
-                        <select id="type" required>
-                            <option value="">Selecione</option>
-                            <option>Preditiva</option>
-                            <option>Preventiva</option>
-                            <option>Corretiva</option>
-                            <option>Melhorativa</option>
-                        </select>
                     </div>
                 </div>
 
@@ -91,80 +89,88 @@
             </form>
         </div>
 
-        <!-- Agenda de Atividades -->
         <div class="activities-list">
             <h2>Agenda de Atividades</h2>
-            <button class="toggle-archived" onclick="toggleArchived()">Mostrar Arquivadas</button>
-            <div id="activeActivities"></div>
+            <div class="list-controls">
+                 <button class="toggle-archived" onclick="toggleArchived()">Mostrar Arquivadas</button>
+                 <button id="generatePdfButton" disabled>Gerar PDF das Arquivadas</button>
+            </div>
+
+            <div id="activeActivities">
+                </div>
+
             <div class="archived-section" id="archivedSection">
                 <h3>Atividades Arquivadas</h3>
-                <div id="archivedActivities"></div>
+                <div id="archivedActivities">
+                    </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Realização -->
     <div id="performModal" class="modal">
         <div class="modal-content">
-            <h3>Registro de Atividade</h3>
+            <h3>Registro de Atividade Realizada</h3>
             <form id="performForm">
                 <input type="hidden" id="activityId">
-                
+
                 <div class="form-group">
                     <h4>Pré-Atividade</h4>
                     <label>Foto Antes (Obrigatório)</label>
                     <input type="file" id="beforeImage" accept="image/*" required>
-                    
+
                     <label>Descrição (Obrigatório)</label>
                     <textarea id="beforeDescription" required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <h4>Pós-Atividade (Opcional)</h4>
                     <label>Foto Depois</label>
                     <input type="file" id="afterImage" accept="image/*">
-                    
+
                     <label>Descrição</label>
                     <textarea id="afterDescription"></textarea>
                 </div>
-                
-                <div class="form-row">
-                    <button type="submit">Finalizar Atividade</button>
+
+                <div class="form-row modal-actions">
+                    <button type="submit">Finalizar e Arquivar</button>
                     <button type="button" onclick="closePerformModal()">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal de Não Realização -->
     <div id="notPerformedModal" class="modal">
         <div class="modal-content">
             <h3>Motivo da Não Realização</h3>
             <form id="notPerformedForm">
                 <input type="hidden" id="notPerformedActivityId">
-                
+
                 <div class="form-group">
                     <label>Motivo (Obrigatório)</label>
                     <textarea id="reason" required></textarea>
                 </div>
-                
-                <div class="form-row">
-                    <button type="submit">Confirmar</button>
+
+                <div class="form-row modal-actions">
+                    <button type="submit">Confirmar e Arquivar</button>
                     <button type="button" onclick="closeNotPerformedModal()">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal de Relatório -->
     <div id="reportModal" class="modal">
         <div class="modal-content">
-            <h3>Relatório Completo</h3>
-            <div id="reportContent"></div>
-            <button onclick="downloadReport()">Baixar Relatório</button>
-            <button onclick="closeReport()">Fechar</button>
+            <h3>Relatório Completo da Atividade</h3>
+            <div id="reportContent">
+                </div>
+             <div class="modal-actions">
+                <button onclick="downloadReport()">Baixar Relatório (.txt)</button>
+                <button onclick="closeReport()">Fechar</button>
+            </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script src="../script/manutencao.js"></script>
 </body>

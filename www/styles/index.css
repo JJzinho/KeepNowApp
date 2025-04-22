@@ -712,3 +712,20 @@ body {
     justify-content: center;
     margin-left: auto;
 }
+/* Adicione ao CSS existente */
+#custom-location-container {
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+#custom-location-container.hidden {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+}
+
+#custom-location-container:not(.hidden) {
+    opacity: 1;
+    height: auto;
+}

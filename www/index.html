@@ -159,8 +159,66 @@
            <button class="modal-close-x">&times;</button>>
             <h2 class="modal-title">Criar Chamado</h2>
             <form id="ticket-form">
-                <div class="form-group"><label class="form-label" for="occurrence-type">Ocorrência</label><select class="form-select" id="occurrence-type" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
-                <div class="form-group"><label class="form-label" for="location">Localização</label><input type="text" class="form-control" id="location" placeholder="Ex: Bloco A, Garagem..." required></div>
+                <div class="form-group">
+                    <label class="form-label" for="occurrence-type">Ocorrência</label>
+                    <select class="form-select" id="occurrence-type" required>
+                        <option value="" selected disabled>Selecione...</option>
+                        <option value="Hidraulica">Hidráulica</option>
+                        <option value="Eletrica">Elétrica</option>
+                        <option value="Elevador">Elevador</option>
+                        <option value="Gerador">Gerador</option>
+                        <option value="Pintura">Pintura</option>
+                        <option value="Alvenaria">Alvenaria / Estrutura</option>
+                        <option value="Jardinagem">Jardinagem / Paisagismo</option>
+                        <option value="Limpeza">Limpeza Específica (Ex: Fachada, Piscina)</option>
+                        <option value="Seguranca">Segurança (Câmeras, Portões, Interfone)</option>
+                        <option value="ArCondicionado">Ar Condicionado Central</option>
+                        <option value="Pragas">Controle de Pragas</option>
+                        <option value="Telecom">Telecomunicações (Antena, Cabeamento)</option>
+                        <option value="Incendio">Sistema de Incêndio (Extintores, Hidrantes)</option>
+                        <option value="Gas">Sistema de Gás</option>
+                        <option value="Outros">Geral / Outros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ticket-level">Nível/Localização Principal</label>
+                    <select class="form-select" id="ticket-level" required>
+                        <option value="" selected disabled>Selecione o Nível...</option>
+                        <option value="subsolo">Subsolo</option>
+                        <option value="terreo">Térreo</option>
+                        <option value="vazado">Vazado</option>
+                        <option value="pavimento_tipo">Pavimento Tipo</option>
+                        <option value="coberta">Coberta / Casa de Máquinas</option>
+                        <option value="cobertura">Cobertura (Área Social/Lazer)</option>
+                        <option value="garagem">Garagem (Geral)</option>
+                        <option value="area_externa">Área Externa / Jardim</option>
+                        <option value="outro_nivel">Outro Nível (Usar Área)</option> </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ticket-area">Área Específica</label>
+                    <select class="form-select" id="ticket-area" required>
+                        <option value="" selected disabled>Selecione a Área...</option>
+                        <option value="salao_festas">Salão de Festas</option>
+                        <option value="copa">Copa (Salão/Apoio)</option>
+                        <option value="espaco_gourmet">Espaço Gourmet</option>
+                        <option value="hall_social">Hall Social / Entrada</option>
+                        <option value="hall_servico">Hall de Serviço</option>
+                        <option value="escada">Escadaria / Corredor</option>
+                        <option value="academia">Academia</option>
+                        <option value="brinquedoteca">Brinquedoteca / Playgroud</option>
+                        <option value="piscina">Piscina / Deck</option>
+                        <option value="quadra">Quadra Esportiva</option>
+                        <option value="garagem_especifica">Garagem (Vaga/Local Específico)</option>
+                        <option value="bicicletario">Bicicletário</option>
+                        <option value="casa_maquinas">Casa de Máquinas (Bombas/Elevador)</option>
+                        <option value="deposito">Depósito / Almoxarifado</option>
+                        <option value="sala_sindico">Sala do Síndico / Administração</option>
+                        <option value="portaria">Portaria / Guarita</option>
+                        <option value="apartamento">Apartamento (Especificar nº no campo Outro)</option> <option value="outro">Outro (Especificar abaixo)</option>
+                    </select>
+                    <input type="text" class="form-control hidden" id="ticket-area-custom" placeholder="Especifique a área/localização exata" style="margin-top: 8px;">
+                    </div>
+
                 <div class="form-group"><label class="form-label" for="description">Descrição</label><input type="text" class="form-control" id="description" placeholder="Breve descrição" required></div>
                 <div class="form-group"><label class="form-label" for="priority">Prioridade</label><select class="form-select" id="priority" required><option value="" selected disabled>Selecione...</option><option value="Baixo">Baixo</option><option value="Média">Média</option><option value="Alta">Alta</option><option value="Urgência">Urgência</option></select></div>
                 <div class="form-actions">
@@ -207,7 +265,27 @@
                 <input type="hidden" id="supplier-id">
                 <div class="form-group"><label class="form-label" for="supplier-name">Nome</label><input type="text" class="form-control" id="supplier-name" required></div>
                  <div class="form-group"><label class="form-label" for="supplier-phone">Telefone (Ex: +55 (11) 9...)</label><input type="tel" class="form-control" id="supplier-phone" placeholder="+55 (XX) XXXXX-XXXX" required maxlength="19"></div>
-                <div class="form-group"><label class="form-label" for="supplier-occurrence">Serviço Principal</label><select class="form-select" id="supplier-occurrence" required><option value="" selected disabled>Selecione...</option><option value="Hidraulica">Hidráulica</option><option value="Eletrica">Elétrica</option><option value="Elevador">Elevador</option><option value="Gerador">Gerador</option></select></div>
+                 <div class="form-group">
+                    <label class="form-label" for="supplier-occurrence">Serviço Principal</label>
+                    <select class="form-select" id="supplier-occurrence" required>
+                        <option value="" selected disabled>Selecione...</option>
+                        <option value="Hidraulica">Hidráulica</option>
+                        <option value="Eletrica">Elétrica</option>
+                        <option value="Elevador">Elevador</option>
+                        <option value="Gerador">Gerador</option>
+                        <option value="Pintura">Pintura</option>
+                        <option value="Alvenaria">Alvenaria / Estrutura</option>
+                        <option value="Jardinagem">Jardinagem / Paisagismo</option>
+                        <option value="Limpeza">Limpeza Específica</option>
+                        <option value="Seguranca">Segurança</option>
+                        <option value="ArCondicionado">Ar Condicionado Central</option>
+                        <option value="Pragas">Controle de Pragas</option>
+                        <option value="Telecom">Telecomunicações</option>
+                        <option value="Incendio">Sistema de Incêndio</option>
+                        <option value="Gas">Sistema de Gás</option>
+                        <option value="Outros">Geral / Outros</option>
+                    </select>
+                </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancel-supplier-btn">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>

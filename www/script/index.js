@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Initial Suppliers Data ---
-     const defaultSuppliers = [
+    const defaultSuppliers = [
         { id: 1, name: "Hidráulica Master", phone: "5511987654321", occurrence: "Hidraulica" },
         { id: 2, name: "Elétrica Total", phone: "5511976543210", occurrence: "Eletrica" },
         { id: 3, name: "Elevadores Seguros", phone: "5511965432109", occurrence: "Elevador" },
         { id: 4, name: "Geradores Potentes", phone: "5511954321098", occurrence: "Gerador" }
-     ];
+    ];
 
     // --- State Variables ---
     let suppliers = [];
@@ -45,38 +45,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const maskPhone = (value) => {
         let cleaned = value.replace(/\D/g, '');
-         // Handle +55 prefix
-         let prefix = "";
-         if (cleaned.startsWith('55')) {
-             prefix = "+55 ";
-             cleaned = cleaned.substring(2);
-         } else if (value.trim().startsWith('+')) {
-             prefix = "+";
-             if (value.trim().startsWith('+5')) prefix = "+5";
-             if (value.trim().startsWith('+55')) prefix = "+55 ";
-         } else if (cleaned.length > 0) {
+        // Handle +55 prefix
+        let prefix = "";
+        if (cleaned.startsWith('55')) {
+            prefix = "+55 ";
+            cleaned = cleaned.substring(2);
+        } else if (value.trim().startsWith('+')) {
+            prefix = "+";
+            if (value.trim().startsWith('+5')) prefix = "+5";
+            if (value.trim().startsWith('+55')) prefix = "+55 ";
+        } else if (cleaned.length > 0) {
             prefix = "+55 "; // Assume BR if starts typing numbers
-         }
+        }
 
-         let maskedValue = cleaned;
-         if (cleaned.length > 2) { // DDD entered
-             maskedValue = `(${cleaned.substring(0, 2)}) ${cleaned.substring(2)}`;
-         }
-         if (cleaned.length >= 7) { // Start of main number entered
-             // Decide between 8 or 9 digits for the first part
-             const numDigitsFirstPart = (cleaned.length > 10) ? 5 : 4; // 9 digits main number?
-             const firstPart = cleaned.substring(2, 2 + numDigitsFirstPart);
-             const secondPart = cleaned.substring(2 + numDigitsFirstPart);
-             if(secondPart) { // Only add hyphen if second part exists
+        let maskedValue = cleaned;
+        if (cleaned.length > 2) { // DDD entered
+            maskedValue = `(${cleaned.substring(0, 2)}) ${cleaned.substring(2)}`;
+        }
+        if (cleaned.length >= 7) { // Start of main number entered
+            // Decide between 8 or 9 digits for the first part
+            const numDigitsFirstPart = (cleaned.length > 10) ? 5 : 4; // 9 digits main number?
+            const firstPart = cleaned.substring(2, 2 + numDigitsFirstPart);
+            const secondPart = cleaned.substring(2 + numDigitsFirstPart);
+            if(secondPart) { // Only add hyphen if second part exists
                 maskedValue = `(${cleaned.substring(0, 2)}) ${firstPart}-${secondPart}`;
-             } else {
-                 maskedValue = `(${cleaned.substring(0, 2)}) ${firstPart}`;
-             }
-         }
+            } else {
+                maskedValue = `(${cleaned.substring(0, 2)}) ${firstPart}`;
+            }
+        }
 
-         let fullMasked = prefix + maskedValue;
-         // Limit total length: +55 (XX) XXXXX-XXXX -> 19 chars
-         return fullMasked.slice(0, 19);
+        let fullMasked = prefix + maskedValue;
+        // Limit total length: +55 (XX) XXXXX-XXXX -> 19 chars
+        return fullMasked.slice(0, 19);
     };
 
 
@@ -112,17 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         inputElement.value = maskedValue; // Update value
 
         // Attempt to restore cursor position (basic)
-        // This is tricky and might not be perfect without a library
         if (cursorPos !== null) {
-             // Adjust cursor based on added/removed non-digit characters
-             // This is a simplified heuristic
-             const diff = maskedValue.length - value.length;
-             // If characters were added before cursor, move cursor forward
-             // If characters were removed before cursor, this won't adjust perfectly back
-             // It's often better to just place cursor at the end for simplicity in manual masking
-             // inputElement.selectionEnd = cursorPos + diff;
-             // Setting to end is usually less disruptive:
-             inputElement.selectionEnd = maskedValue.length;
+           inputElement.selectionEnd = maskedValue.length;
         }
     };
 
@@ -159,18 +150,52 @@ document.addEventListener('DOMContentLoaded', () => {
          if (!cleaned || cleaned.length !== 8) return cep; // Return original if invalid
         return cleaned.replace(/^(\d{5})(\d{3})$/, '$1-$2');
     };
-    const getOccurrenceName = (key) => ({'Hidraulica':'Hidráulica','Eletrica':'Elétrica','Elevador':'Elevador','Gerador':'Gerador'}[key] || key);
+    const getOccurrenceName = (key) => ({
+        'Hidraulica':'Hidráulica',
+        'Eletrica':'Elétrica',
+        'Elevador':'Elevador',
+        'Gerador':'Gerador',
+        // NOVAS ENTRADAS ABAIXO
+        'Pintura': 'Pintura',
+        'Alvenaria': 'Alvenaria / Estrutura',
+        'Jardinagem': 'Jardinagem / Paisagismo',
+        'Limpeza': 'Limpeza Específica',
+        'Seguranca': 'Segurança (Câmeras, Portões, Interfone)',
+        'ArCondicionado': 'Ar Condicionado Central',
+        'Pragas': 'Controle de Pragas',
+        'Telecom': 'Telecomunicações (Antena, Cabeamento)',
+        'Incendio': 'Sistema de Incêndio',
+        'Gas': 'Sistema de Gás',
+        'Outros': 'Geral / Outros'
+    }[key] || key); // Mantém o fallback para retornar a própria chave se não encontrar
+    
+    // NEW function to get display text from selects
+    const getSelectedText = (selectElement) => {
+        if (!selectElement || selectElement.selectedIndex < 0) return '';
+        return selectElement.options[selectElement.selectedIndex].text;
+    };
 
+    // --- Modal Handling ---
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal-close-x')) {
             const modal = e.target.closest('.modal-overlay');
-            if (modal) hideModal(modal);
+            if (modal) {
+                if (modal.id === 'info-modal') {
+                    hideInfoModal(); // Use specific hide for info modal
+                } else {
+                    hideModal(modal);
+                }
+            }
           }
           if (e.target.classList.contains('modal-overlay')) {
-            hideModal(e.target);
+            if (e.target.id === 'info-modal') {
+                hideInfoModal(); // Use specific hide for info modal
+            } else {
+                hideModal(e.target);
+            }
           }
         });
-        
+
     const showModal = (modal) => {
         if (!modal) { console.error("showModal: Modal element not found"); return; }
         modal.classList.remove('hidden');
@@ -180,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('hidden');
     };
 
-     const hideInfoModal = () => {
+    const hideInfoModal = () => {
         const modal = document.getElementById('info-modal');
         if (modal) {
             // --- If modal was in edit mode when 'X' was clicked ---
@@ -191,11 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentImagePreviewSrc = null; // Clear temp preview store
 
                 // 2. Visually reset the modal to display mode
-                //    (without reloading data like Cancel does)
                 const displayElements = modal.querySelectorAll('.info-display');
                 const editElements = modal.querySelectorAll('.info-edit');
                 const editLabels = modal.querySelectorAll('.info-edit-label');
-                const editInfoBtn = document.getElementById('edit-info-btn'); // Ensure we have the button ref
+                const editInfoBtn = document.getElementById('edit-info-btn');
                 const modalImagePreview = document.getElementById('modal-image-preview');
                 const editModalPhotoFile = document.getElementById('edit-modal-photo-file');
 
@@ -206,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Reset file input visually
                 if(editModalPhotoFile) editModalPhotoFile.value = null;
-                // Ensure image preview is visible and shows the *currently saved* image
+                // Ensure image preview shows the *currently saved* image
                  if (modalImagePreview) {
                     modalImagePreview.src = loadCondoData().foto || ''; // Revert preview to saved data
                      modalImagePreview.classList.remove('hidden');
@@ -235,24 +259,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveCondoData(data) {
-         try {
-             // Ensure critical fields are strings before saving
-             const dataToSave = { ...data };
-             for (const key in dataToSave) {
-                 if (typeof dataToSave[key] === 'number') {
-                     dataToSave[key] = String(dataToSave[key]);
-                 }
-             }
-             localStorage.setItem('condominioData', JSON.stringify(dataToSave));
-         } catch (e) {
-             console.error("Error saving condo data to localStorage:", e);
-             if (e.name === 'QuotaExceededError') {
+        try {
+            // Ensure critical fields are strings before saving
+            const dataToSave = { ...data };
+            for (const key in dataToSave) {
+                if (typeof dataToSave[key] === 'number') {
+                    dataToSave[key] = String(dataToSave[key]);
+                }
+            }
+            localStorage.setItem('condominioData', JSON.stringify(dataToSave));
+        } catch (e) {
+            console.error("Error saving condo data to localStorage:", e);
+            if (e.name === 'QuotaExceededError') {
                 alert("Erro ao salvar: Espaço de armazenamento local cheio. A imagem pode ser muito grande.");
-             } else {
+            } else {
                 alert("Erro ao salvar dados do condomínio.");
-             }
-         }
-     }
+            }
+        }
+    }
 
     function loadSuppliers() {
         const savedSuppliers = localStorage.getItem('condoSuppliers');
@@ -260,8 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 return JSON.parse(savedSuppliers);
             } catch(e) {
-                 console.error("Error parsing suppliers data from localStorage:", e);
-                 return [...defaultSuppliers]; // Use default clone if parsing fails
+                console.error("Error parsing suppliers data from localStorage:", e);
+                return [...defaultSuppliers]; // Use default clone if parsing fails
             }
         }
          return [...defaultSuppliers]; // Use cloned defaults if nothing saved
@@ -299,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewModal = document.getElementById('preview-modal');
     const supplierModal = document.getElementById('supplier-modal');
     const manageSuppliersModal = document.getElementById('manage-suppliers-modal');
-    const ticketForm = document.getElementById('ticket-form');
+    const ticketForm = document.getElementById('ticket-form'); // Keep this reference
     const supplierForm = document.getElementById('supplier-form');
     const contactsListDiv = document.getElementById('contacts-list');
     const manageContactsListDiv = document.getElementById('manage-contacts-list');
@@ -332,13 +356,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const editModalAdmin = document.getElementById('edit-modal-admin');
     // Supplier phone input (for masking)
     const supplierPhoneInput = document.getElementById('supplier-phone');
+    // NEW Ticket Location Elements
+    const ticketLevelSelect = document.getElementById('ticket-level');
+    const ticketAreaSelect = document.getElementById('ticket-area');
+    const ticketAreaCustomInput = document.getElementById('ticket-area-custom');
 
 
      // Check essential elements
-     if (!infoModal || !ticketModal || !previewModal || !supplierModal || !manageSuppliersModal || !editInfoBtn || !saveEditInfoBtn || !cancelEditInfoBtn || !editModalPhotoFile || !modalImagePreview ) {
-        console.error("Core modal or essential button/input elements not found! Aborting script setup.");
-        alert("Erro crítico: Elementos essenciais da página não foram encontrados.");
-        return; // Stop script execution if critical elements are missing
+     if (!infoModal || !ticketModal || !previewModal || !supplierModal || !manageSuppliersModal || !editInfoBtn || !saveEditInfoBtn || !cancelEditInfoBtn || !editModalPhotoFile || !modalImagePreview || !ticketLevelSelect || !ticketAreaSelect || !ticketAreaCustomInput ) { // Added new location elements check
+         console.error("Core modal or essential button/input elements not found! Aborting script setup.");
+         alert("Erro crítico: Elementos essenciais da página não foram encontrados.");
+         return; // Stop script execution if critical elements are missing
      }
 
 
@@ -388,8 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if(modalAdmin) modalAdmin.textContent = currentCondoData.admin || '';
 
         // --- Info Modal Edit Inputs (Populate for editing - Handled in toggleEditMode now) ---
-        // Only ensure values are set if needed for initial load or specific resets.
-        // toggleInfoEditMode handles population before showing edit fields.
     }
 
     function renderSuppliersList(container) {
@@ -407,15 +433,15 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'contact-item';
             // Use formatPhone for display here
             item.innerHTML = `
-                <div class="contact-info">
-                    <div class="contact-name">${supplier.name}</div>
-                    <div class="contact-phone">${formatPhone(supplier.phone)}</div>
-                    <span class="contact-occurrence">${getOccurrenceName(supplier.occurrence)}</span>
-                </div>
-                <div class="contact-actions">
-                    <button class="contact-btn edit-btn" title="Editar"><i class="material-icons">edit</i></button>
-                    <button class="contact-btn delete-btn" title="Excluir"><i class="material-icons">delete</i></button>
-                </div>`;
+                 <div class="contact-info">
+                     <div class="contact-name">${supplier.name}</div>
+                     <div class="contact-phone">${formatPhone(supplier.phone)}</div>
+                     <span class="contact-occurrence">${getOccurrenceName(supplier.occurrence)}</span>
+                 </div>
+                 <div class="contact-actions">
+                     <button class="contact-btn edit-btn" title="Editar"><i class="material-icons">edit</i></button>
+                     <button class="contact-btn delete-btn" title="Excluir"><i class="material-icons">delete</i></button>
+                 </div>`;
 
             const editBtn = item.querySelector('.edit-btn');
             const deleteBtn = item.querySelector('.delete-btn');
@@ -435,16 +461,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePreviewModal() {
         const occurrenceElem = document.getElementById('preview-occurrence');
-        const locationElem = document.getElementById('preview-location');
+        const locationElem = document.getElementById('preview-location'); // This element remains the same
         const descriptionElem = document.getElementById('preview-description');
         const priorityElem = document.getElementById('preview-priority');
 
         if(occurrenceElem) occurrenceElem.textContent = getOccurrenceName(currentTicket.occurrence);
-        if(locationElem) locationElem.textContent = currentTicket.location;
+        // UPDATE this line to use the new combined location:
+        if(locationElem) locationElem.textContent = currentTicket.location; // location now holds the combined string
         if(descriptionElem) descriptionElem.textContent = currentTicket.description;
         if(priorityElem) priorityElem.textContent = currentTicket.priority;
         updateSupplierDropdownList();
-     }
+    }
 
     function updateSupplierDropdownList() {
         if(!supplierSelect || !noSupplierDiv || !whatsappBtn) return; // Check elements
@@ -472,49 +499,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Handlers ---
 
     // Handle File Selection for Preview
-     function handleFileSelect(event) {
-         const file = event.target.files[0];
-         if (file && file.type.startsWith('image/')) {
-             const reader = new FileReader();
-             reader.onload = function(e) {
-                 if (modalImagePreview) {
-                     modalImagePreview.src = e.target.result;
-                     currentImagePreviewSrc = e.target.result; // Store for saving
-                     newFileSelected = true; // Mark that a new file was chosen
-                     modalImagePreview.classList.remove('hidden'); // Ensure preview is visible
-                 }
-             }
-             reader.readAsDataURL(file);
-         } else if (file) {
-             alert("Por favor, selecione um arquivo de imagem válido (JPG, PNG, GIF, etc.).");
-             event.target.value = null; // Clear the invalid selection
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (modalImagePreview) {
+                    modalImagePreview.src = e.target.result;
+                    currentImagePreviewSrc = e.target.result; // Store for saving
+                    newFileSelected = true; // Mark that a new file was chosen
+                    modalImagePreview.classList.remove('hidden'); // Ensure preview is visible
+                }
+            }
+            reader.readAsDataURL(file);
+        } else if (file) {
+            alert("Por favor, selecione um arquivo de imagem válido (JPG, PNG, GIF, etc.).");
+            event.target.value = null; // Clear the invalid selection
+            newFileSelected = false;
+        } else {
+            // No file selected or selection cleared
              newFileSelected = false;
-             // Optionally reset preview if user selects invalid file then clears
-             // modalImagePreview.src = loadCondoData().foto || ''; // Revert to saved image
-         } else {
-             // No file selected or selection cleared
-              newFileSelected = false;
-              currentImagePreviewSrc = null;
-              // Revert preview to saved image if selection is cleared
-              if (modalImagePreview) modalImagePreview.src = loadCondoData().foto || '';
-         }
-     }
+             currentImagePreviewSrc = null;
+             // Revert preview to saved image if selection is cleared
+             if (modalImagePreview) modalImagePreview.src = loadCondoData().foto || '';
+        }
+    }
 
 
     // Toggle Edit Mode for Info Modal
-     function toggleInfoEditMode(enableEdit) {
-         isInfoModalInEditMode = enableEdit;
-         newFileSelected = false; // Reset file selection flag when toggling mode
-         currentImagePreviewSrc = null; // Reset preview src store
+    function toggleInfoEditMode(enableEdit) {
+        isInfoModalInEditMode = enableEdit;
+        newFileSelected = false; // Reset file selection flag when toggling mode
+        currentImagePreviewSrc = null; // Reset preview src store
 
-         const displayElements = infoModal.querySelectorAll('.info-display');
-         const editElements = infoModal.querySelectorAll('.info-edit');
-         const editLabels = infoModal.querySelectorAll('.info-edit-label'); // Get labels too
+        const displayElements = infoModal.querySelectorAll('.info-display');
+        const editElements = infoModal.querySelectorAll('.info-edit');
+        const editLabels = infoModal.querySelectorAll('.info-edit-label'); // Get labels too
 
-         // Get current data to populate/revert
-         const currentData = loadCondoData();
+        // Get current data to populate/revert
+        const currentData = loadCondoData();
 
-         if (enableEdit) {
+        if (enableEdit) {
             // --- Entering Edit Mode ---
             // Populate inputs with CURRENT data (raw for masked fields)
              if(editModalName) editModalName.value = currentData.nomecondo || '';
@@ -547,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if(modalImagePreview) modalImagePreview.classList.remove('hidden');
 
 
-         } else {
+        } else {
             // --- Exiting Edit Mode (via Cancel or Save) ---
              displayElements.forEach(el => el.classList.remove('hidden'));
              editElements.forEach(el => el.classList.add('hidden'));
@@ -555,8 +580,8 @@ document.addEventListener('DOMContentLoaded', () => {
              if (editInfoBtn) editInfoBtn.classList.remove('hidden'); // Show Edit button
              // Ensure image preview shows the final state (handled by updateCondoDataOnUI called after save/cancel)
              if (modalImagePreview) modalImagePreview.classList.remove('hidden');
-         }
-     }
+        }
+    }
 
 
     function handleEditSupplier(id) {
@@ -581,17 +606,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Determine context...
          if (manageSuppliersModal && !manageSuppliersModal.classList.contains('hidden')) {
-            supplierModalContext = 'manage';
-            hideModal(manageSuppliersModal);
-        } else if (previewModal && !previewModal.classList.contains('hidden')) {
-            supplierModalContext = 'preview';
-            hideModal(previewModal);
-        } else {
-            supplierModalContext = 'manage'; // Default context
-            // If another modal was open, ensure it's hidden
-             if (ticketModal && !ticketModal.classList.contains('hidden')) hideModal(ticketModal);
-             if (infoModal && !infoModal.classList.contains('hidden')) hideInfoModal(); // Use specific hide function
-        }
+             supplierModalContext = 'manage';
+             hideModal(manageSuppliersModal);
+         } else if (previewModal && !previewModal.classList.contains('hidden')) {
+             supplierModalContext = 'preview';
+             hideModal(previewModal);
+         } else {
+             supplierModalContext = 'manage'; // Default context
+             // If another modal was open, ensure it's hidden
+              if (ticketModal && !ticketModal.classList.contains('hidden')) hideModal(ticketModal);
+              if (infoModal && !infoModal.classList.contains('hidden')) hideInfoModal(); // Use specific hide function
+         }
         showModal(supplierModal);
     }
 
@@ -609,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             console.log(`Fornecedor ID ${id} excluído.`);
         }
-     }
+    }
 
     function handleSendWhatsApp() {
         if(!supplierSelect) return;
@@ -617,17 +642,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const supplier = suppliers.find(s => s.id === parseInt(supplierId));
         if (!supplier) { alert('Selecione um fornecedor válido.'); return; }
 
-         const currentCondoData = loadCondoData(); // Load current data for name
+        const currentCondoData = loadCondoData(); // Load current data for name
 
+        // UPDATE this line to use the combined location from currentTicket
         const message = `*Novo Chamado - ${currentCondoData.nomecondo}*\n\n` +
                         `*Ocorrência:* ${getOccurrenceName(currentTicket.occurrence)}\n` +
-                        `*Localização:* ${currentTicket.location}\n` +
+                        `*Localização:* ${currentTicket.location}\n` + // Use the combined location
                         `*Descrição:* ${currentTicket.description}\n` +
                         `*Prioridade:* ${currentTicket.priority}\n\n` +
                         `_Por favor, verificar disponibilidade._`;
         // Send CLEAN number to WhatsApp API
         window.open(`https://wa.me/${cleanInput(supplier.phone)}?text=${encodeURIComponent(message)}`, '_blank');
-     }
+    }
 
     function handleSupplierFormSubmit(event) {
         event.preventDefault();
@@ -698,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handler for cancelling the supplier form
-     function handleCancelSupplierForm() {
+    function handleCancelSupplierForm() {
         hideModal(supplierModal);
         // Return to the correct context
         if (supplierModalContext === 'preview' && previewModal) {
@@ -714,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- MODIFIED: Handler for Cancel Edit Info Button ---
-     function handleCancelEditInfoBtn() {
+    function handleCancelEditInfoBtn() {
         // Reset fields using the currently SAVED data
         const currentData = loadCondoData(); // Load fresh data
         updateCondoDataOnUI(currentData); // Update all displays/inputs first
@@ -736,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Attach Event Listeners ---
 
     // Navbar Toggle
-     if (navbarToggle && navbarDropdown) {
+    if (navbarToggle && navbarDropdown) {
         navbarToggle.addEventListener('click', (e) => {
             e.stopPropagation(); // Prevent document click listener from closing immediately
             navbarDropdown.classList.toggle('show');
@@ -823,14 +849,89 @@ document.addEventListener('DOMContentLoaded', () => {
      if(editModalPhotoFile) editModalPhotoFile.addEventListener('change', handleFileSelect);
 
 
-    // Ticket Creation Flow
-    if(createTicketBtn && ticketModal) { createTicketBtn.addEventListener('click', () => { if(ticketForm) ticketForm.reset(); currentTicket={}; showModal(ticketModal); }); }
-    if(ticketForm && previewModal && ticketModal) { ticketForm.addEventListener('submit', (e) => { e.preventDefault(); const occ = document.getElementById('occurrence-type'), loc = document.getElementById('location'), desc = document.getElementById('description'), pri = document.getElementById('priority'); currentTicket = { occurrence: occ?.value || '', location: loc?.value.trim() || '', description: desc?.value.trim() || '', priority: pri?.value || '' }; updatePreviewModal(); hideModal(ticketModal); showModal(previewModal); });}
+    // --- Ticket Creation Flow ---
+    if(createTicketBtn && ticketModal) {
+        createTicketBtn.addEventListener('click', () => {
+            if(ticketForm) ticketForm.reset();
+            // ADD this line to ensure custom field is hidden on open
+            if(ticketAreaCustomInput) {
+                ticketAreaCustomInput.classList.add('hidden');
+                ticketAreaCustomInput.required = false; // Make sure it's not required initially
+            }
+            currentTicket={};
+            showModal(ticketModal);
+        });
+    }
+    if(ticketForm && previewModal && ticketModal) {
+        ticketForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const occ = document.getElementById('occurrence-type');
+            // REMOVED: const loc = document.getElementById('location'); // Old location input removed
+            const desc = document.getElementById('description');
+            const pri = document.getElementById('priority');
+
+            // --- NEW Location Logic ---
+            let locationString = "";
+            const levelText = getSelectedText(ticketLevelSelect);
+            const areaText = getSelectedText(ticketAreaSelect);
+            const customAreaValue = ticketAreaCustomInput ? ticketAreaCustomInput.value.trim() : "";
+
+            // Basic validation for selects
+            if (!ticketLevelSelect || !ticketLevelSelect.value) {
+                 alert('Por favor, selecione o Nível/Localização Principal.');
+                 ticketLevelSelect.focus();
+                 return;
+            }
+             if (!ticketAreaSelect || !ticketAreaSelect.value) {
+                 alert('Por favor, selecione a Área Específica.');
+                 ticketAreaSelect.focus();
+                 return;
+            }
+
+            if (ticketAreaSelect.value === 'outro') {
+                if (!customAreaValue) {
+                    alert('Por favor, especifique a área no campo "Outro".');
+                    ticketAreaCustomInput.focus();
+                    return; // Stop submission
+                }
+                locationString = `${levelText} - Outro: ${customAreaValue}`;
+            } else {
+                locationString = `${levelText} - ${areaText}`;
+            }
+            // --- End NEW Location Logic ---
+
+            currentTicket = {
+                occurrence: occ?.value || '',
+                // UPDATE this line:
+                location: locationString, // Use the combined string
+                description: desc?.value.trim() || '',
+                priority: pri?.value || ''
+            };
+            updatePreviewModal();
+            hideModal(ticketModal);
+            showModal(previewModal);
+        });
+    }
+
+    // ADD Event listener for the Area dropdown to show/hide the custom input
+    if (ticketAreaSelect && ticketAreaCustomInput) {
+        ticketAreaSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'outro') {
+                ticketAreaCustomInput.classList.remove('hidden');
+                ticketAreaCustomInput.required = true; // Make it required only when visible
+            } else {
+                ticketAreaCustomInput.classList.add('hidden');
+                ticketAreaCustomInput.required = false; // Not required when hidden
+                ticketAreaCustomInput.value = ''; // Clear value when hidden
+            }
+        });
+    }
+
     if(backToFormBtn && previewModal && ticketModal) { backToFormBtn.addEventListener('click', () => { hideModal(previewModal); showModal(ticketModal); }); }
     if(confirmTicketBtn && previewModal) { confirmTicketBtn.addEventListener('click', () => { console.log('Chamado confirmado (simulação):', currentTicket); alert('Chamado registrado com sucesso! (Simulação)'); hideModal(previewModal); currentTicket = {}; }); }
 
 
-    // Supplier Management Flow
+    // --- Supplier Management Flow ---
      if(viewContactsBtn && manageSuppliersModal) { viewContactsBtn.addEventListener('click', () => { suppliers = loadSuppliers(); renderSuppliersList(manageContactsListDiv); showModal(manageSuppliersModal); }); }
      if(closeManageSuppliersBtn && manageSuppliersModal) { closeManageSuppliersBtn.addEventListener('click', () => hideModal(manageSuppliersModal)); }
      if(newSupplierBtn && supplierModal && manageSuppliersModal) { newSupplierBtn.addEventListener('click', () => { if(supplierModalTitle) supplierModalTitle.textContent = "Adicionar Novo Fornecedor"; if(supplierForm) supplierForm.reset(); const sid = document.getElementById('supplier-id'); if(sid) sid.value = ''; supplierModalContext = 'manage'; hideModal(manageSuppliersModal); showModal(supplierModal); }); }
@@ -840,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
      if(supplierForm) { supplierForm.addEventListener('submit', handleSupplierFormSubmit); }
 
 
-    // Preview Modal - WhatsApp Interaction
+    // --- Preview Modal - WhatsApp Interaction ---
     if(supplierSelect) { supplierSelect.addEventListener('change', (e) => { if(whatsappBtn) whatsappBtn.disabled = !e.target.value; }); }
     if(whatsappBtn) { whatsappBtn.addEventListener('click', handleSendWhatsApp); }
 

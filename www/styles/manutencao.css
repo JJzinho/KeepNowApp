@@ -1,9 +1,15 @@
 /* manutencao.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'); /* Example Font */
+
 :root {
-    --primary: #2A3F54;
-    --secondary: #F7F7F7;
-    --background: #FFFFFF;
-    --text: #333333;
+    --primary: #2A3F54; /* Dark Blue */
+    --secondary: #EDEDED; /* Light Gray Background */
+    --background: #FFFFFF; /* White Card Background */
+    --text: #333333; /* Dark Text */
+    --text-light: #FFFFFF; /* Light Text (on dark backgrounds) */
+    --accent: #1ABB9C; /* Teal Accent */
+    --border-color: #D9DEE4; /* Light Border */
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 body {
@@ -12,6 +18,7 @@ body {
     padding: 0;
     background-color: var(--secondary);
     color: var(--text);
+    line-height: 1.6;
 }
 
 .container {
@@ -20,173 +27,371 @@ body {
     padding: 20px;
 }
 
-.header {
+/* App Bar Styles */
+.app-bar {
     background-color: var(--primary);
-    color: white;
-    padding: 1rem;
+    height: 60px; /* Slightly taller */
     display: flex;
     align-items: center;
+    justify-content: center; /* Center logo */
+    padding: 0 20px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    position: relative; /* Needed for absolute positioning of logo */
+}
+
+.app-bar .logo {
+    height: 75px; /* Adjusted size */
+    /* No absolute positioning needed if centered using flexbox */
+    /* position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -5px; */ /* Adjust overlap if needed */
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--primary);
+    color: var(--text-light);
+    padding: 1rem 0; /* Padding top/bottom */
     margin-bottom: 2rem;
+    text-align: center;
 }
 
-.section-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 1rem;
+.header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
 }
 
-.form-container {
-    background-color: var(--background);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 2rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-.form-container.expanded {
-    max-height: 1000px;
-}
-
-.form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.form-group {
-    flex: 1;
-    position: relative;
-}
-
-select, input, textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-top: 4px;
-}
-
+/* Button Styles */
 button {
     background-color: var(--primary);
-    color: white;
+    color: var(--text-light);
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px; /* Larger padding */
+    border-radius: 5px;
     cursor: pointer;
-    margin: 4px;
+    margin: 5px; /* Consistent margin */
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    font-weight: 700;
 }
 
 button:hover {
     opacity: 0.9;
 }
 
+button:disabled {
+    background-color: #a0a0a0; /* Muted gray */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.create-button {
+    background-color: var(--accent); /* Use accent color */
+    margin-bottom: 1.5rem; /* Space below create button */
+}
+
+/* Form Container Styles */
+.form-container {
+    background-color: var(--background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0px; /* Start with no padding */
+    margin-bottom: 2rem;
+    max-height: 0; /* Collapsed by default */
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; /* Smooth transition */
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.form-container.expanded {
+    max-height: 1000px; /* Large enough to fit content */
+    padding: 25px; /* Add padding when expanded */
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 1.5rem; /* Increased gap */
+    margin-bottom: 1.5rem;
+}
+
+.form-row:last-child {
+    margin-bottom: 0; /* No margin on last row (button row) */
+}
+
+.form-group {
+    flex: 1; /* Allow flexible sizing */
+    min-width: 200px; /* Minimum width before wrapping */
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+select, input[type="text"], input[type="file"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 4px;
+    box-sizing: border-box; /* Include padding in width */
+    font-size: 0.9rem;
+    background-color: #f8f9fa; /* Very light input background */
+}
+
+textarea {
+    min-height: 80px; /* Minimum height for text areas */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.custom-period-input {
+    display: none; /* Hidden by default */
+    margin-top: 8px;
+}
+
+/* Activities List Styles */
 .activities-list {
     background-color: var(--background);
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 20px;
+    padding: 25px;
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.activities-list h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.list-controls {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+.toggle-archived {
+    background-color: #6c757d; /* Gray button */
+}
+
+#generatePdfButton {
+    background-color: var(--accent); /* Accent color for PDF button */
 }
 
 .activity-item {
     padding: 1rem;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid var(--border-color); /* Add border to each item */
+    border-radius: 5px;
+    margin-bottom: 1rem; /* Space between items */
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Align items to top */
+    background-color: #fdfdfd; /* Slightly off-white background */
+    transition: box-shadow 0.2s ease;
 }
 
+.activity-item:hover {
+     box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.activity-details {
+    flex-grow: 1;
+    margin-right: 1rem; /* Space between details and actions */
+}
+.activity-details h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+.activity-details p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+.activity-details p strong {
+    color: var(--text);
+    margin-right: 5px;
+}
+
+.activity-actions {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically initially */
+    gap: 8px;
+    flex-shrink: 0; /* Prevent actions from shrinking */
+}
+
+.activity-actions button {
+    min-width: 110px; /* Ensure buttons have minimum width */
+    padding: 8px 12px; /* Slightly smaller padding for action buttons */
+}
+
+/* Archived Section Styles */
 .archived-section {
     margin-top: 2rem;
-    display: none;
+    padding-top: 1rem;
+    border-top: 2px solid var(--primary);
+    display: none; /* Hidden by default, controlled by JS */
 }
 
 .archived-section.visible {
     display: block;
 }
 
-.toggle-archived {
-    margin: 1rem 0;
+.archived-section h3 {
+    margin-top: 0;
+    color: var(--primary);
 }
 
-.custom-period-input {
-    display: none;
-    margin-top: 8px;
-}
-
+/* Modal Styles */
 .modal {
-    display: none;
+    display: none; /* Hidden by default */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
     z-index: 1000;
+    overflow-y: auto; /* Allow scrolling if modal content is too tall */
+    padding: 20px 0; /* Add padding top/bottom for scroll */
 }
 
 .modal-content {
-    background-color: white;
-    margin: 5% auto;
-    padding: 20px;
-    width: 80%;
-    max-width: 600px;
+    background-color: var(--background);
+    margin: 5% auto; /* Centered with margin */
+    padding: 30px;
+    width: 90%;
+    max-width: 700px; /* Max width */
     border-radius: 8px;
-    max-height: 80vh;
-    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative; /* For potential close button positioning */
 }
 
-.app-bar { 
-    background-color: var(--primary); 
-    height: 50px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-end; 
-    padding: 0 10px; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-    position: relative; 
+.modal-content h3, .modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
-.app-bar .logo { 
-    position: absolute; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    height: 65px; 
-    top: -5px; 
+.modal-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    border-bottom: none;
+}
+
+.modal-content .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.modal-content .form-group label {
+    margin-bottom: 8px;
+}
+
+.modal-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+}
+
+.modal-actions button[type="button"] {
+    background-color: #6c757d; /* Gray for cancel buttons */
+}
+
+/* Report Modal Specific Styles */
+#reportContent {
+    margin-bottom: 2rem; /* Space before action buttons */
 }
 
 .report-item {
     margin-bottom: 15px;
-    padding: 10px;
-    background-color: #f9f9f9;
+    padding: 15px;
+    background-color: #f8f9fa; /* Light background for report items */
+    border: 1px solid #eee;
     border-radius: 4px;
 }
-
-.activity-actions {
-    display: flex;
-    gap: 8px;
+.report-item p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+.report-item strong {
+     color: #333;
+}
+#reportContent hr {
+    border: none;
+    border-top: 1px dashed var(--border-color);
+    margin: 15px 0;
 }
 
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .form-row {
-        flex-direction: column;
+        flex-direction: column; /* Stack form groups vertically */
+        gap: 1rem; /* Reduce gap */
     }
-    
+
     .activity-item {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: column; /* Stack details and actions */
+        align-items: stretch; /* Stretch items to full width */
     }
-    
+
+    .activity-details {
+        margin-right: 0;
+        margin-bottom: 1rem; /* Space below details */
+    }
+
     .activity-actions {
-        margin-top: 10px;
+        flex-direction: row; /* Place buttons side-by-side again */
+        justify-content: space-between; /* Space out buttons */
         width: 100%;
-        justify-content: space-between;
     }
-    
+
+    .activity-actions button {
+         flex-grow: 1; /* Allow buttons to grow */
+         margin: 0 5px; /* Small horizontal margin */
+    }
+     .activity-actions button:first-child { margin-left: 0; }
+     .activity-actions button:last-child { margin-right: 0; }
+
+
     .modal-content {
         width: 95%;
-        margin: 10% auto;
+        margin: 10% auto; /* Adjust margin for smaller screens */
+        padding: 20px;
     }
+
+    .modal-actions {
+        justify-content: space-between; /* Space out modal buttons */
+    }
+}
+
+@media (max-width: 480px) {
+     .container {
+         padding: 15px;
+     }
+     .header h1 {
+         font-size: 1.5rem;
+     }
+      button {
+         padding: 8px 15px;
+         font-size: 0.85rem;
+     }
+      .modal-content {
+         padding: 15px;
+     }
+     .modal-actions button {
+         width: 48%; /* Make modal buttons take roughly half width */
+         margin: 0;
+     }
 }
